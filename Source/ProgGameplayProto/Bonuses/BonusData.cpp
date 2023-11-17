@@ -7,6 +7,7 @@
 #include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
+#include "ProgGameplayProto/Abilities/AbilityComponent.h"
 
 void UBonusData::ApplyOnMainCharacter()
 {
@@ -16,10 +17,13 @@ void UBonusData::ApplyOnMainCharacter()
 	UWeaponComponent* weapon = mainCharacter->GetWeapon();
 	if (!IsValid(weapon)) return;
 
-	Apply(mainCharacter, weapon);
+	UAbilityComponent* ability = mainCharacter->GetAbility();
+	if (!IsValid(ability)) return;
+
+	Apply(mainCharacter, weapon, ability);
 }
 
-void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
+void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilityComponent* Ability)
 {
 	ApplyEffects(Character, Weapon);
 
@@ -42,6 +46,13 @@ void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent*
 	Weapon->BonusCriticalHitChance += BonusCriticalHitChance;
 	Weapon->BonusCriticalHitChanceMultiplier += BonusCriticalHitChanceMultiplier;
 	Weapon->BonusCriticalHitDamageMultiplier += BonusCriticalHitDamageMultiplier;
+
+	Ability->BonusMaxHealth += BonusMaxHealth;
+	Ability->BonusRegenerationRate += BonusRegenerationRate;
+	Ability->BonusDropChance += BonusDropChance;
+	Ability->BonusDropMultiplier += BonusDropMultiplier;
+	Ability->BonusPickUpDistance += BonusPickUpDistance;
+	Ability->BonusUpgradesNumber += BonusUpgradesNumber;
 }
 
 void UBonusData::ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)

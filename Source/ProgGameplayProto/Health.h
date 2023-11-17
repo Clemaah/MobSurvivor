@@ -21,8 +21,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float MaxHealth = 10;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float RegenerationRate = 0;
+
 	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite)
-	float CurrentHealth;
+	float CurrentHealth = 10;
+
+	float TimeElapsedSinceLastRegeneration = 0;
 
 	virtual void BeginPlay() override;
 
@@ -37,10 +42,27 @@ public:
 	FOnHealthChanged OnHealthChanged;
 
 public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	virtual void InitializeHealth(float maxHealth = 10, float RegenerationRate = 0);
+
+	virtual void TryRegenerate(float DeltaTime);
+
 	virtual void HitByProjectile(AWeaponProjectile* Projectile) override;
+
 	virtual void HitByAttack(float Damages, AActor* Attacker);
+
 	virtual void AddHealth(float Amount);
+
+	virtual void SetMaxHealth(float NewMaxHealth);
+
+	virtual void SetRegenerationRate(float NewRegenerationRate);
+
 	virtual void Die();
+
+	virtual float GetMaxHealth() { return MaxHealth; }
+	virtual float GetRegenerationRate() { return RegenerationRate; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetCurrentHealth() { return CurrentHealth; }

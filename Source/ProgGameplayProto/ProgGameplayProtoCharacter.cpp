@@ -18,6 +18,7 @@
 #include "Components/SphereComponent.h"
 #include "Drops/Drop.h"
 #include "Weapons/WeaponComponent.h"
+#include "Abilities/AbilityComponent.h"
 #include "Logging/StructuredLog.h"
 #include "Weapons/WeaponData.h"
 #include "Weapons/WeaponProjectile.h"
@@ -67,11 +68,14 @@ AProgGameplayProtoCharacter::AProgGameplayProtoCharacter()
 
 	Weapon = CreateDefaultSubobject<UWeaponComponent>("Weapon");
 
+	Ability = CreateDefaultSubobject<UAbilityComponent>("Ability");
+
 	Health = CreateDefaultSubobject<UHealth>("Health");
 
 	Experience = CreateDefaultSubobject<UExperienceComponent>("Experience");
 
 	DropsCollector = CreateDefaultSubobject<USphereComponent>("Drops Collector");
+	DropsCollector->SetRelativeLocation(FVector(0, 0, -90));
 	DropsCollector->SetupAttachment(GetCapsuleComponent());
 }
 
@@ -80,15 +84,33 @@ bool AProgGameplayProtoCharacter::WantsToShoot()
 	return bIsHoldingShoot || bIsAutoFire;
 }
 
+void AProgGameplayProtoCharacter::SetupDefaultComponents()
+{
+	SetupDefaultWeapon();
+	SetupDefaultAbility();
+	SetupDefaultHealth();
+
+	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
+	{
+		DefaultBonuses[i]->Apply(this, Weapon, Ability);
+	}
+}
+
 void AProgGameplayProtoCharacter::SetupDefaultWeapon()
 {
 	Weapon->InitializeWeapon(this);
 	Weapon->SetData(DefaultWeaponData);
+}
 
-	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
-	{
-		DefaultBonuses[i]->Apply(this, Weapon);
-	}
+void AProgGameplayProtoCharacter::SetupDefaultAbility()
+{
+	Ability->InitializeAbility(this);
+	Ability->SetData(DefaultAbilityData);
+}
+
+void AProgGameplayProtoCharacter::SetupDefaultHealth()
+{
+	Health->InitializeHealth(Ability->GetMaxHealth(), Ability->GetRegenerationRate());
 }
 
 void AProgGameplayProtoCharacter::BeginPlay()
@@ -107,8 +129,8 @@ void AProgGameplayProtoCharacter::BeginPlay()
 		}
 	}
 
-	//Setup Weapon
-	SetupDefaultWeapon();
+	//Setup Components
+	SetupDefaultComponents();
 
 	DropsCollector->OnComponentBeginOverlap.AddDynamic(this, &AProgGameplayProtoCharacter::OnDropsCollectorBeginOverlap);
 }

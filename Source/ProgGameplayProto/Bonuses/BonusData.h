@@ -9,6 +9,7 @@
 class UProjectileEffect;
 class AProgGameplayProtoCharacter;
 class UWeaponComponent;
+class UAbilityComponent;
 /**
  *
  */
@@ -25,68 +26,86 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<TSubclassOf<UProjectileEffect>> Effects;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusFireRate = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusFireRateMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusNumberOfShots = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusNumberOfShotsMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusPrecision = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusPrecisionMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusSpread = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusSpreadMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusDamages = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float BonusDamagesMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float BonusProjectileSize = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float BonusProjectileSizeMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float BonusRange = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float BonusRangeMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float BonusProjectileSpeed = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float BonusProjectileSpeedMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
 	float BonusCriticalHitChance = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
 	float BonusCriticalHitChanceMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
 	float BonusCriticalHitDamageMultiplier = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Health")
+	float BonusMaxHealth = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Health")
+	float BonusRegenerationRate = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
+	float BonusDropChance = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
+	float BonusDropMultiplier = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
+	float BonusPickUpDistance = 0;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Upgrade")
+	int BonusUpgradesNumber = 0;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void ApplyOnMainCharacter();
 
-	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
+	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilityComponent* Ability);
 
 	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 };

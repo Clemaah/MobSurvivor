@@ -18,7 +18,6 @@ UWeaponComponent::UWeaponComponent()
 	// ...
 }
 
-
 // Called when the game starts
 void UWeaponComponent::BeginPlay()
 {
@@ -27,7 +26,6 @@ void UWeaponComponent::BeginPlay()
 	// ...
 
 }
-
 
 // Called every frame
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -52,6 +50,8 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 
 	if (TimeElapsedSinceLastShoot >= GetShootDelay())
 	{
+		TimeElapsedSinceLastShoot = 0;
+
 		Shoot();
 	}
 }
@@ -63,8 +63,6 @@ void UWeaponComponent::AddEffect(UProjectileEffect* Effect)
 
 void UWeaponComponent::Shoot()
 {
-	TimeElapsedSinceLastShoot = 0;
-
 	if (!IsValid(Character)) return;
 	if (!IsValid(Character->WeaponProjectileToSpawn)) return;
 
@@ -87,6 +85,7 @@ void UWeaponComponent::SpawnProjectile(FVector Direction)
 
 	if (Direction == FVector::ZeroVector)
 		Direction = Character->GetActorForwardVector();
+
 	projectile->SetDirection(Direction);
 
 	for (int i = 0; i < Effects.Num(); i++)

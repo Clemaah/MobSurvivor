@@ -18,6 +18,8 @@ class UInputAction;
 class UWeaponComponent;
 class UWeaponData;
 class AWeaponProjectile;
+class UAbilityComponent;
+class UAbilityData;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -62,15 +64,28 @@ public:
 
 	static AProgGameplayProtoCharacter* Instance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Weapon)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
 	TSubclassOf<AWeaponProjectile> WeaponProjectileToSpawn;
 
 	virtual bool WantsToShoot();
+
+	void SetupDefaultComponents();
+	void SetupDefaultHealth();
 	void SetupDefaultWeapon();
+	void SetupDefaultAbility();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = WeaponData)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
 	USphereComponent* DropsCollector;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
+	TArray<UBonusData*> DefaultBonuses;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
+	UWeaponData* DefaultWeaponData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
+	UAbilityData* DefaultAbilityData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UHealth* Health;
@@ -78,14 +93,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UExperienceComponent* Experience;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = WeaponData)
-	UWeaponData* DefaultWeaponData;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = WeaponData)
-	TArray<UBonusData*> DefaultBonuses;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UWeaponComponent* Weapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UAbilityComponent* Ability;
 
 	bool bIsHoldingShoot = false;
 	bool bIsAutoFire = false;
@@ -123,6 +135,9 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 	FORCEINLINE UExperienceComponent* GetExperience() const { return Experience; }
+
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
+
+	FORCEINLINE UAbilityComponent* GetAbility() const { return Ability; }
 };
 
