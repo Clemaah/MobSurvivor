@@ -2,8 +2,9 @@
 
 #include "ProgGameplayProtoGameMode.h"
 
-#include "BonusManager.h"
 #include "EnemySpawnerManager.h"
+#include "BonusManager.h"
+#include "UpgradesManager.h"
 #include "ProgGameplayProtoCharacter.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -23,4 +24,5 @@ void AProgGameplayProtoGameMode::InitGame(const FString& MapName, const FString&
 
 	EnemySpawnerManager = GetWorld()->SpawnActor<AEnemySpawnerManager>();
 	BonusManager = GetWorld()->SpawnActor<ABonusManager>();
+	UpgradesManager = GetWorld()->SpawnActor<AUpgradesManager>();
 }

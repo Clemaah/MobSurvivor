@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "ProgGameplayProtoCharacter.generated.h"
 
 class USphereComponent;
 class UExperienceComponent;
-class UHealth;
+class UHealthComponent;
 class UBonusData;
 class USpringArmComponent;
 class UCameraComponent;
@@ -70,7 +71,6 @@ public:
 	virtual bool WantsToShoot();
 
 	void SetupDefaultComponents();
-	void SetupDefaultHealth();
 	void SetupDefaultWeapon();
 	void SetupDefaultAbility();
 
@@ -88,7 +88,7 @@ protected:
 	UAbilityData* DefaultAbilityData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UHealth* Health;
+	UHealthComponent* Health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UExperienceComponent* Experience;
@@ -136,8 +136,12 @@ public:
 
 	FORCEINLINE UExperienceComponent* GetExperience() const { return Experience; }
 
+	FORCEINLINE UHealthComponent* GetHealth() const { return Health; }
+
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
 
 	FORCEINLINE UAbilityComponent* GetAbility() const { return Ability; }
+
+	FORCEINLINE void SetDropCollectorRadius(float NewRadius) const { DropsCollector->SetSphereRadius(NewRadius); }
 };
 

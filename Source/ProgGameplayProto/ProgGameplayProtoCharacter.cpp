@@ -12,7 +12,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "ExperienceComponent.h"
-#include "Health.h"
+#include "HealthComponent.h"
 #include "InputActionValue.h"
 #include "Bonuses/BonusData.h"
 #include "Components/SphereComponent.h"
@@ -70,7 +70,7 @@ AProgGameplayProtoCharacter::AProgGameplayProtoCharacter()
 
 	Ability = CreateDefaultSubobject<UAbilityComponent>("Ability");
 
-	Health = CreateDefaultSubobject<UHealth>("Health");
+	Health = CreateDefaultSubobject<UHealthComponent>("Health");
 
 	Experience = CreateDefaultSubobject<UExperienceComponent>("Experience");
 
@@ -88,7 +88,6 @@ void AProgGameplayProtoCharacter::SetupDefaultComponents()
 {
 	SetupDefaultWeapon();
 	SetupDefaultAbility();
-	SetupDefaultHealth();
 
 	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
 	{
@@ -98,19 +97,14 @@ void AProgGameplayProtoCharacter::SetupDefaultComponents()
 
 void AProgGameplayProtoCharacter::SetupDefaultWeapon()
 {
-	Weapon->InitializeWeapon(this);
 	Weapon->SetData(DefaultWeaponData);
+	Weapon->InitializeWeapon(this);
 }
 
 void AProgGameplayProtoCharacter::SetupDefaultAbility()
 {
-	Ability->InitializeAbility(this);
 	Ability->SetData(DefaultAbilityData);
-}
-
-void AProgGameplayProtoCharacter::SetupDefaultHealth()
-{
-	Health->InitializeHealth(Ability->GetMaxHealth(), Ability->GetRegenerationRate());
+	Ability->InitializeAbility(this);
 }
 
 void AProgGameplayProtoCharacter::BeginPlay()

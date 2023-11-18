@@ -96,10 +96,10 @@ public:
 	float BonusDropMultiplier = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
-	float BonusPickUpDistance = 0;
+	float BonusDropCollectorRadius = 0;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Upgrade")
-	int BonusUpgradesNumber = 0;
+	int BonusNumberOfUpgrades = 0;
 
 public:
 	UFUNCTION(BlueprintCallable)

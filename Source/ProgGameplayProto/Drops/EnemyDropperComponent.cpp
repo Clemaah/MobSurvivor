@@ -3,7 +3,7 @@
 
 #include "EnemyDropperComponent.h"
 
-#include "ProgGameplayProto/Health.h"
+#include "ProgGameplayProto/HealthComponent.h"
 
 
 void UEnemyDropperComponent::BeginPlay()
@@ -15,7 +15,7 @@ void UEnemyDropperComponent::BeginPlay()
 
 void UEnemyDropperComponent::SetupDropOnDie()
 {
-	UHealth* health = GetOwner()->FindComponentByClass<UHealth>();
+	UHealthComponent* health = GetOwner()->FindComponentByClass<UHealthComponent>();
 
 	if (!IsValid(health)) return;
 

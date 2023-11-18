@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ProjectileInteraction.h"
-#include "Health.generated.h"
+#include "HealthComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealthDie);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealthValue);
@@ -13,7 +13,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealthVa
  *
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API UHealth : public UProjectileInteraction
+class PROGGAMEPLAYPROTO_API UHealthComponent : public UProjectileInteraction
 {
 	GENERATED_BODY()
 
@@ -55,11 +55,10 @@ public:
 
 	virtual void AddHealth(float Amount);
 
-	virtual void SetMaxHealth(float NewMaxHealth);
-
-	virtual void SetRegenerationRate(float NewRegenerationRate);
-
 	virtual void Die();
+
+	virtual void SetMaxHealth(float NewMaxHealth) { MaxHealth = NewMaxHealth; }
+	virtual void SetRegenerationRate(float NewRegenerationRate) { RegenerationRate = NewRegenerationRate; }
 
 	virtual float GetMaxHealth() { return MaxHealth; }
 	virtual float GetRegenerationRate() { return RegenerationRate; }

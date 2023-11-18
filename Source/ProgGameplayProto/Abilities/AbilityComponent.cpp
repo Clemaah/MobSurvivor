@@ -2,8 +2,13 @@
 
 
 #include "AbilityComponent.h"
+
+#include "Kismet/GameplayStatics.h"
 #include "ProgGameplayProto/Abilities/AbilityData.h"
 #include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/HealthComponent.h"
+#include "ProgGameplayProto/ProgGameplayProtoGameMode.h"
+#include "ProgGameplayProto/UpgradesManager.h"
 
 // Sets default values for this component's properties
 UAbilityComponent::UAbilityComponent()
@@ -21,8 +26,8 @@ void UAbilityComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+
+	UpgradesManager = Cast<AProgGameplayProtoGameMode, AGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()))->UpgradesManager;
 }
 
 
@@ -37,6 +42,19 @@ void UAbilityComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAct
 void UAbilityComponent::InitializeAbility(AProgGameplayProtoCharacter* NewCharacter)
 {
 	Character = NewCharacter;
+	Character->GetHealth()->InitializeHealth(GetMaxHealth(), GetRegenerationRate());
+	Character->SetDropCollectorRadius(GetDropCollectorRadius());
+	UpgradesManager->NumberOfUpgrades = GetNumberOfUpgrades();
+}
+
+void UAbilityComponent::UpdateAbility()
+{
+	Character->GetHealth()->SetMaxHealth(GetMaxHealth());
+	Character->GetHealth()->SetRegenerationRate(GetRegenerationRate());
+	Character->SetDropCollectorRadius(GetDropCollectorRadius());
+	UpgradesManager->NumberOfUpgrades = GetNumberOfUpgrades();
+	//Character->(GetDropChance());
+	//Character->(GetDropMultiplier());
 }
 
 float UAbilityComponent::GetMaxHealth()
@@ -75,20 +93,20 @@ float UAbilityComponent::GetDropMultiplier()
 	return value;
 }
 
-float UAbilityComponent::GetPickUpDistance()
+float UAbilityComponent::GetDropCollectorRadius()
 {
 	if (!IsValid(AbilityData)) return 0.0f;
 
-	float value = FMath::Clamp(AbilityData->PickUpDistance + BonusPickUpDistance, 50, 300);
+	float value = FMath::Clamp(AbilityData->DropCollectorRadius + BonusDropCollectorRadius, 50, 300);
 
 	return value;
 }
 
-int UAbilityComponent::GetUpgradesNumber()
+int UAbilityComponent::GetNumberOfUpgrades()
 {
 	if (!IsValid(AbilityData)) return 0.0f;
 
-	int value = FMath::Clamp(AbilityData->UpgradesNumber + BonusUpgradesNumber, 3, 5);
+	int value = FMath::Clamp(AbilityData->NumberOfUpgrades + BonusNumberOfUpgrades, 1, 5);
 
 	return value;
 }

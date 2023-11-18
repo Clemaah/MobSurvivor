@@ -8,7 +8,7 @@
 
 class UEnemyDropperComponent;
 class UCapsuleComponent;
-class UHealth;
+class UHealthComponent;
 
 UCLASS()
 class PROGGAMEPLAYPROTO_API AEnemy : public APawn
@@ -23,7 +23,7 @@ public:
 	UCapsuleComponent* Collision;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UHealth* Health;
+	UHealthComponent* Health;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UEnemyDropperComponent* Dropper;

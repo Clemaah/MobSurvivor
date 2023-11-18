@@ -13,5 +13,9 @@ UCLASS()
 class PROGGAMEPLAYPROTO_API AUpgradesManager : public AInfo
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	UPROPERTY(BlueprintReadOnly)
+	int NumberOfUpgrades = 3;
 };

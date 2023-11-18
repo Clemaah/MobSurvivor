@@ -8,6 +8,7 @@
 
 class UAbilityData;
 class AProgGameplayProtoCharacter;
+class AUpgradesManager;
 
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -26,6 +27,8 @@ protected:
 	UPROPERTY()
 	TObjectPtr<AProgGameplayProtoCharacter> Character;
 
+	TObjectPtr<AUpgradesManager> UpgradesManager;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -38,18 +41,20 @@ public:
 
 	virtual void SetData(UAbilityData* Data) { AbilityData = Data; }
 
+	virtual void UpdateAbility();
+
 	virtual float GetMaxHealth();
 	virtual float GetRegenerationRate();
 	virtual float GetDropChance();
 	virtual float GetDropMultiplier();
-	virtual float GetPickUpDistance();
-	virtual int GetUpgradesNumber();
+	virtual float GetDropCollectorRadius();
+	virtual int GetNumberOfUpgrades();
 
 public:
 	float BonusMaxHealth = 0;
 	float BonusRegenerationRate = 0;
 	float BonusDropChance = 0;
 	float BonusDropMultiplier = 0;
-	float BonusPickUpDistance = 0;
-	int BonusUpgradesNumber = 0;
+	float BonusDropCollectorRadius = 0;
+	int BonusNumberOfUpgrades = 0;
 };

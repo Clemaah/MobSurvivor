@@ -51,8 +51,10 @@ void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent*
 	Ability->BonusRegenerationRate += BonusRegenerationRate;
 	Ability->BonusDropChance += BonusDropChance;
 	Ability->BonusDropMultiplier += BonusDropMultiplier;
-	Ability->BonusPickUpDistance += BonusPickUpDistance;
-	Ability->BonusUpgradesNumber += BonusUpgradesNumber;
+	Ability->BonusDropCollectorRadius += BonusDropCollectorRadius;
+	Ability->BonusNumberOfUpgrades += BonusNumberOfUpgrades;
+
+	Ability->UpdateAbility();
 }
 
 void UBonusData::ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)

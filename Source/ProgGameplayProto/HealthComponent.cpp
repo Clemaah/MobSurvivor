@@ -1,27 +1,26 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Health.h"
+#include "HealthComponent.h"
 
 #include "Weapons/WeaponProjectile.h"
 
 
-void UHealth::BeginPlay()
+void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	PrimaryComponentTick.bCanEverTick = false;
 }
 
 // Called every frame
-void UHealth::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	TryRegenerate(DeltaTime);
+	if (RegenerationRate > 0)
+		TryRegenerate(DeltaTime);
 }
 
-void UHealth::InitializeHealth(float NewMaxHealth, float NewRegenerationRate)
+void UHealthComponent::InitializeHealth(float NewMaxHealth, float NewRegenerationRate)
 {
 	SetMaxHealth(NewMaxHealth);
 
@@ -30,7 +29,7 @@ void UHealth::InitializeHealth(float NewMaxHealth, float NewRegenerationRate)
 	SetRegenerationRate(NewRegenerationRate);
 }
 
-void UHealth::TryRegenerate(float DeltaTime)
+void UHealthComponent::TryRegenerate(float DeltaTime)
 {
 	TimeElapsedSinceLastRegeneration += DeltaTime;
 
@@ -42,7 +41,7 @@ void UHealth::TryRegenerate(float DeltaTime)
 	}
 }
 
-void UHealth::HitByProjectile(AWeaponProjectile* Projectile)
+void UHealthComponent::HitByProjectile(AWeaponProjectile* Projectile)
 {
 	Super::HitByProjectile(Projectile);
 
@@ -51,12 +50,12 @@ void UHealth::HitByProjectile(AWeaponProjectile* Projectile)
 	AddHealth(-damages);
 }
 
-void UHealth::HitByAttack(float Damages, AActor* Attacker)
+void UHealthComponent::HitByAttack(float Damages, AActor* Attacker)
 {
 	AddHealth(-Damages);
 }
 
-void UHealth::AddHealth(float Amount)
+void UHealthComponent::AddHealth(float Amount)
 {
 	if (CurrentHealth == MaxHealth && Amount >= 0) return;
 
@@ -66,26 +65,14 @@ void UHealth::AddHealth(float Amount)
 	if (CurrentHealth == 0) Die();
 }
 
-void UHealth::SetMaxHealth(float NewMaxHealth)
-{
-	MaxHealth = NewMaxHealth;
-}
-
-void UHealth::SetRegenerationRate(float NewRegenerationRate)
-{
-	RegenerationRate = NewRegenerationRate;
-
-	PrimaryComponentTick.bCanEverTick = (RegenerationRate > 0);
-}
-
-void UHealth::Die()
+void UHealthComponent::Die()
 {
 	OnBeforeHealthDie.Broadcast();
 
 	OnHealthDie.Broadcast();
 }
 
-float UHealth::GetCurrentHealthPercentage()
+float UHealthComponent::GetCurrentHealthPercentage()
 {
 	float output = CurrentHealth / MaxHealth;
 

@@ -5,7 +5,7 @@
 
 #include "Components/CapsuleComponent.h"
 #include "ProgGameplayProto/GameUtils.h"
-#include "ProgGameplayProto/Health.h"
+#include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"
 
@@ -18,7 +18,7 @@ AEnemy::AEnemy()
 	Collision = CreateDefaultSubobject<UCapsuleComponent>("Collision");
 	SetRootComponent(Collision);
 
-	Health = CreateDefaultSubobject<UHealth>("Health");
+	Health = CreateDefaultSubobject<UHealthComponent>("Health");
 
 	Dropper = CreateDefaultSubobject<UEnemyDropperComponent>("Dropper");
 	Dropper->SetupAttachment(Collision);
@@ -71,7 +71,7 @@ void AEnemy::TryAttacking(AActor* Target)
 {
 	if (!Target->IsA(AProgGameplayProtoCharacter::StaticClass())) return;
 
-	UHealth* targetHealth = Target->FindComponentByClass<UHealth>();
+	UHealthComponent* targetHealth = Target->FindComponentByClass<UHealthComponent>();
 
 	if (!IsValid(targetHealth)) return;
 

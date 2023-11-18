@@ -28,8 +28,8 @@ public:
 	float DropMultiplier = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
-	float PickUpDistance = 100;
+	float DropCollectorRadius = 100;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Upgrade")
-	int UpgradesNumber = 3;
+	int NumberOfUpgrades = 3;
 };

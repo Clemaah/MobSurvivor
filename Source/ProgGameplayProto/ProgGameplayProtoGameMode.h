@@ -28,6 +28,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	ABonusManager* BonusManager;
 
+	UPROPERTY(BlueprintReadOnly)
+	AUpgradesManager* UpgradesManager;
+
 protected:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 };
