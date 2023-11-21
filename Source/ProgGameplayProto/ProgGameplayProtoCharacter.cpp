@@ -18,7 +18,7 @@
 #include "Components/SphereComponent.h"
 #include "Drops/Drop.h"
 #include "Weapons/WeaponComponent.h"
-#include "Abilities/AbilityComponent.h"
+#include "Abilities/AbilitiesComponent.h"
 #include "Logging/StructuredLog.h"
 #include "Weapons/WeaponData.h"
 #include "Weapons/WeaponProjectile.h"
@@ -68,7 +68,7 @@ AProgGameplayProtoCharacter::AProgGameplayProtoCharacter()
 
 	Weapon = CreateDefaultSubobject<UWeaponComponent>("Weapon");
 
-	Ability = CreateDefaultSubobject<UAbilityComponent>("Ability");
+	Abilities = CreateDefaultSubobject<UAbilitiesComponent>("Abilities");
 
 	Health = CreateDefaultSubobject<UHealthComponent>("Health");
 
@@ -87,11 +87,11 @@ bool AProgGameplayProtoCharacter::WantsToShoot()
 void AProgGameplayProtoCharacter::SetupDefaultComponents()
 {
 	SetupDefaultWeapon();
-	SetupDefaultAbility();
+	SetupDefaultAbilities();
 
 	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
 	{
-		DefaultBonuses[i]->Apply(this, Weapon, Ability);
+		DefaultBonuses[i]->Apply(this, Weapon, Abilities);
 	}
 }
 
@@ -101,10 +101,10 @@ void AProgGameplayProtoCharacter::SetupDefaultWeapon()
 	Weapon->InitializeWeapon(this);
 }
 
-void AProgGameplayProtoCharacter::SetupDefaultAbility()
+void AProgGameplayProtoCharacter::SetupDefaultAbilities()
 {
-	Ability->SetData(DefaultAbilityData);
-	Ability->InitializeAbility(this);
+	Abilities->SetData(DefaultAbilitiesData);
+	Abilities->InitializeAbilities(this);
 }
 
 void AProgGameplayProtoCharacter::BeginPlay()

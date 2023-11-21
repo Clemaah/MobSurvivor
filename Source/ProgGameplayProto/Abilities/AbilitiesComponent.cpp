@@ -1,17 +1,17 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AbilityComponent.h"
+#include "AbilitiesComponent.h"
 
 #include "Kismet/GameplayStatics.h"
-#include "ProgGameplayProto/Abilities/AbilityData.h"
+#include "ProgGameplayProto/Abilities/AbilitiesData.h"
 #include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/ProgGameplayProtoGameMode.h"
 #include "ProgGameplayProto/UpgradesManager.h"
 
 // Sets default values for this component's properties
-UAbilityComponent::UAbilityComponent()
+UAbilitiesComponent::UAbilitiesComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -22,7 +22,7 @@ UAbilityComponent::UAbilityComponent()
 
 
 // Called when the game starts
-void UAbilityComponent::BeginPlay()
+void UAbilitiesComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -32,14 +32,14 @@ void UAbilityComponent::BeginPlay()
 
 
 // Called every frame
-void UAbilityComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UAbilitiesComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
-void UAbilityComponent::InitializeAbility(AProgGameplayProtoCharacter* NewCharacter)
+void UAbilitiesComponent::InitializeAbilities(AProgGameplayProtoCharacter* NewCharacter)
 {
 	Character = NewCharacter;
 	Character->GetHealth()->InitializeHealth(GetMaxHealth(), GetRegenerationRate());
@@ -47,7 +47,7 @@ void UAbilityComponent::InitializeAbility(AProgGameplayProtoCharacter* NewCharac
 	UpgradesManager->NumberOfUpgrades = GetNumberOfUpgrades();
 }
 
-void UAbilityComponent::UpdateAbility()
+void UAbilitiesComponent::UpdateAbilities()
 {
 	Character->GetHealth()->SetMaxHealth(GetMaxHealth());
 	Character->GetHealth()->SetRegenerationRate(GetRegenerationRate());
@@ -57,56 +57,56 @@ void UAbilityComponent::UpdateAbility()
 	//Character->(GetDropMultiplier());
 }
 
-float UAbilityComponent::GetMaxHealth()
+float UAbilitiesComponent::GetMaxHealth()
 {
-	if (!IsValid(AbilityData)) return 0.0f;
+	if (!IsValid(AbilitiesData)) return 0.0f;
 
-	float value = FMath::Clamp(AbilityData->MaxHealth + BonusMaxHealth, 10, 200);
+	float value = FMath::Clamp(AbilitiesData->MaxHealth + BonusMaxHealth, 10, 200);
 
 	return value;
 }
 
-float UAbilityComponent::GetRegenerationRate()
+float UAbilitiesComponent::GetRegenerationRate()
 {
-	if (!IsValid(AbilityData)) return 0.0f;
+	if (!IsValid(AbilitiesData)) return 0.0f;
 
-	float value = FMath::Clamp(AbilityData->RegenerationRate + BonusRegenerationRate, 0, 1);
+	float value = FMath::Clamp(AbilitiesData->RegenerationRate + BonusRegenerationRate, 0, 1);
 
 	return value;
 }
 
-float UAbilityComponent::GetDropChance()
+float UAbilitiesComponent::GetDropChance()
 {
-	if (!IsValid(AbilityData)) return 0.0f;
+	if (!IsValid(AbilitiesData)) return 0.0f;
 
-	float value = FMath::Clamp(AbilityData->DropChance + BonusDropChance, 1, 100);
+	float value = FMath::Clamp(AbilitiesData->DropChance + BonusDropChance, 1, 100);
 
 	return value;
 }
 
-float UAbilityComponent::GetDropMultiplier()
+float UAbilitiesComponent::GetDropMultiplier()
 {
-	if (!IsValid(AbilityData)) return 0.0f;
+	if (!IsValid(AbilitiesData)) return 0.0f;
 
-	float value = FMath::Clamp(AbilityData->DropMultiplier + BonusDropMultiplier, 1, 5);
+	float value = FMath::Clamp(AbilitiesData->DropMultiplier + BonusDropMultiplier, 1, 5);
 
 	return value;
 }
 
-float UAbilityComponent::GetDropCollectorRadius()
+float UAbilitiesComponent::GetDropCollectorRadius()
 {
-	if (!IsValid(AbilityData)) return 0.0f;
+	if (!IsValid(AbilitiesData)) return 0.0f;
 
-	float value = FMath::Clamp(AbilityData->DropCollectorRadius + BonusDropCollectorRadius, 50, 300);
+	float value = FMath::Clamp(AbilitiesData->DropCollectorRadius + BonusDropCollectorRadius, 50, 300);
 
 	return value;
 }
 
-int UAbilityComponent::GetNumberOfUpgrades()
+int UAbilitiesComponent::GetNumberOfUpgrades()
 {
-	if (!IsValid(AbilityData)) return 0.0f;
+	if (!IsValid(AbilitiesData)) return 0.0f;
 
-	int value = FMath::Clamp(AbilityData->NumberOfUpgrades + BonusNumberOfUpgrades, 1, 5);
+	int value = FMath::Clamp(AbilitiesData->NumberOfUpgrades + BonusNumberOfUpgrades, 1, 5);
 
 	return value;
 }

@@ -4,25 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "AbilityComponent.generated.h"
+#include "AbilitiesComponent.generated.h"
 
-class UAbilityData;
+class UAbilitiesData;
 class AProgGameplayProtoCharacter;
 class AUpgradesManager;
 
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class PROGGAMEPLAYPROTO_API UAbilityComponent : public UActorComponent
+class PROGGAMEPLAYPROTO_API UAbilitiesComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UAbilityComponent();
+	UAbilitiesComponent();
 
 protected:
 	UPROPERTY()
-	TObjectPtr<UAbilityData> AbilityData;
+	TObjectPtr<UAbilitiesData> AbilitiesData;
 
 	UPROPERTY()
 	TObjectPtr<AProgGameplayProtoCharacter> Character;
@@ -37,11 +37,11 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void InitializeAbility(AProgGameplayProtoCharacter* NewCharacter);
+	virtual void InitializeAbilities(AProgGameplayProtoCharacter* NewCharacter);
 
-	virtual void SetData(UAbilityData* Data) { AbilityData = Data; }
+	virtual void SetData(UAbilitiesData* Data) { AbilitiesData = Data; }
 
-	virtual void UpdateAbility();
+	virtual void UpdateAbilities();
 
 	virtual float GetMaxHealth();
 	virtual float GetRegenerationRate();

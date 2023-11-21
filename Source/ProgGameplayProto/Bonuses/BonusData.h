@@ -9,7 +9,7 @@
 class UProjectileEffect;
 class AProgGameplayProtoCharacter;
 class UWeaponComponent;
-class UAbilityComponent;
+class UAbilitiesComponent;
 /**
  *
  */
@@ -83,29 +83,29 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
 	float BonusCriticalHitDamageMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Health")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Health")
 	float BonusMaxHealth = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Health")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Health")
 	float BonusRegenerationRate = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Drop")
 	float BonusDropChance = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Drop")
 	float BonusDropMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Drop")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Drop")
 	float BonusDropCollectorRadius = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability Data|Upgrade")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Upgrade")
 	int BonusNumberOfUpgrades = 0;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void ApplyOnMainCharacter();
 
-	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilityComponent* Ability);
+	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilitiesComponent* Abilities);
 
 	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 };

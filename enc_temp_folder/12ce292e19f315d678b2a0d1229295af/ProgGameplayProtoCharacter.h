@@ -19,7 +19,7 @@ class UInputAction;
 class UWeaponComponent;
 class UWeaponData;
 class AWeaponProjectile;
-class UAbilitiesComponent;
+class UCharacterAbilitiesComponent;
 class UAbilitiesData;
 struct FInputActionValue;
 
@@ -85,7 +85,7 @@ protected:
 	UWeaponData* DefaultWeaponData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
-	UAbilitiesData* DefaultAbilitiesData;
+	UCharacterAbilitiesData* DefaultAbilitiesData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UHealthComponent* Health;
@@ -97,7 +97,7 @@ protected:
 	UWeaponComponent* Weapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UAbilitiesComponent* Abilities;
+	UCharacterAbilitiesComponent* Abilities;
 
 	bool bIsHoldingShoot = false;
 	bool bIsAutoFire = false;
@@ -140,7 +140,7 @@ public:
 
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
 
-	FORCEINLINE UAbilitiesComponent* GetAbilities() const { return Abilities; }
+	FORCEINLINE UCharacterAbilitiesComponent* GetAbilities() const { return Abilities; }
 
 	FORCEINLINE void SetDropCollectorRadius(float NewRadius) const { DropsCollector->SetSphereRadius(NewRadius); }
 };

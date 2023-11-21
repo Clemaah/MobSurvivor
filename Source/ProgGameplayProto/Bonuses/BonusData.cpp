@@ -7,7 +7,7 @@
 #include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
-#include "ProgGameplayProto/Abilities/AbilityComponent.h"
+#include "ProgGameplayProto/Abilities/AbilitiesComponent.h"
 
 void UBonusData::ApplyOnMainCharacter()
 {
@@ -17,13 +17,13 @@ void UBonusData::ApplyOnMainCharacter()
 	UWeaponComponent* weapon = mainCharacter->GetWeapon();
 	if (!IsValid(weapon)) return;
 
-	UAbilityComponent* ability = mainCharacter->GetAbility();
-	if (!IsValid(ability)) return;
+	UAbilitiesComponent* abilities = mainCharacter->GetAbilities();
+	if (!IsValid(abilities)) return;
 
-	Apply(mainCharacter, weapon, ability);
+	Apply(mainCharacter, weapon, abilities);
 }
 
-void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilityComponent* Ability)
+void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilitiesComponent* Abilities)
 {
 	ApplyEffects(Character, Weapon);
 
@@ -47,14 +47,14 @@ void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent*
 	Weapon->BonusCriticalHitChanceMultiplier += BonusCriticalHitChanceMultiplier;
 	Weapon->BonusCriticalHitDamageMultiplier += BonusCriticalHitDamageMultiplier;
 
-	Ability->BonusMaxHealth += BonusMaxHealth;
-	Ability->BonusRegenerationRate += BonusRegenerationRate;
-	Ability->BonusDropChance += BonusDropChance;
-	Ability->BonusDropMultiplier += BonusDropMultiplier;
-	Ability->BonusDropCollectorRadius += BonusDropCollectorRadius;
-	Ability->BonusNumberOfUpgrades += BonusNumberOfUpgrades;
+	Abilities->BonusMaxHealth += BonusMaxHealth;
+	Abilities->BonusRegenerationRate += BonusRegenerationRate;
+	Abilities->BonusDropChance += BonusDropChance;
+	Abilities->BonusDropMultiplier += BonusDropMultiplier;
+	Abilities->BonusDropCollectorRadius += BonusDropCollectorRadius;
+	Abilities->BonusNumberOfUpgrades += BonusNumberOfUpgrades;
 
-	Ability->UpdateAbility();
+	Abilities->UpdateAbilities();
 }
 
 void UBonusData::ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
