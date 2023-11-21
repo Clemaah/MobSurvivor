@@ -19,8 +19,8 @@ class UInputAction;
 class UWeaponComponent;
 class UWeaponData;
 class AWeaponProjectile;
-class UAbilitiesComponent;
-class UAbilitiesData;
+class UPersonaComponent;
+class UPersonaData;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
@@ -65,27 +65,28 @@ public:
 
 	static AProgGameplayProtoCharacter* Instance;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Persona")
 	TSubclassOf<AWeaponProjectile> WeaponProjectileToSpawn;
 
 	virtual bool WantsToShoot();
 
 	void SetupDefaultComponents();
 	void SetupDefaultWeapon();
-	void SetupDefaultAbilities();
+	void SetupDefaultPersona();
+	void SetupDefaultHealth();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Persona")
 	USphereComponent* DropsCollector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Persona")
 	TArray<UBonusData*> DefaultBonuses;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Persona")
 	UWeaponData* DefaultWeaponData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Abilities")
-	UAbilitiesData* DefaultAbilitiesData;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Persona")
+	UPersonaData* DefaultPersonaData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UHealthComponent* Health;
@@ -97,7 +98,7 @@ protected:
 	UWeaponComponent* Weapon;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UAbilitiesComponent* Abilities;
+	UPersonaComponent* Persona;
 
 	bool bIsHoldingShoot = false;
 	bool bIsAutoFire = false;
@@ -140,7 +141,7 @@ public:
 
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
 
-	FORCEINLINE UAbilitiesComponent* GetAbilities() const { return Abilities; }
+	FORCEINLINE UPersonaComponent* GetPersona() const { return Persona; }
 
 	FORCEINLINE void SetDropCollectorRadius(float NewRadius) const { DropsCollector->SetSphereRadius(NewRadius); }
 };

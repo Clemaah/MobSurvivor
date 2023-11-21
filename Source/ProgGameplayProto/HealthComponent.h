@@ -29,8 +29,6 @@ protected:
 
 	float TimeElapsedSinceLastRegeneration = 0;
 
-	virtual void BeginPlay() override;
-
 public:
 	UPROPERTY()
 	FOnHealthDie OnBeforeHealthDie;
@@ -42,7 +40,6 @@ public:
 	FOnHealthChanged OnHealthChanged;
 
 public:
-	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void InitializeHealth(float maxHealth = 10, float RegenerationRate = 0);

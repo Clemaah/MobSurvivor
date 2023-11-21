@@ -6,9 +6,13 @@
 #include "Weapons/WeaponProjectile.h"
 
 
-void UHealthComponent::BeginPlay()
+void UHealthComponent::InitializeHealth(float NewMaxHealth, float NewRegenerationRate)
 {
-	Super::BeginPlay();
+	SetMaxHealth(NewMaxHealth);
+
+	CurrentHealth = MaxHealth;
+
+	SetRegenerationRate(NewRegenerationRate);
 }
 
 // Called every frame
@@ -18,15 +22,6 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 	if (RegenerationRate > 0)
 		TryRegenerate(DeltaTime);
-}
-
-void UHealthComponent::InitializeHealth(float NewMaxHealth, float NewRegenerationRate)
-{
-	SetMaxHealth(NewMaxHealth);
-
-	CurrentHealth = MaxHealth;
-
-	SetRegenerationRate(NewRegenerationRate);
 }
 
 void UHealthComponent::TryRegenerate(float DeltaTime)

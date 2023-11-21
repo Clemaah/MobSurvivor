@@ -9,7 +9,7 @@
 class UProjectileEffect;
 class AProgGameplayProtoCharacter;
 class UWeaponComponent;
-class UAbilitiesComponent;
+class UPersonaComponent;
 /**
  *
  */
@@ -83,29 +83,32 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
 	float BonusCriticalHitDamageMultiplier = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Health")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Health")
 	float BonusMaxHealth = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Health")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Health")
 	float BonusRegenerationRate = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Drop")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
 	float BonusDropChance = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Drop")
-	float BonusDropMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Drop")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
 	float BonusDropCollectorRadius = 0;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Abilities Data|Upgrade")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
+	float BonusCoinMultiplier = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
+	float BonusExperienceMultiplier = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Upgrade")
 	int BonusNumberOfUpgrades = 0;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void ApplyOnMainCharacter();
 
-	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilitiesComponent* Abilities);
+	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UPersonaComponent* Persona);
 
 	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 };

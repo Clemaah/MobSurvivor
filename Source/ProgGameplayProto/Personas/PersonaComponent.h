@@ -4,49 +4,50 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
-#include "AbilitiesComponent.generated.h"
+#include "PersonaComponent.generated.h"
 
-class UAbilitiesData;
+class UPersonaData;
 class AProgGameplayProtoCharacter;
 class AUpgradesManager;
 
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class PROGGAMEPLAYPROTO_API UAbilitiesComponent : public UActorComponent
+class PROGGAMEPLAYPROTO_API UPersonaComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:
 	// Sets default values for this component's properties
-	UAbilitiesComponent();
+	UPersonaComponent();
 
 protected:
 	UPROPERTY()
-	TObjectPtr<UAbilitiesData> AbilitiesData;
+	TObjectPtr<UPersonaData> PersonaData;
 
 	UPROPERTY()
 	TObjectPtr<AProgGameplayProtoCharacter> Character;
 
-	TObjectPtr<AUpgradesManager> UpgradesManager;
+	TObjectPtr<AUpgradesManager> UpgradesManager; // A modifier
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void InitializeAbilities(AProgGameplayProtoCharacter* NewCharacter);
+	virtual void InitializePersona(AProgGameplayProtoCharacter* NewCharacter);
 
-	virtual void SetData(UAbilitiesData* Data) { AbilitiesData = Data; }
+	virtual void SetData(UPersonaData* Data) { PersonaData = Data; }
 
-	virtual void UpdateAbilities();
+	virtual void UpdatePersona();
 
 	virtual float GetMaxHealth();
 	virtual float GetRegenerationRate();
 	virtual float GetDropChance();
-	virtual float GetDropMultiplier();
+	virtual float GetCoinMultiplier();
+	virtual float GetExperienceMultiplier();
 	virtual float GetDropCollectorRadius();
 	virtual int GetNumberOfUpgrades();
 
@@ -54,7 +55,8 @@ public:
 	float BonusMaxHealth = 0;
 	float BonusRegenerationRate = 0;
 	float BonusDropChance = 0;
-	float BonusDropMultiplier = 0;
+	float BonusCoinMultiplier = 0;
+	float BonusExperienceMultiplier = 0;
 	float BonusDropCollectorRadius = 0;
 	int BonusNumberOfUpgrades = 0;
 };

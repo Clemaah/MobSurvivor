@@ -5,9 +5,9 @@
 #include "ProgGameplayProto/Effects/BounceEffect.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
 
-void UBounceBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UAbilitiesComponent* Abilities)
+void UBounceBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UPersonaComponent* Persona)
 {
-	Super::Apply(Character, Weapon, Abilities);
+	Super::Apply(Character, Weapon, Persona);
 
 	UBounceEffect* effect = NewObject<UBounceEffect>(this, BounceEffect);
 	effect->NumberOfAdditionalBounces = NumberOfBounces;
