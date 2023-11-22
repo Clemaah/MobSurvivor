@@ -25,6 +25,6 @@ public:
 	UPROPERTY(EditAnywhere)
 	TArray<FRangeEnemySpawnRule> RangeSpawnRules;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TArray<UBonusData*> Bonuses;
 };

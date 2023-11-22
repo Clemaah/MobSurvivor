@@ -9,16 +9,16 @@
 /**
  * 
  */
-UCLASS()
-class PROGGAMEPLAYPROTO_API UPersonaData : public UDataAsset
+UCLASS(BlueprintType)
+class PROGGAMEPLAYPROTO_API UPersonaData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Nom")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Meta")
 	FText Name;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (MultiLine = true), Category = "Persona Data|Description")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Meta", meta = (MultiLine = true))
 	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Health")

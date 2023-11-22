@@ -19,6 +19,7 @@ public:
 	AProgGameplayProtoGameMode();
 
 public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UGameLevelData* GameLevelData;
 
