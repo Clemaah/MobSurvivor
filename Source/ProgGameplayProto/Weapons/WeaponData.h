@@ -9,12 +9,18 @@
 /**
  *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class PROGGAMEPLAYPROTO_API UWeaponData : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Meta")
+	FText Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Meta", meta = (MultiLine = true))
+	FText Description;
+
 	//number of shots / seconds
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
 	float FireRate = 1;
@@ -50,16 +56,16 @@ public:
 	float DamagesMultiplier = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float ProjectileSize = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float ProjectileSizeMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float Range = 700;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float RangeMultiplier = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
+	float ProjectileSize = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
+	float ProjectileSizeMultiplier = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
 	float ProjectileSpeed = 1000;

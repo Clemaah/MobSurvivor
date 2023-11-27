@@ -70,10 +70,7 @@ public:
 
 	virtual bool WantsToShoot();
 
-	void SetupDefaultComponents();
-	void SetupDefaultWeapon();
-	void SetupDefaultPersona();
-	void SetupDefaultHealth();
+	void SetupComponents();
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Persona")
@@ -87,6 +84,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons & Persona")
 	UPersonaData* DefaultPersonaData;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Weapons & Persona")
+	UWeaponData* SelectedWeaponData;
+
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, Category = "Weapons & Persona")
+	UPersonaData* SelectedPersonaData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UHealthComponent* Health;

@@ -29,8 +29,10 @@ void UPersonaComponent::BeginPlay()
 	UpgradesManager = Cast<AProgGameplayProtoGameMode, AGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()))->UpgradesManager;
 }
 
-void UPersonaComponent::InitializePersona(AProgGameplayProtoCharacter* NewCharacter)
+void UPersonaComponent::InitializePersona(AProgGameplayProtoCharacter* NewCharacter, UPersonaData* Data)
 {
+	PersonaData = Data;
+
 	Character = NewCharacter;
 	Character->GetHealth()->InitializeHealth(GetMaxHealth(), GetRegenerationRate());
 	Character->SetDropCollectorRadius(GetDropCollectorRadius());

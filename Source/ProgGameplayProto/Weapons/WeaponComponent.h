@@ -20,13 +20,10 @@ public:
 	UWeaponComponent();
 
 protected:
-	UPROPERTY()
 	TObjectPtr<UWeaponData> WeaponData;
 
-	UPROPERTY()
 	TObjectPtr<AProgGameplayProtoCharacter> Character;
 
-	UPROPERTY()
 	TArray<UProjectileEffect*> Effects;
 
 	float TimeElapsedSinceLastShoot = 0;
@@ -57,11 +54,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter);
+	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Data);
 
 	virtual void TryShooting(float DeltaTime);
-
-	virtual void SetData(UWeaponData* Data) { WeaponData = Data; }
 
 	virtual void AddEffect(UProjectileEffect* Effect);
 

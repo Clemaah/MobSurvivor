@@ -35,8 +35,9 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	TryShooting(DeltaTime);
 }
 
-void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter)
+void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Data)
 {
+	WeaponData = Data;
 	Character = NewCharacter;
 }
 

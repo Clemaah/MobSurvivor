@@ -21,10 +21,8 @@ public:
 	UPersonaComponent();
 
 protected:
-	UPROPERTY()
 	TObjectPtr<UPersonaData> PersonaData;
 
-	UPROPERTY()
 	TObjectPtr<AProgGameplayProtoCharacter> Character;
 
 	TObjectPtr<AUpgradesManager> UpgradesManager; // A modifier
@@ -37,9 +35,8 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void InitializePersona(AProgGameplayProtoCharacter* NewCharacter);
+	virtual void InitializePersona(AProgGameplayProtoCharacter* NewCharacter, UPersonaData* Data);
 
-	virtual void SetData(UPersonaData* Data) { PersonaData = Data; }
 
 	virtual void UpdatePersona();
 

@@ -73,34 +73,7 @@ AProgGameplayProtoCharacter::AProgGameplayProtoCharacter()
 	DropsCollector = CreateDefaultSubobject<USphereComponent>("Drops Collector");
 	DropsCollector->SetRelativeLocation(FVector(0, 0, -90));
 	DropsCollector->SetupAttachment(GetCapsuleComponent());
-}
 
-bool AProgGameplayProtoCharacter::WantsToShoot()
-{
-	return bIsHoldingShoot || bIsAutoFire;
-}
-
-void AProgGameplayProtoCharacter::SetupDefaultComponents()
-{
-	SetupDefaultWeapon();
-	SetupDefaultPersona();
-
-	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
-	{
-		DefaultBonuses[i]->Apply(this, Weapon, Persona);
-	}
-}
-
-void AProgGameplayProtoCharacter::SetupDefaultWeapon()
-{
-	Weapon->SetData(DefaultWeaponData);
-	Weapon->InitializeWeapon(this);
-}
-
-void AProgGameplayProtoCharacter::SetupDefaultPersona()
-{
-	Persona->SetData(DefaultPersonaData);
-	Persona->InitializePersona(this);
 }
 
 void AProgGameplayProtoCharacter::BeginPlay()
@@ -119,10 +92,26 @@ void AProgGameplayProtoCharacter::BeginPlay()
 		}
 	}
 
-	//Setup Components
-	SetupDefaultComponents();
-
 	DropsCollector->OnComponentBeginOverlap.AddDynamic(this, &AProgGameplayProtoCharacter::OnDropsCollectorBeginOverlap);
+
+	//Setup Components
+	SetupComponents();
+}
+
+bool AProgGameplayProtoCharacter::WantsToShoot()
+{
+	return bIsHoldingShoot || bIsAutoFire;
+}
+
+void AProgGameplayProtoCharacter::SetupComponents()
+{
+	Weapon->InitializeWeapon(this, (SelectedWeaponData != nullptr) ? SelectedWeaponData : DefaultWeaponData);
+	Persona->InitializePersona(this, (SelectedPersonaData != nullptr) ? SelectedPersonaData : DefaultPersonaData);
+
+	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
+	{
+		DefaultBonuses[i]->Apply(this, Weapon, Persona);
+	}
 }
 
 void AProgGameplayProtoCharacter::Tick(float DeltaTime)
