@@ -23,5 +23,5 @@ protected:
 	int32 NumberOfBounces;
 
 public:
-	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UPersonaComponent* Persona) override;
+	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon) override;
 };

@@ -3,16 +3,16 @@
 
 #include "BounceEffect.h"
 
-#include "ProgGameplayProto/Weapons/WeaponProjectile.h"
+#include "ProgGameplayProto/Projectiles/Projectile.h"
 
-void UBounceEffect::RegisterProjectile(AWeaponProjectile* Projectile)
+void UBounceEffect::RegisterProjectile(AProjectile* Projectile)
 {
 	Super::RegisterProjectile(Projectile);
 
-	Projectile->NumberOfHitsBeforeDestroy += NumberOfAdditionalBounces;
+	Projectile->GetCharacteristics()->NumberOfHitsBeforeDestroy += NumberOfAdditionalBounces;
 }
 
-void UBounceEffect::OnProjectileHit(AWeaponProjectile* Projectile, FVector HitLocation, FVector OriginLocation)
+void UBounceEffect::OnProjectileHit(AProjectile* Projectile, FVector HitLocation, FVector OriginLocation)
 {
 	Super::OnProjectileHit(Projectile, HitLocation, OriginLocation);
 

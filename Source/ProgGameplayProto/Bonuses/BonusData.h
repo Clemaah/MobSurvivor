@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "ProgGameplayProto/Characters/CharacterCharacteristics.h"
+#include "ProgGameplayProto/Projectiles/ProjectileCharacteristics.h"
+#include "ProgGameplayProto/Weapons/WeaponCharacteristics.h"
 #include "BonusData.generated.h"
 
 class UProjectileEffect;
 class AProgGameplayProtoCharacter;
 class UWeaponComponent;
-class UPersonaComponent;
 /**
  *
  */
@@ -20,95 +22,29 @@ class PROGGAMEPLAYPROTO_API UBonusData : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (MultiLine = true))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true))
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true))
+	int MaxStack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Effects")
 	TArray<TSubclassOf<UProjectileEffect>> Effects;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusFireRate = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ShowOnlyInnerProperties))
+	FCharacterCharacteristics CharacterBonuses;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusFireRateMultiplier = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ShowOnlyInnerProperties))
+	FWeaponCharacteristics WeaponBonuses;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusNumberOfShots = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusNumberOfShotsMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusPrecision = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusPrecisionMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusSpread = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusSpreadMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusDamages = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float BonusDamagesMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float BonusProjectileSize = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float BonusProjectileSizeMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float BonusRange = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float BonusRangeMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float BonusProjectileSpeed = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float BonusProjectileSpeedMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
-	float BonusCriticalHitChance = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
-	float BonusCriticalHitChanceMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
-	float BonusCriticalHitDamageMultiplier = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Health")
-	float BonusMaxHealth = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Health")
-	float BonusRegenerationRate = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
-	float BonusDropChance = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
-	float BonusDropCollectorRadius = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
-	float BonusCoinMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Drop")
-	float BonusExperienceMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Persona Data|Upgrade")
-	int BonusNumberOfUpgrades = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ShowOnlyInnerProperties))
+	FProjectileCharacteristics ProjectileBonuses;
 
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void ApplyOnMainCharacter();
 
-	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UPersonaComponent* Persona);
+	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 
 	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 };

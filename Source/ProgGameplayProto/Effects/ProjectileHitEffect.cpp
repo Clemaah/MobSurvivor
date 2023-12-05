@@ -3,23 +3,23 @@
 
 #include "ProjectileHitEffect.h"
 
-#include "ProgGameplayProto/Weapons/WeaponProjectile.h"
+#include "ProgGameplayProto/Projectiles/Projectile.h"
 
-void UProjectileHitEffect::RegisterProjectile(AWeaponProjectile* Projectile)
+void UProjectileHitEffect::RegisterProjectile(AProjectile* Projectile)
 {
 	Super::RegisterProjectile(Projectile);
 
-	Projectile->OnProjectileHit.AddDynamic(this, &UProjectileHitEffect::OnProjectileHit);
+	Projectile->OnProjectileHitDelegate.AddDynamic(this, &UProjectileHitEffect::OnProjectileHit);
 }
 
-void UProjectileHitEffect::OnProjectileHit(AWeaponProjectile* Projectile, FVector HitLocation, FVector OriginLocation)
+void UProjectileHitEffect::OnProjectileHit(AProjectile* Projectile, FVector HitLocation, FVector OriginLocation)
 {
 
 }
 
-void UProjectileHitEffect::OnProjectileDestroy(AWeaponProjectile* Projectile)
+void UProjectileHitEffect::OnProjectileDestroy(AProjectile* Projectile)
 {
 	Super::OnProjectileDestroy(Projectile);
 
-	Projectile->OnProjectileHit.AddDynamic(this, &UProjectileHitEffect::OnProjectileHit);
+	Projectile->OnProjectileHitDelegate.AddDynamic(this, &UProjectileHitEffect::OnProjectileHit);
 }

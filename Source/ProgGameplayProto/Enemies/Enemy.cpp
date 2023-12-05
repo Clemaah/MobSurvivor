@@ -6,7 +6,7 @@
 #include "Components/CapsuleComponent.h"
 #include "ProgGameplayProto/GameUtils.h"
 #include "ProgGameplayProto/HealthComponent.h"
-#include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"
 
 // Sets default values

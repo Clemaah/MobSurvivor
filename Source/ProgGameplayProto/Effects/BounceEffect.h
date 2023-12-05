@@ -18,7 +18,7 @@ public:
 	int32 NumberOfAdditionalBounces;
 
 public:
-	virtual void RegisterProjectile(AWeaponProjectile* Projectile) override;
+	virtual void RegisterProjectile(AProjectile* Projectile) override;
 
-	virtual void OnProjectileHit(AWeaponProjectile* Projectile, FVector HitLocation, FVector OriginLocation) override;
+	virtual void OnProjectileHit(AProjectile* Projectile, FVector HitLocation, FVector OriginLocation) override;
 };

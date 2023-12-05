@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WeaponCharacteristics.h"
 #include "Engine/DataAsset.h"
 #include "WeaponData.generated.h"
 
@@ -15,71 +16,23 @@ class PROGGAMEPLAYPROTO_API UWeaponData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Meta")
-	FText Name;
+	UWeaponData();
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Meta", meta = (MultiLine = true))
+	UFUNCTION(BlueprintCallable)
+	TMap<FString, float> GetMap(const int Level);
+
+	UFUNCTION(BlueprintCallable)
+	FWeaponCharacteristics GetLevelCharacteristics(const int Level);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
+	FString Name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta", Meta = (MultiLine = true))
 	FText Description;
 
-	//number of shots / seconds
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float FireRate = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
+	TArray<FWeaponCharacteristics> Levels;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float FireRateMultiplier = 1;
-
-	//roudned to nearest integer
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float NumberOfShots = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float NumberOfShotsMultiplier = 1;
-
-	//1 is 100% precise, 0 can have a variation of direction up to 30 degrees
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float Precision = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float PrecisionMultiplier = 1;
-
-	//spread in degrees, unclamped
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float Spread;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float SpreadMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float Damages = 10;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|General")
-	float DamagesMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float Range = 700;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float RangeMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float ProjectileSize = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float ProjectileSizeMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float ProjectileSpeed = 1000;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Projectile")
-	float ProjectileSpeedMultiplier = 1;
-
-	//0 is 0%, 1 is 100%
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
-	float CriticalHitChance = 0.025f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
-	float CriticalHitChanceMultiplier = 1;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Data|Criticals")
-	float CriticalHitDamageMultiplier = 2;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder))
+	TArray<int> LevelsPrice;
 };

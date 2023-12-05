@@ -4,8 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
-#include "Iris/Core/IrisProfiler.h"
 #include "DropperComponent.generated.h"
+
+class ADrop;
+
+UENUM(BlueprintType)
+enum EDropType { Coin, Experience, Upgrade };
 
 USTRUCT(BlueprintType)
 struct FDropAndWeight
@@ -14,10 +18,16 @@ struct FDropAndWeight
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<AActor> ObjectToSpawn;
+	TSubclassOf<ADrop> ObjectToSpawn;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Weight;
+	TEnumAsByte<EDropType> Type;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector2D NumberOfDropsRange;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Meta = (ClampMin = 0, ClampMax = 100))
+	float ChanceToDrop;
 };
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
@@ -33,22 +43,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FDropAndWeight> Drops;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector2D NumberOfDropsRange;
-
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	virtual AActor* SpawnWeightedDrop();
-
-	virtual int32 GetWeightedIndex();
-
 	virtual FVector GetRandomSpawnLocation();
 
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
 	virtual void Drop();
 };

@@ -15,10 +15,10 @@ class PROGGAMEPLAYPROTO_API UProjectileHitEffect : public UProjectileEffect
 	GENERATED_BODY()
 
 public:
-	virtual void RegisterProjectile(AWeaponProjectile* Projectile) override;
+	virtual void RegisterProjectile(AProjectile* Projectile) override;
 
 	UFUNCTION()
-	virtual void OnProjectileHit(AWeaponProjectile* Projectile, FVector HitLocation, FVector OriginLocation);
+	virtual void OnProjectileHit(AProjectile* Projectile, FVector HitLocation, FVector OriginLocation);
 
-	virtual void OnProjectileDestroy(AWeaponProjectile* Projectile) override;
+	virtual void OnProjectileDestroy(AProjectile* Projectile) override;
 };

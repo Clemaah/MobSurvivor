@@ -6,9 +6,9 @@
 #include "Components/ActorComponent.h"
 #include "ProjectileInteraction.generated.h"
 
-class AWeaponProjectile;
+class AProjectile;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitDelegate, AWeaponProjectile*, Projectile);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitDelegate, AProjectile*, Projectile);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROGGAMEPLAYPROTO_API UProjectileInteraction : public UActorComponent
@@ -27,7 +27,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void HitByProjectile(AWeaponProjectile* Projectile);
+	virtual void HitByProjectile(AProjectile* Projectile);
 
 	UPROPERTY(BlueprintAssignable)
 	FHitDelegate OnHitByProjectile;

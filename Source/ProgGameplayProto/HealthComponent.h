@@ -42,20 +42,22 @@ public:
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void InitializeHealth(float maxHealth = 10, float RegenerationRate = 0);
+	virtual void InitializeHealth(float NewMaxHealth = 10, float NewRegenerationRate = 0);
 
 	virtual void TryRegenerate(float DeltaTime);
 
-	virtual void HitByProjectile(AWeaponProjectile* Projectile) override;
+	virtual void HitByProjectile(AProjectile* Projectile) override;
 
 	virtual void HitByAttack(float Damages, AActor* Attacker);
 
 	virtual void AddHealth(float Amount);
 
+	virtual void RestoreFullHealth();
+
 	virtual void Die();
 
-	virtual void SetMaxHealth(float NewMaxHealth) { MaxHealth = NewMaxHealth; }
-	virtual void SetRegenerationRate(float NewRegenerationRate) { RegenerationRate = NewRegenerationRate; }
+	virtual void SetMaxHealth(float NewMaxHealth);
+	virtual void SetRegenerationRate(float NewRegenerationRate);
 
 	virtual float GetMaxHealth() { return MaxHealth; }
 	virtual float GetRegenerationRate() { return RegenerationRate; }

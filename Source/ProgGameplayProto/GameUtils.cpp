@@ -3,7 +3,7 @@
 
 #include "GameUtils.h"
 
-#include "ProgGameplayProtoCharacter.h"
+#include "Characters/ProgGameplayProtoCharacter.h"
 
 AProgGameplayProtoCharacter* UGameUtils::GetMainCharacter()
 {

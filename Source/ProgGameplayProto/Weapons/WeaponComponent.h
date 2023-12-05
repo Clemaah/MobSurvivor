@@ -4,8 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "ProgGameplayProto/Projectiles/ProjectileCharacteristics.h"
+#include "WeaponCharacteristics.h"
 #include "WeaponComponent.generated.h"
 
+class UProjectileData;
+class AProjectile;
 class UProjectileEffect;
 class UWeaponData;
 class AProgGameplayProtoCharacter;
@@ -15,69 +19,61 @@ class PROGGAMEPLAYPROTO_API UWeaponComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:
-	// Sets default values for this component's properties
-	UWeaponComponent();
+	/* ---------------------- VARIABLES ----------------------*/
 
 protected:
-	TObjectPtr<UWeaponData> WeaponData;
-
+	// --- CHARACTER REFERENCE
 	TObjectPtr<AProgGameplayProtoCharacter> Character;
+
+
+	// --- OTHER VARIABLES
+	FWeaponCharacteristics WeaponCharacteristics;
+
+	FProjectileCharacteristics ProjectileCharacteristics;
 
 	TArray<UProjectileEffect*> Effects;
 
 	float TimeElapsedSinceLastShoot = 0;
 
-protected:
-	// Called when the game starts
-	virtual void BeginPlay() override;
 
-	virtual void Shoot();
 
-	virtual void SpawnProjectile(FVector Direction);
+	/* ---------------------- FUNCTIONS ----------------------*/
 
-	virtual FVector GetMouseDirection();
-	virtual TArray<FVector> ComputeSpreadDirections();
-
-	virtual float GetShootDelay();
-	virtual int32 GetNumberOfProjectiles();
-	virtual float GetProjectileSize();
-	virtual float GetProjectileRange();
-	virtual float GetProjectileSpeed();
-	virtual float GetSpread();
-	virtual float GetPrecisionRandomAngle();
-	virtual float GetDamages();
-	virtual float GetCriticalHitChance();
-	virtual float GetCriticalHitDamagesMultiplier();
-
+	// --- INITIALIZATION
 public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UWeaponComponent();
 
-	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Data);
+	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Weapon, int WeaponLevel, UProjectileData* Projectile, int ProjectileLevel);
+
+
+	// --- BEHAVIOUR
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	virtual void TryShooting(float DeltaTime);
 
-	virtual void AddEffect(UProjectileEffect* Effect);
+protected:
+	virtual void Shoot();
 
+	virtual TArray<FVector> ComputeSpreadDirections();
+
+	virtual bool CanActivateDoubleShot();
+
+	virtual void SpawnProjectile(FVector Direction);
+
+
+	// --- GETTERS
+	virtual FVector GetMouseDirection();
+
+	virtual float GetShootDelay();
+
+	virtual float GetPrecisionRandomAngle();
+
+	virtual float GetSpread();
+
+
+	// --- SETTERS
 public:
-	float BonusFireRate = 0;
-	float BonusFireRateMultiplier = 0;
-	float BonusNumberOfShots = 0;
-	float BonusNumberOfShotsMultiplier = 0;
-	float BonusPrecision = 0;
-	float BonusPrecisionMultiplier = 0;
-	float BonusSpread = 0;
-	float BonusSpreadMultiplier = 0;
-	float BonusDamages = 0;
-	float BonusDamagesMultiplier = 0;
-	float BonusProjectileSize = 0;
-	float BonusProjectileSizeMultiplier = 0;
-	float BonusRange = 0;
-	float BonusRangeMultiplier = 0;
-	float BonusProjectileSpeed = 0;
-	float BonusProjectileSpeedMultiplier = 0;
-	float BonusCriticalHitChance = 0;
-	float BonusCriticalHitChanceMultiplier = 0;
-	float BonusCriticalHitDamageMultiplier = 0;
+	virtual void UpdateCharacteristics(FWeaponCharacteristics& WeaponBonuses, FProjectileCharacteristics& ProjectileBonuses);
+
+	virtual void AddEffect(UProjectileEffect* Effect);
 };

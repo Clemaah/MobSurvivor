@@ -2,7 +2,7 @@
 
 
 #include "ProjectileInteraction.h"
-#include "ProgGameplayProto/Weapons/WeaponProjectile.h"
+#include "ProgGameplayProto/Projectiles/Projectile.h"
 
 // Sets default values for this component's properties
 UProjectileInteraction::UProjectileInteraction()
@@ -33,7 +33,7 @@ void UProjectileInteraction::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
-void UProjectileInteraction::HitByProjectile(AWeaponProjectile* Projectile)
+void UProjectileInteraction::HitByProjectile(AProjectile* Projectile)
 {
 	OnHitByProjectile.Broadcast(Projectile);
 }

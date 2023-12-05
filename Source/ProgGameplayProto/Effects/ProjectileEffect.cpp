@@ -3,9 +3,9 @@
 
 #include "ProjectileEffect.h"
 #include "Logging/StructuredLog.h"
-#include "ProgGameplayProto/Weapons/WeaponProjectile.h"
+#include "ProgGameplayProto/Projectiles/Projectile.h"
 
-void UProjectileEffect::RegisterProjectile(AWeaponProjectile* Projectile)
+void UProjectileEffect::RegisterProjectile(AProjectile* Projectile)
 {
 	if (!IsValid(Projectile))
 	{
@@ -16,10 +16,10 @@ void UProjectileEffect::RegisterProjectile(AWeaponProjectile* Projectile)
 
 	CurrentProjectile = Projectile;
 
-	CurrentProjectile->OnProjectileDestroy.AddDynamic(this, &UProjectileEffect::OnProjectileDestroy);
+	CurrentProjectile->OnProjectileDestroyDelegate.AddDynamic(this, &UProjectileEffect::OnProjectileDestroy);
 }
 
-void UProjectileEffect::OnProjectileDestroy(AWeaponProjectile* Projectile)
+void UProjectileEffect::OnProjectileDestroy(AProjectile* Projectile)
 {
 
 }

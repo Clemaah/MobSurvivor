@@ -3,16 +3,14 @@
 
 #include "HealthComponent.h"
 
-#include "Weapons/WeaponProjectile.h"
+#include "Projectiles/Projectile.h"
 
 
 void UHealthComponent::InitializeHealth(float NewMaxHealth, float NewRegenerationRate)
 {
 	SetMaxHealth(NewMaxHealth);
-
-	CurrentHealth = MaxHealth;
-
 	SetRegenerationRate(NewRegenerationRate);
+	RestoreFullHealth();
 }
 
 // Called every frame
@@ -36,7 +34,7 @@ void UHealthComponent::TryRegenerate(float DeltaTime)
 	}
 }
 
-void UHealthComponent::HitByProjectile(AWeaponProjectile* Projectile)
+void UHealthComponent::HitByProjectile(AProjectile* Projectile)
 {
 	Super::HitByProjectile(Projectile);
 
@@ -60,6 +58,12 @@ void UHealthComponent::AddHealth(float Amount)
 	if (CurrentHealth == 0) Die();
 }
 
+void UHealthComponent::RestoreFullHealth()
+{
+	CurrentHealth = MaxHealth;
+	OnHealthChanged.Broadcast(CurrentHealth);
+}
+
 void UHealthComponent::Die()
 {
 	OnBeforeHealthDie.Broadcast();
@@ -74,4 +78,16 @@ float UHealthComponent::GetCurrentHealthPercentage()
 	output = FMath::Clamp(output, 0, 1);
 
 	return output;
+}
+
+
+void UHealthComponent::SetMaxHealth(float NewMaxHealth)
+{
+	MaxHealth = NewMaxHealth;
+	OnHealthChanged.Broadcast(CurrentHealth);
+}
+
+void UHealthComponent::SetRegenerationRate(float NewRegenerationRate)
+{
+	RegenerationRate = NewRegenerationRate;
 }

@@ -6,7 +6,7 @@
 #include "UObject/NoExportTypes.h"
 #include "ProjectileEffect.generated.h"
 
-class AWeaponProjectile;
+class AProjectile;
 
 /**
  *
@@ -17,12 +17,12 @@ class PROGGAMEPLAYPROTO_API UProjectileEffect : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void RegisterProjectile(AWeaponProjectile* Projectile);
+	virtual void RegisterProjectile(AProjectile* Projectile);
 
 	UFUNCTION()
-	virtual void OnProjectileDestroy(AWeaponProjectile* Projectile);
+	virtual void OnProjectileDestroy(AProjectile* Projectile);
 
 protected:
 	UPROPERTY()
-	AWeaponProjectile* CurrentProjectile;
+	AProjectile* CurrentProjectile;
 };

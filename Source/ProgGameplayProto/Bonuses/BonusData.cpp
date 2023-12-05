@@ -4,10 +4,9 @@
 #include "BonusData.h"
 
 #include "ProgGameplayProto/GameUtils.h"
-#include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
-#include "ProgGameplayProto/Personas/PersonaComponent.h"
 
 void UBonusData::ApplyOnMainCharacter()
 {
@@ -17,45 +16,15 @@ void UBonusData::ApplyOnMainCharacter()
 	UWeaponComponent* weapon = mainCharacter->GetWeapon();
 	if (!IsValid(weapon)) return;
 
-	UPersonaComponent* Persona = mainCharacter->GetPersona();
-	if (!IsValid(Persona)) return;
-
-	Apply(mainCharacter, weapon, Persona);
+	Apply(mainCharacter, weapon);
 }
 
-void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon, UPersonaComponent* Persona)
+void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
 {
 	ApplyEffects(Character, Weapon);
 
-	Weapon->BonusFireRate += BonusFireRate;
-	Weapon->BonusFireRateMultiplier += BonusFireRateMultiplier;
-	Weapon->BonusNumberOfShots += BonusNumberOfShots;
-	Weapon->BonusNumberOfShotsMultiplier += BonusNumberOfShotsMultiplier;
-	Weapon->BonusPrecision += BonusPrecision;
-	Weapon->BonusPrecisionMultiplier += BonusPrecisionMultiplier;
-	Weapon->BonusSpread += BonusSpread;
-	Weapon->BonusSpreadMultiplier += BonusSpreadMultiplier;
-	Weapon->BonusDamages += BonusDamages;
-	Weapon->BonusDamagesMultiplier += BonusDamagesMultiplier;
-	Weapon->BonusProjectileSize += BonusProjectileSize;
-	Weapon->BonusProjectileSizeMultiplier += BonusProjectileSizeMultiplier;
-	Weapon->BonusRange += BonusRange;
-	Weapon->BonusRangeMultiplier += BonusRangeMultiplier;
-	Weapon->BonusProjectileSpeed += BonusProjectileSpeed;
-	Weapon->BonusProjectileSpeedMultiplier += BonusProjectileSpeedMultiplier;
-	Weapon->BonusCriticalHitChance += BonusCriticalHitChance;
-	Weapon->BonusCriticalHitChanceMultiplier += BonusCriticalHitChanceMultiplier;
-	Weapon->BonusCriticalHitDamageMultiplier += BonusCriticalHitDamageMultiplier;
-
-	Persona->BonusMaxHealth += BonusMaxHealth;
-	Persona->BonusRegenerationRate += BonusRegenerationRate;
-	Persona->BonusDropChance += BonusDropChance;
-	Persona->BonusDropCollectorRadius += BonusDropCollectorRadius;
-	Persona->BonusCoinMultiplier += BonusCoinMultiplier;
-	Persona->BonusExperienceMultiplier += BonusExperienceMultiplier;
-	Persona->BonusNumberOfUpgrades += BonusNumberOfUpgrades;
-
-	Persona->UpdatePersona();
+	Character->UpdateCharacteristics(CharacterBonuses);
+	Weapon->UpdateCharacteristics(WeaponBonuses, ProjectileBonuses);
 }
 
 void UBonusData::ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)

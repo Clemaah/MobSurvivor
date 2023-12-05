@@ -3,8 +3,13 @@
 
 #include "DropperComponent.h"
 
+#include "Drop.h"
+#include "ExperienceDrop.h"
 #include "Logging/StructuredLog.h"
+#include "ProgGameplayProto/GameUtils.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 
+class AProgGameplayProtoCharacter;
 // Sets default values for this component's properties
 UDropperComponent::UDropperComponent()
 {
@@ -24,69 +29,50 @@ void UDropperComponent::BeginPlay()
 	// ...
 }
 
-AActor* UDropperComponent::SpawnWeightedDrop()
+void UDropperComponent::Drop()
 {
-	if (Drops.Num() < 1) return nullptr;
+	if (Drops.Num() < 1) return;
 
-	AActor* spawnedActor = nullptr;
-
-	const int32 dropIndex = GetWeightedIndex();
-	FVector spawnLocation = GetRandomSpawnLocation();
-
-	AActor* spawnedDrop = GetWorld()->SpawnActor<AActor>(Drops[dropIndex].ObjectToSpawn, spawnLocation, FRotator::ZeroRotator);
-
-	return spawnedDrop;
-}
-
-int32 UDropperComponent::GetWeightedIndex()
-{
-	float totalWeight = 0;
+	const AProgGameplayProtoCharacter* mainCharacter = UGameUtils::GetMainCharacter();
 
 	for (int32 i = 0; i < Drops.Num(); i++)
 	{
-		totalWeight += Drops[i].Weight;
+		const float rolledDice = FMath::FRandRange(0.f, 100.f);
+		float dropChance = Drops[i].ChanceToDrop;
+		int32 numberOfDrops = FMath::RandRange(Drops[i].NumberOfDropsRange.X, Drops[i].NumberOfDropsRange.Y);
+
+		switch (Drops[i].Type)
+		{
+			case Coin:
+				dropChance *= mainCharacter->GetCharacteristics().CoinDropChanceMultiplier;
+				numberOfDrops *= mainCharacter->GetCharacteristics().CoinMultiplier;
+				break;
+
+			case Experience:
+				numberOfDrops *= mainCharacter->GetCharacteristics().ExperienceMultiplier;
+				break;
+
+			default:
+				dropChance *= mainCharacter->GetCharacteristics().UpgradeDropChanceMultiplier;
+				break;
+		}
+
+		if (rolledDice <= dropChance)
+		{
+			for (int32 j = 0; j < numberOfDrops; j++)
+			{
+				FVector spawnLocation = GetRandomSpawnLocation();
+				GetWorld()->SpawnActor<ADrop>(Drops[i].ObjectToSpawn, spawnLocation, FRotator::ZeroRotator);
+			}
+		}
 	}
-
-	const float randomSelectedWeight = FMath::FRandRange(0, totalWeight);
-	float weightsSum = 0;
-
-	for (int32 i = 0; i < Drops.Num(); i++)
-	{
-		weightsSum += Drops[i].Weight;
-
-		if (randomSelectedWeight <= weightsSum)
-			return i;
-	}
-
-	UE_LOGFMT(LogTemp, Warning, "Should have found a weight in the list");
-
-	return 0;
 }
 
 FVector UDropperComponent::GetRandomSpawnLocation()
 {
-	FVector randomOffset = FVector(FMath::FRandRange(-20.0f, 20.0f), FMath::FRandRange(-20.0f, 20.0f), 0);
+	const FVector randomOffset = FVector(FMath::FRandRange(-20.0f, 20.0f), FMath::FRandRange(-20.0f, 20.0f), 0);
 
-	FVector output = GetComponentLocation() + randomOffset;
+	const FVector output = GetComponentLocation() + randomOffset;
 
 	return output;
-}
-
-
-// Called every frame
-void UDropperComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
-void UDropperComponent::Drop()
-{
-	const int32 numberOfDrops = FMath::RandRange(NumberOfDropsRange.X, NumberOfDropsRange.Y);
-
-	for (int32 i = 0; i < numberOfDrops; i++)
-	{
-		SpawnWeightedDrop();
-	}
 }

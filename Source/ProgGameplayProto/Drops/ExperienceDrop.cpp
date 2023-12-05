@@ -3,10 +3,9 @@
 
 #include "ExperienceDrop.h"
 
-#include "DropperComponent.h"
 #include "ProgGameplayProto/ExperienceComponent.h"
 #include "ProgGameplayProto/GameUtils.h"
-#include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 
 void AExperienceDrop::Collect()
 {

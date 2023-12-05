@@ -2,43 +2,38 @@
 
 
 #include "WeaponComponent.h"
-#include "ProgGameplayProto/Weapons/WeaponData.h"
-#include "ProgGameplayProto/ProgGameplayProtoCharacter.h"
-#include "ProgGameplayProto/Weapons/WeaponProjectile.h"
 #include "Kismet/GameplayStatics.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/Weapons/WeaponData.h"
+#include "ProgGameplayProto/Weapons/WeaponCharacteristics.h"
+#include "ProgGameplayProto/Projectiles/ProjectileData.h"
+#include "ProgGameplayProto/Projectiles/Projectile.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
 
-// Sets default values for this component's properties
+
+
+//////////////////////////////////////////////////////////////////////////
+// --- INITIALIZATION
 UWeaponComponent::UWeaponComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
-// Called when the game starts
-void UWeaponComponent::BeginPlay()
+void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Weapon, int WeaponLevel, UProjectileData* Projectile, int ProjectileLevel)
 {
-	Super::BeginPlay();
-
-	// ...
-
+	Character = NewCharacter;
+	WeaponCharacteristics = Weapon->GetLevelCharacteristics(WeaponLevel);
+	ProjectileCharacteristics = Projectile->GetLevelCharacteristics(ProjectileLevel);
 }
 
-// Called every frame
+
+//////////////////////////////////////////////////////////////////////////
+// --- BEHAVIOUR
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	TryShooting(DeltaTime);
-}
-
-void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Data)
-{
-	WeaponData = Data;
-	Character = NewCharacter;
 }
 
 void UWeaponComponent::TryShooting(float DeltaTime)
@@ -51,20 +46,14 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 
 	if (TimeElapsedSinceLastShoot >= GetShootDelay())
 	{
-		TimeElapsedSinceLastShoot = 0;
+		TimeElapsedSinceLastShoot = CanActivateDoubleShot() ? GetShootDelay() - 0.2f : 0;
 
 		Shoot();
 	}
 }
 
-void UWeaponComponent::AddEffect(UProjectileEffect* Effect)
-{
-	Effects.Add(Effect);
-}
-
 void UWeaponComponent::Shoot()
 {
-	if (!IsValid(Character)) return;
 	if (!IsValid(Character->WeaponProjectileToSpawn)) return;
 
 	TArray<FVector> shootDirections = ComputeSpreadDirections();
@@ -75,14 +64,55 @@ void UWeaponComponent::Shoot()
 	}
 }
 
+bool UWeaponComponent::CanActivateDoubleShot()
+{
+	const float value = WeaponCharacteristics.DoubleShotChance;
+	const float multiplier = Character->GetCharacteristics().DoubleShotChanceMultiplier;
+
+	const float diceRoll = FMath::RandRange(0, 100);
+
+	return diceRoll <= value * multiplier;
+}
+
+TArray<FVector> UWeaponComponent::ComputeSpreadDirections()
+{
+	TArray<FVector> directions;
+
+	FVector centralDirection = GetMouseDirection();
+	const int numberOfProjectiles = WeaponCharacteristics.ShotsNumber;
+
+	if (numberOfProjectiles < 2)
+	{
+		centralDirection = centralDirection.RotateAngleAxis(GetPrecisionRandomAngle(), FVector::UpVector);
+		directions.Add(centralDirection);
+	}
+	else
+	{
+		const float spread = GetSpread();
+		const float angleIncrement = spread / (numberOfProjectiles - 1);
+
+		for (int i = 0; i < numberOfProjectiles; i++)
+		{
+			float offsetAngle = (i * angleIncrement) - (spread / 2.0f);
+			offsetAngle += GetPrecisionRandomAngle();
+			FVector direction = centralDirection;
+			direction = direction.RotateAngleAxis(offsetAngle, FVector::UpVector);
+
+			directions.Add(direction);
+		}
+	}
+
+	return directions;
+}
+
 void UWeaponComponent::SpawnProjectile(FVector Direction)
 {
 	const FVector spawnLocation = Character->GetActorLocation();
 	const FRotator spawnRotation = FRotator::ZeroRotator;
 
-	AWeaponProjectile* projectile = Character->GetWorld()->SpawnActor<AWeaponProjectile>(Character->WeaponProjectileToSpawn, spawnLocation, spawnRotation);
+	AProjectile* projectile = Character->GetWorld()->SpawnActor<AProjectile>(Character->WeaponProjectileToSpawn, spawnLocation, spawnRotation);
 
-	projectile->SetParameters(GetProjectileSize(), GetProjectileRange(), GetProjectileSpeed(), GetDamages(), GetCriticalHitChance(), GetCriticalHitDamagesMultiplier());
+	projectile->InitializeProjectile(ProjectileCharacteristics, WeaponCharacteristics);
 
 	if (Direction == FVector::ZeroVector)
 		Direction = Character->GetActorForwardVector();
@@ -123,103 +153,17 @@ FVector UWeaponComponent::GetMouseDirection()
 	return Character->GetActorForwardVector();
 }
 
-TArray<FVector> UWeaponComponent::ComputeSpreadDirections()
-{
-	TArray<FVector> directions;
-
-	FVector centralDirection = GetMouseDirection();
-	const int32 numberOfProjectiles = GetNumberOfProjectiles();
-
-	if (numberOfProjectiles < 2)
-	{
-		centralDirection = centralDirection.RotateAngleAxis(GetPrecisionRandomAngle(), FVector::UpVector);
-		directions.Add(centralDirection);
-	}
-	else
-	{
-		const float angleIncrement = GetSpread() / (numberOfProjectiles - 1);
-		const float spread = GetSpread();
-
-		for (int i = 0; i < numberOfProjectiles; i++)
-		{
-			float offsetAngle = (i * angleIncrement) - (spread / 2.0f);
-			offsetAngle += GetPrecisionRandomAngle();
-			FVector direction = centralDirection;
-			direction = direction.RotateAngleAxis(offsetAngle, FVector::UpVector);
-
-			directions.Add(direction);
-		}
-	}
-
-	return directions;
-}
-
-int32 UWeaponComponent::GetNumberOfProjectiles()
-{
-	if (!IsValid(WeaponData)) return int32();
-
-	int32 output = static_cast<int32>(WeaponData->NumberOfShots + BonusNumberOfShots) * (WeaponData->NumberOfShotsMultiplier + BonusNumberOfShotsMultiplier);
-	output = FMath::Max(0, output);
-
-	return output;
-}
-
 float UWeaponComponent::GetShootDelay()
 {
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	float value = FMath::Max(0.1f, (WeaponData->FireRate + BonusFireRate));
-	float multiplier = FMath::Max(0.1f, WeaponData->FireRateMultiplier + BonusFireRateMultiplier);
+	const float value = WeaponCharacteristics.FireRate;
+	const float multiplier = Character->GetCharacteristics().FireRateMultiplier;
 
 	return 1 / (value * multiplier);
 }
 
-float UWeaponComponent::GetProjectileSize()
-{
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	float value = FMath::Max(0.1f, WeaponData->ProjectileSize + BonusProjectileSize);
-	float multiplier = FMath::Max(0.1f, WeaponData->ProjectileSizeMultiplier + BonusProjectileSizeMultiplier);
-
-	return value * multiplier;
-}
-
-float UWeaponComponent::GetProjectileRange()
-{
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	float value = FMath::Max(100, WeaponData->Range + BonusRange);
-	float multiplier = FMath::Max(0.1f, WeaponData->RangeMultiplier + BonusRangeMultiplier);
-
-	float output = FMath::Max(100, value * multiplier);
-
-	return output;
-}
-
-float UWeaponComponent::GetProjectileSpeed()
-{
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	float value = FMath::Max(50, WeaponData->ProjectileSpeed + BonusProjectileSpeed);
-	float multiplier = FMath::Max(0.1f, WeaponData->ProjectileSpeedMultiplier + BonusProjectileSpeedMultiplier);
-
-	float output = FMath::Max(50, value * multiplier);
-
-	return output;
-}
-
-float UWeaponComponent::GetSpread()
-{
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	return (WeaponData->Spread + BonusSpread) * (WeaponData->SpreadMultiplier + BonusSpreadMultiplier);
-}
-
 float UWeaponComponent::GetPrecisionRandomAngle()
 {
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	const float totalPrecision = (WeaponData->Precision + BonusPrecision) * (WeaponData->PrecisionMultiplier + BonusPrecisionMultiplier);
+	const float totalPrecision = (WeaponCharacteristics.Precision) * Character->GetCharacteristics().PrecisionMultiplier;
 
 	const float precisionFactor = FMath::Clamp((1 - totalPrecision), 0, 1);
 	const float angleLimit = 30 * precisionFactor;
@@ -229,30 +173,21 @@ float UWeaponComponent::GetPrecisionRandomAngle()
 	return angle;
 }
 
-float UWeaponComponent::GetDamages()
+float UWeaponComponent::GetSpread()
 {
-	if (!IsValid(WeaponData)) return 0.0f;
+	const float value = WeaponCharacteristics.Spread;
+	const float multiplier = Character->GetCharacteristics().SpreadMultiplier;
 
-	float output = (WeaponData->Damages + BonusDamages) * (WeaponData->DamagesMultiplier + BonusDamagesMultiplier);
-	output = FMath::Max(0.1f, output);
-
-	return output;
+	return FMath::Clamp(value * multiplier, 0, 360);
 }
 
-float UWeaponComponent::GetCriticalHitChance()
+void UWeaponComponent::UpdateCharacteristics(FWeaponCharacteristics& WeaponBonuses, FProjectileCharacteristics& ProjectileBonuses)
 {
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	return (WeaponData->CriticalHitChance + BonusCriticalHitChance) * (WeaponData->CriticalHitChanceMultiplier + BonusCriticalHitChanceMultiplier);
+	WeaponCharacteristics += WeaponBonuses;
+	ProjectileCharacteristics += ProjectileBonuses;
 }
 
-float UWeaponComponent::GetCriticalHitDamagesMultiplier()
+void UWeaponComponent::AddEffect(UProjectileEffect* Effect)
 {
-	if (!IsValid(WeaponData)) return 0.0f;
-
-	float output = WeaponData->CriticalHitDamageMultiplier + BonusCriticalHitDamageMultiplier;
-	output = FMath::Max(1, output);
-
-	return output;
+	Effects.Add(Effect);
 }
-
