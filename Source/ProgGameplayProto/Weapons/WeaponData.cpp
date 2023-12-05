@@ -7,8 +7,7 @@
 
 UWeaponData::UWeaponData()
 {
-	Levels.Init(FWeaponCharacteristics(), 5);
-	LevelsPrice.Init(0, 5);
+	Levels.Init(FWeaponLevel(), 5);
 }
 
 TMap<FString, float> UWeaponData::GetMap(const int Level)
@@ -40,7 +39,7 @@ FWeaponCharacteristics UWeaponData::GetLevelCharacteristics(const int Level)
 
 	while (i <= Level)
 	{
-		ReturnStruct += Levels[i];
+		ReturnStruct += Levels[i].Characteristics;
 		i++;
 	}
 

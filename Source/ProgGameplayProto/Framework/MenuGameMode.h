@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "MenuGameMode.generated.h"
 
-class UMenuData;
+class UStartDatas;
 class AUpgradesManager;
 /**
  * 
@@ -17,9 +17,6 @@ class PROGGAMEPLAYPROTO_API AMenuGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UMenuData* MenuData;
-
 	UPROPERTY(BlueprintReadOnly)
 	AUpgradesManager* UpgradesManager;
 

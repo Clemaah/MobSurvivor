@@ -7,8 +7,7 @@
 
 UCharacterData::UCharacterData()
 {
-	Levels.Init(FCharacterCharacteristics(), 5);
-	LevelsPrice.Init(0, 5);
+	Levels.Init(FCharacterLevel(), 5);
 }
 
 TMap<FString, float> UCharacterData::GetMap(const int Level)
@@ -43,7 +42,7 @@ FCharacterCharacteristics UCharacterData::GetLevelCharacteristics(const int Leve
 
 	while (i <= Level)
 	{
-		ReturnStruct += Levels[i];
+		ReturnStruct += Levels[i].Characteristics;
 		i++;
 	}
 

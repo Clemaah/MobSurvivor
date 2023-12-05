@@ -76,6 +76,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Inputs", meta = (AllowPrivateAccess = "true"))
 	UInputAction* AutoFireAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Inputs", meta = (AllowPrivateAccess = "true"))
+	UInputAction* PauseAction;
+
 
 protected:
 	// --- COMPONENTS

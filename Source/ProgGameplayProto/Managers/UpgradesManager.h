@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Info.h"
-#include "ProgGameplayProto/MenuData.h"
 #include "UpgradesManager.generated.h"
 
 class UCharacterData;

@@ -3,21 +3,21 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
-#include "MenuData.generated.h"
-
-class UCharacterData;
-class UWeaponData;
-class UProjectileData;
+#include "ProgGameplayProto/Characters/CharacterData.h"
+#include "ProgGameplayProto/Projectiles/ProjectileData.h"
+#include "ProgGameplayProto/Weapons/WeaponData.h"
+#include "MobSurvivorParameters.generated.h"
 /**
  * 
  */
-UCLASS()
-class PROGGAMEPLAYPROTO_API UMenuData : public UPrimaryDataAsset
+USTRUCT(BlueprintType)
+struct PROGGAMEPLAYPROTO_API FMobSurvivorParameters
 {
 	GENERATED_BODY()
 
-public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int TotalCoins;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<UCharacterData*, int> CharactersLevel;
 

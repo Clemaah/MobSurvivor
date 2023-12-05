@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Drop.h"
-#include "ExperienceDrop.generated.h"
+#include "CoinDrop.generated.h"
 
 /**
- *
+ * 
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API AExperienceDrop : public ADrop
+class PROGGAMEPLAYPROTO_API ACoinDrop : public ADrop
 {
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ExperienceAmount;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
+	int CoinAmount;
 
 	virtual void Collect() override;
 };

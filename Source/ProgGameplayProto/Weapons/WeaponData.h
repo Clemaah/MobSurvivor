@@ -10,6 +10,20 @@
 /**
  *
  */
+
+USTRUCT(BlueprintType)
+struct PROGGAMEPLAYPROTO_API FWeaponLevel
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FWeaponCharacteristics Characteristics;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ClampMin = 0))
+	int Price;
+};
+
+
 UCLASS(BlueprintType)
 class PROGGAMEPLAYPROTO_API UWeaponData : public UDataAsset
 {
@@ -30,9 +44,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta", Meta = (MultiLine = true))
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
-	TArray<FWeaponCharacteristics> Levels;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder))
-	TArray<int> LevelsPrice;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
+	TArray<FWeaponLevel> Levels;
 };

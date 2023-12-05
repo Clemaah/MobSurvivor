@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Framework/MobSurvivorSaveGame.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameUtils.generated.h"
 
@@ -21,4 +22,7 @@ class PROGGAMEPLAYPROTO_API UGameUtils : public UBlueprintFunctionLibrary
 public:
 	UFUNCTION(BlueprintPure, Category = "Manager")
 	static AProgGameplayProtoCharacter* GetMainCharacter();
+
+	UFUNCTION(BlueprintPure, Category = "Manager")
+	static UMobSurvivorSaveGame* GetSaveGame(UWorld* World);
 };

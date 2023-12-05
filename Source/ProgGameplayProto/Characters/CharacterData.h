@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CharacterCharacteristics.h"
 #include "Engine/DataAsset.h"
 #include "CharacterData.generated.h"
 
@@ -10,7 +11,18 @@
  * 
  */
 
-struct FCharacterCharacteristics;
+USTRUCT(BlueprintType)
+struct PROGGAMEPLAYPROTO_API FCharacterLevel
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FCharacterCharacteristics Characteristics;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ClampMin = 0))
+	int Price;
+};
+
 
 UCLASS(BlueprintType)
 class PROGGAMEPLAYPROTO_API UCharacterData : public UPrimaryDataAsset
@@ -33,9 +45,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta", Meta = (MultiLine = true))
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
-	TArray<FCharacterCharacteristics> Levels;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder))
-	TArray<int> LevelsPrice;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
+	TArray<FCharacterLevel> Levels;
 };

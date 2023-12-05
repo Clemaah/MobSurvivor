@@ -23,7 +23,7 @@ void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacte
 {
 	Character = NewCharacter;
 	WeaponCharacteristics = Weapon->GetLevelCharacteristics(WeaponLevel);
-	ProjectileCharacteristics = Projectile->GetLevelCharacteristics(ProjectileLevel);
+	ProjectileCharacteristics = Projectile->GetCurrentCharacteristics(ProjectileLevel);
 }
 
 
@@ -46,7 +46,11 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 
 	if (TimeElapsedSinceLastShoot >= GetShootDelay())
 	{
-		TimeElapsedSinceLastShoot = CanActivateDoubleShot() ? GetShootDelay() - 0.2f : 0;
+		if (!isDoubleShotActivated && CanActivateDoubleShot())
+		{
+			isDoubleShotActivated = true;
+			TimeElapsedSinceLastShoot = FMath::Max(0, GetShootDelay() - 0.1f);
+		}
 
 		Shoot();
 	}

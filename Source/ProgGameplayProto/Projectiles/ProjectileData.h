@@ -10,6 +10,19 @@
 /**
  *
  */
+
+USTRUCT(BlueprintType)
+struct PROGGAMEPLAYPROTO_API FProjectileLevel
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FProjectileCharacteristics Characteristics;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ClampMin = 0))
+	int Price;
+};
+
 UCLASS(BlueprintType)
 class PROGGAMEPLAYPROTO_API UProjectileData : public UDataAsset
 {
@@ -22,7 +35,7 @@ public:
 	TMap<FString, float> GetMap(const int Level);
 
 	UFUNCTION(BlueprintCallable)
-	FProjectileCharacteristics GetLevelCharacteristics(const int Level);
+	FProjectileCharacteristics GetCurrentCharacteristics(const int Level);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
 	FString Name;
@@ -30,9 +43,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta", Meta = (MultiLine = true))
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
-	TArray<FProjectileCharacteristics> Levels;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, EditFixedSize, Category = "Characteristics", Meta = (EditFixedOrder))
-	TArray<int> LevelsPrice;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
+	TArray<FProjectileLevel> Levels;
 };

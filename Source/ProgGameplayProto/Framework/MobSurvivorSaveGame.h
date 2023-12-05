@@ -4,10 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
+#include "ProgGameplayProto/StartDatas.h"
 #include "UObject/ObjectMacros.h"
 
 #include "MobSurvivorSaveGame.generated.h"
 
+class UProjectileData;
+class UWeaponData;
+class UCharacterData;
 /**
  * 
  */
@@ -19,9 +23,6 @@ class PROGGAMEPLAYPROTO_API UMobSurvivorSaveGame : public USaveGame
 	UMobSurvivorSaveGame();
 
 public:
-	UPROPERTY(BlueprintReadWrite, Category = "Player Info")
-	FString PlayerName;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Player Info")
-	int32 PlayerAge;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StartParameters", Meta = (ShowOnlyInnerProperties))
+	FMobSurvivorParameters ParametersToSave;
 };

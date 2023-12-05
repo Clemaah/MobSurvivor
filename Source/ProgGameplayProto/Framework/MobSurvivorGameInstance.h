@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "MobSurvivorGameInstance.generated.h"
 
+class UStartParameters;
 class UMobSurvivorSaveGame;
 /**
  * 
@@ -18,11 +19,16 @@ class PROGGAMEPLAYPROTO_API UMobSurvivorGameInstance : public UGameInstance
 public:
 	UMobSurvivorGameInstance();
 
-	UPROPERTY(BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(BlueprintReadWrite, Category = "SaveSettings")
 	FString SaveGameSlotName;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Settings")
+	UPROPERTY(BlueprintReadWrite, Category = "SaveSettings")
 	UMobSurvivorSaveGame* SaveGameInstance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "StartParameters", Meta = (ShowOnlyInnerProperties))
+	UStartParameters* StartDataReference;
+
+	void OnStart() override;
 
 	UFUNCTION(BlueprintCallable, Category = "GameManager")
 	void LoadGame();

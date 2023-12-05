@@ -35,6 +35,8 @@ protected:
 
 	float TimeElapsedSinceLastShoot = 0;
 
+	bool isDoubleShotActivated;
+
 
 
 	/* ---------------------- FUNCTIONS ----------------------*/
