@@ -12,7 +12,7 @@ UProjectileData::UProjectileData()
 
 TMap<FString, float> UProjectileData::GetMap(const int Level)
 {
-	const FProjectileCharacteristics Characteristics = GetCurrentCharacteristics(Level);
+	const FProjectileCharacteristics Characteristics = GetLevelCharacteristics(Level);
 	TMap<FString, float> ReturnMap;
 
 	ReturnMap.Add(TEXT("Damages"), Characteristics.Damages);
@@ -25,7 +25,7 @@ TMap<FString, float> UProjectileData::GetMap(const int Level)
 	return ReturnMap;
 }
 
-FProjectileCharacteristics UProjectileData::GetCurrentCharacteristics(const int Level)
+FProjectileCharacteristics UProjectileData::GetLevelCharacteristics(const int Level)
 {
 	FProjectileCharacteristics ReturnStruct;
 
@@ -40,4 +40,11 @@ FProjectileCharacteristics UProjectileData::GetCurrentCharacteristics(const int 
 	}
 
 	return ReturnStruct;
+}
+
+int UProjectileData::GetLevelPrice(const int Level)
+{
+	if (Level < 0 || Level >= Levels.Num()) return 0;
+
+	return Levels[Level].Price;
 }

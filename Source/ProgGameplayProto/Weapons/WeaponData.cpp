@@ -45,3 +45,10 @@ FWeaponCharacteristics UWeaponData::GetLevelCharacteristics(const int Level)
 
 	return ReturnStruct;
 }
+
+int UWeaponData::GetLevelPrice(const int Level)
+{
+	if (Level < 0 || Level >= Levels.Num()) return 0;
+
+	return Levels[Level].Price;
+}

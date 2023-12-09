@@ -12,6 +12,7 @@
 
 class UProjectileData;
 struct FInputActionValue;
+struct FMobSurvivorParameters;
 
 class UCameraComponent;
 class USpringArmComponent;
@@ -122,7 +123,7 @@ public:
 	virtual void RegisterInstance();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetupComponents(UCharacterData* CharacterData, int CharacterLevel, UWeaponData* WeaponData, int WeaponLevel, UProjectileData* ProjectileData, int ProjectileLevel);
+	virtual void SetupComponents(const FMobSurvivorParameters& Parameters);
 
 	virtual void InitializeCharacterVariables();
 

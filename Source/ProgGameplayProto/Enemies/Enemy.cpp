@@ -4,7 +4,7 @@
 #include "Enemy.h"
 
 #include "Components/CapsuleComponent.h"
-#include "ProgGameplayProto/GameUtils.h"
+#include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"

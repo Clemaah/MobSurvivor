@@ -48,3 +48,10 @@ FCharacterCharacteristics UCharacterData::GetLevelCharacteristics(const int Leve
 
 	return ReturnStruct;
 }
+
+int UCharacterData::GetLevelPrice(const int Level)
+{
+	if (Level < 0 || Level >= Levels.Num()) return 0;
+
+	return Levels[Level].Price;
+}

@@ -5,10 +5,10 @@
 
 #include "ProgGameplayProto/EnemySpawnRule.h"
 #include "ProgGameplayProto/LevelData.h"
-#include "ProgGameplayProto/GameUtils.h"
+#include "ProgGameplayProto/System/GameUtils.h"
+#include "ProgGameplayProto/System/MobSurvivorGameMode.h"
+#include "ProgGameplayProto/System/MobSurvivorGameState.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
-#include "ProgGameplayProto/Framework/MobSurvivorGameMode.h"
-#include "ProgGameplayProto/Framework/MobSurvivorGameState.h"
 #include "Kismet/GameplayStatics.h"
 
 AEnemySpawnerManager::AEnemySpawnerManager()

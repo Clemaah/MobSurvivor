@@ -9,6 +9,7 @@
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 #include "ProgGameplayProto/Projectiles/Projectile.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
+#include "ProgGameplayProto/System/MobSurvivorParameters.h"
 
 
 
@@ -19,11 +20,11 @@ UWeaponComponent::UWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Weapon, int WeaponLevel, UProjectileData* Projectile, int ProjectileLevel)
+void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, const FMobSurvivorParameters& Parameters)
 {
 	Character = NewCharacter;
-	WeaponCharacteristics = Weapon->GetLevelCharacteristics(WeaponLevel);
-	ProjectileCharacteristics = Projectile->GetCurrentCharacteristics(ProjectileLevel);
+	WeaponCharacteristics = Parameters.SelectedWeapon->GetLevelCharacteristics(Parameters.WeaponsLevel[Parameters.SelectedWeapon]);
+	ProjectileCharacteristics = Parameters.SelectedProjectile->GetLevelCharacteristics(Parameters.WeaponsLevel[Parameters.SelectedWeapon]);
 }
 
 

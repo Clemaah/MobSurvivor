@@ -3,7 +3,7 @@
 
 #include "BonusData.h"
 
-#include "ProgGameplayProto/GameUtils.h"
+#include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"

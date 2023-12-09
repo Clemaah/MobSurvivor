@@ -3,7 +3,7 @@
 
 #include "CoinDrop.h"
 
-#include "ProgGameplayProto/GameUtils.h"
+#include "ProgGameplayProto/System/GameUtils.h"
 
 void ACoinDrop::Collect()
 {

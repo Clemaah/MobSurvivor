@@ -17,6 +17,7 @@
 #include "ProgGameplayProto/Characters/CharacterData.h"
 #include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/ExperienceComponent.h"
+#include "ProgGameplayProto/System/MobSurvivorParameters.h"
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -104,12 +105,14 @@ void AProgGameplayProtoCharacter::RegisterInstance()
 	Instance = this;
 }
 
-void AProgGameplayProtoCharacter::SetupComponents(UCharacterData* CharacterData, int CharacterLevel, UWeaponData* WeaponData, int WeaponLevel, UProjectileData* ProjectileData, int ProjectileLevel)
+void AProgGameplayProtoCharacter::SetupComponents(const FMobSurvivorParameters& Parameters)
 {
-	CharacterCharacteristics = CharacterData->GetLevelCharacteristics(CharacterLevel);
+	CharacterCharacteristics = Parameters.SelectedCharacter->GetLevelCharacteristics(Parameters.CharactersLevel[Parameters.SelectedCharacter]);
+	Weapon->InitializeWeapon(this, Parameters);
 
-	Weapon->InitializeWeapon(this, WeaponData, WeaponLevel, ProjectileData, ProjectileLevel);
 	InitializeCharacterVariables();
+
+
 	/*
 	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
 		DefaultBonuses[i]->Apply(this, Weapon, Character);*/
@@ -221,6 +224,4 @@ void AProgGameplayProtoCharacter::UpdateCharacteristics(FCharacterCharacteristic
 	Health->SetMaxHealth(CharacterCharacteristics.MaxHealth);
 	Health->SetRegenerationRate(CharacterCharacteristics.RegenerationRate);
 	GetCharacterMovement()->MaxWalkSpeed = CharacterCharacteristics.Speed * 1000;
-
-	//BonusManager->NumberOfUpgrades = Character.NumberOfUpgrades;
 }

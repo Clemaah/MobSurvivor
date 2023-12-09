@@ -31,11 +31,14 @@ class PROGGAMEPLAYPROTO_API UProjectileData : public UDataAsset
 public:
 	UProjectileData();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	TMap<FString, float> GetMap(const int Level);
 
-	UFUNCTION(BlueprintCallable)
-	FProjectileCharacteristics GetCurrentCharacteristics(const int Level);
+	UFUNCTION(BlueprintPure)
+	FProjectileCharacteristics GetLevelCharacteristics(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	int GetLevelPrice(const int Level);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
 	FString Name;

@@ -8,6 +8,7 @@
 #include "WeaponCharacteristics.h"
 #include "WeaponComponent.generated.h"
 
+struct FMobSurvivorParameters;
 class UProjectileData;
 class AProjectile;
 class UProjectileEffect;
@@ -45,8 +46,7 @@ protected:
 public:
 	UWeaponComponent();
 
-	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, UWeaponData* Weapon, int WeaponLevel, UProjectileData* Projectile, int ProjectileLevel);
-
+	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, const FMobSurvivorParameters& Parameters);
 
 	// --- BEHAVIOUR
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

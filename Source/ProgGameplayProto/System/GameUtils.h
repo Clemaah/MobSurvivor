@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Framework/MobSurvivorSaveGame.h"
+#include "ProgGameplayProto/System/MobSurvivorSaveGame.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameUtils.generated.h"
 

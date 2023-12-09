@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "ProgGameplayProto/Framework/MobSurvivorParameters.h"
-#include "StartDatas.generated.h"
+#include "ProgGameplayProto/System/MobSurvivorParameters.h"
+#include "DefaultParametersData.generated.h"
 
 class UCharacterData;
 class UWeaponData;
@@ -14,7 +14,7 @@ class UProjectileData;
  * 
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API UStartParameters : public UPrimaryDataAsset
+class PROGGAMEPLAYPROTO_API UDefaultParametersData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 

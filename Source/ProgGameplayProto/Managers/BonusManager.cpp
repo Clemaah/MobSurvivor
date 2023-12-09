@@ -4,7 +4,7 @@
 #include "BonusManager.h"
 
 #include "ProgGameplayProto/LevelData.h"
-#include "ProgGameplayProto/Framework/MobSurvivorGameMode.h"
+#include "ProgGameplayProto/System/MobSurvivorGameMode.h"
 #include "Kismet/GameplayStatics.h"
 
 void ABonusManager::BeginPlay()

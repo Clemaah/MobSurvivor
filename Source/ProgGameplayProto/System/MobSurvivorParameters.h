@@ -17,6 +17,18 @@ struct PROGGAMEPLAYPROTO_API FMobSurvivorParameters
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int TotalCoins;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString PlayerToken;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UCharacterData* SelectedCharacter;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UWeaponData* SelectedWeapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UProjectileData* SelectedProjectile;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TMap<UCharacterData*, int> CharactersLevel;

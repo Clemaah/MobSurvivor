@@ -4,9 +4,7 @@
 #include "DropperComponent.h"
 
 #include "Drop.h"
-#include "ExperienceDrop.h"
-#include "Logging/StructuredLog.h"
-#include "ProgGameplayProto/GameUtils.h"
+#include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 
 class AProgGameplayProtoCharacter;

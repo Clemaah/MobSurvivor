@@ -3,7 +3,6 @@
 
 #include "MenuGameMode.h"
 
-#include "ProgGameplayProto/GameUtils.h"
 #include "ProgGameplayProto/Managers/UpgradesManager.h"
 
 

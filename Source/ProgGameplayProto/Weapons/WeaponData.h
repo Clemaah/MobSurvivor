@@ -32,11 +32,14 @@ class PROGGAMEPLAYPROTO_API UWeaponData : public UDataAsset
 public:
 	UWeaponData();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	TMap<FString, float> GetMap(const int Level);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	FWeaponCharacteristics GetLevelCharacteristics(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	int GetLevelPrice(const int Level);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
 	FString Name;

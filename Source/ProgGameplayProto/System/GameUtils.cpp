@@ -2,9 +2,8 @@
 
 
 #include "GameUtils.h"
-
-#include "Characters/ProgGameplayProtoCharacter.h"
-#include "Framework/MobSurvivorGameInstance.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
 AProgGameplayProtoCharacter* UGameUtils::GetMainCharacter()

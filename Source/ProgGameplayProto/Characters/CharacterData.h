@@ -33,11 +33,14 @@ class PROGGAMEPLAYPROTO_API UCharacterData : public UPrimaryDataAsset
 public:
 	UCharacterData();
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	TMap<FString, float> GetMap(const int Level);
 
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintPure)
 	FCharacterCharacteristics GetLevelCharacteristics(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	int GetLevelPrice(const int Level);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
 	FString Name;
