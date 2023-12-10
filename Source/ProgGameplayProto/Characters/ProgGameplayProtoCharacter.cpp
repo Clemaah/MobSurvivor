@@ -111,11 +111,6 @@ void AProgGameplayProtoCharacter::SetupComponents(const FMobSurvivorParameters& 
 	Weapon->InitializeWeapon(this, Parameters);
 
 	InitializeCharacterVariables();
-
-
-	/*
-	for (int32 i = 0; i < DefaultBonuses.Num(); i++)
-		DefaultBonuses[i]->Apply(this, Weapon, Character);*/
 }
 
 void AProgGameplayProtoCharacter::InitializeCharacterVariables()

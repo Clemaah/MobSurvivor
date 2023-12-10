@@ -14,9 +14,7 @@ void UProjectileEffect::RegisterProjectile(AProjectile* Projectile)
 		return;
 	}
 
-	CurrentProjectile = Projectile;
-
-	CurrentProjectile->OnProjectileDestroyDelegate.AddDynamic(this, &UProjectileEffect::OnProjectileDestroy);
+	Projectile->OnProjectileDestroyDelegate.AddDynamic(this, &UProjectileEffect::OnProjectileDestroy);
 }
 
 void UProjectileEffect::OnProjectileDestroy(AProjectile* Projectile)
