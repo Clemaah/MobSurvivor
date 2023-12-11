@@ -7,6 +7,9 @@
 #include "ProjectileCharacteristics.h"
 #include "ProjectileData.generated.h"
 
+class UProjectileEffect;
+class AProgGameplayProtoCharacter;
+class UWeaponComponent;
 /**
  *
  */
@@ -46,6 +49,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta", Meta = (MultiLine = true))
 	FText Description;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
+	TArray<TSubclassOf<UProjectileEffect>> Effects;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
 	TArray<FProjectileLevel> Levels;
+
+public:
+	UFUNCTION(BlueprintCallable)
+	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 };

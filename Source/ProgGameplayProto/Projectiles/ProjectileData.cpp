@@ -3,6 +3,9 @@
 
 #include "ProjectileData.h"
 
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/Weapons/WeaponComponent.h"
+#include "ProgGameplayProto/Effects/ProjectileEffect.h"
 
 
 UProjectileData::UProjectileData()
@@ -47,4 +50,15 @@ int UProjectileData::GetLevelPrice(const int Level)
 	if (Level < 0 || Level >= Levels.Num()) return 0;
 
 	return Levels[Level].Price;
+}
+
+void UProjectileData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
+{
+	for (int32 i = 0; i < Effects.Num(); i++)
+	{
+		//UProjectileEffect* effect = NewObject<UProjectileEffect>(this, Effects[i]);
+		//effect->NumberOfAdditionalBounces = NumberOfBounces;
+
+		//Weapon->AddEffect(effect);
+	}
 }
