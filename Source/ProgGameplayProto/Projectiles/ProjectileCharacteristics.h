@@ -21,7 +21,7 @@ struct PROGGAMEPLAYPROTO_API FProjectileCharacteristics
 		Speed = 0;
 		CriticalHitChance = 0;
 		CriticalHitMultiplier = 0;
-		NumberOfHitsBeforeDestroy = 0;
+		NumberOfHitsBeforeDestroy = 1;
 	}
 
 	FProjectileCharacteristics& operator+=(const FProjectileCharacteristics& Other)
