@@ -52,3 +52,19 @@ int UProjectileData::GetLevelPrice(const int Level)
 
 	return Levels[Level].Price;
 }
+
+void UProjectileData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
+{
+	ApplyEffects(Character, Weapon);
+
+}
+
+void UProjectileData::ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
+{
+	for (int32 i = 0; i < Effects.Num(); i++)
+	{
+		UProjectileEffect* effect = NewObject<UProjectileEffect>(this, Effects[i]);
+
+		Weapon->AddEffect(effect);
+	}
+}
