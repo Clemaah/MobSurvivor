@@ -35,7 +35,8 @@ protected:
 public:
 	virtual void Tick(float DeltaSeconds) override;
 
-	virtual void Win();
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnWin();
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE float GetGameTime() const { return GameTime; }

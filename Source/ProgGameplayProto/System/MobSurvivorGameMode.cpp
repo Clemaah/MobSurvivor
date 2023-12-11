@@ -28,7 +28,7 @@ void AMobSurvivorGameMode::Tick(float DeltaSeconds)
 
 	if (GameTime >= GameLevelData->Duration)
 	{
-		Win();
+		OnWin();
 		return;
 	}
 		
@@ -37,9 +37,4 @@ void AMobSurvivorGameMode::Tick(float DeltaSeconds)
 
 
 	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "Game Time: " + FString::SanitizeFloat(GameTime));
-}
-
-void AMobSurvivorGameMode::Win()
-{
-	
 }

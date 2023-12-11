@@ -50,6 +50,11 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 			isDoubleShotActivated = true;
 			TimeElapsedSinceLastShoot = FMath::Max(0, GetShootDelay() - 0.1f);
 		}
+		else
+		{
+			isDoubleShotActivated = false;
+			TimeElapsedSinceLastShoot = 0;
+		}
 
 		Shoot();
 	}
