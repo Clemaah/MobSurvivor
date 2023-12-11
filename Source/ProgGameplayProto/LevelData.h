@@ -20,6 +20,9 @@ class PROGGAMEPLAYPROTO_API ULevelData : public UDataAsset
 
 public:
 	UPROPERTY(EditAnywhere)
+	int Duration;
+
+	UPROPERTY(EditAnywhere)
 	TArray<FPunctualEnemySpawnRule> PunctualSpawnRules;
 
 	UPROPERTY(EditAnywhere)

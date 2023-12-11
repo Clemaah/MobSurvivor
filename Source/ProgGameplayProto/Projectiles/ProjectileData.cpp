@@ -44,7 +44,8 @@ FProjectileCharacteristics UProjectileData::GetLevelCharacteristics(const int Le
 
 int UProjectileData::GetLevelPrice(const int Level)
 {
-	if (Level < 0 || Level >= Levels.Num()) return 0;
+	if (Level < 0 || Level >= Levels.Num()) 
+		return -1;
 
 	return Levels[Level].Price;
 }

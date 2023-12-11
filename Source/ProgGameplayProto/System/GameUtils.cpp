@@ -11,7 +11,12 @@ AProgGameplayProtoCharacter* UGameUtils::GetMainCharacter()
 	return AProgGameplayProtoCharacter::Instance;
 }
 
-UMobSurvivorSaveGame* UGameUtils::GetSaveGame(UWorld* World)
+UMobSurvivorGameInstance* UGameUtils::GetGameInstance(const UWorld* World)
 {
-	return Cast<UMobSurvivorGameInstance>(UGameplayStatics::GetGameInstance(World))->SaveGameInstance;
+	return Cast<UMobSurvivorGameInstance>(UGameplayStatics::GetGameInstance(World));
+}
+
+UMobSurvivorSaveGame* UGameUtils::GetSaveGame(const UWorld* World)
+{
+	return GetGameInstance(World)->SaveGameInstance;
 }

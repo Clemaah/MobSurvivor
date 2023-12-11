@@ -28,11 +28,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UEnemyDropperComponent* Dropper;
 
-	UPROPERTY(Category = EnemyParameters, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
 	float MoveSpeed;
 
-	UPROPERTY(Category = EnemyParameters, EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
 	float Damages;
+
+	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
+	int Points;
 
 protected:
 	// Called when the game starts or when spawned
@@ -48,7 +51,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION(BlueprintCallable)
 	virtual void TryAttacking(AActor* Target);

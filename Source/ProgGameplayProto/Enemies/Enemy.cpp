@@ -8,6 +8,7 @@
 #include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"
+#include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
 
 // Sets default values
 AEnemy::AEnemy()
@@ -49,6 +50,11 @@ void AEnemy::MoveTowardPlayer(float DeltaTime)
 
 void AEnemy::Die()
 {
+	UMobSurvivorGameInstance* GameInstance = UGameUtils::GetGameInstance(GetWorld());
+
+	if (IsValid(GameInstance))
+		GameInstance->GamePoints += Points;
+
 	Destroy();
 }
 

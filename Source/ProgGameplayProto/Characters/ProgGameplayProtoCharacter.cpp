@@ -17,7 +17,6 @@
 #include "ProgGameplayProto/Characters/CharacterData.h"
 #include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/ExperienceComponent.h"
-#include "ProgGameplayProto/System/MobSurvivorParameters.h"
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -105,10 +104,10 @@ void AProgGameplayProtoCharacter::RegisterInstance()
 	Instance = this;
 }
 
-void AProgGameplayProtoCharacter::SetupComponents(const FMobSurvivorParameters& Parameters)
+void AProgGameplayProtoCharacter::SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics)
 {
-	CharacterCharacteristics = Parameters.SelectedCharacter->GetLevelCharacteristics(Parameters.CharactersLevel[Parameters.SelectedCharacter]);
-	Weapon->InitializeWeapon(this, Parameters);
+	CharacterCharacteristics = InCharacterCharacteristics;
+	Weapon->InitializeWeapon(this, InWeaponCharacteristics, InProjectileCharacteristics);
 
 	InitializeCharacterVariables();
 }

@@ -7,7 +7,6 @@
 #include "ProgGameplayProto/LevelData.h"
 #include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/System/MobSurvivorGameMode.h"
-#include "ProgGameplayProto/System/MobSurvivorGameState.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -35,7 +34,6 @@ void AEnemySpawnerManager::BeginPlay()
 void AEnemySpawnerManager::LoadSpawnRules()
 {
 	GameMode = Cast<AMobSurvivorGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
-	GameState = GameMode->GetGameState<AMobSurvivorGameState>();
 
 	ULevelData* gameLevelData = GameMode->GameLevelData;
 
@@ -58,7 +56,7 @@ void AEnemySpawnerManager::EvaluatePunctualRules()
 
 bool AEnemySpawnerManager::EvaluatePunctualRule(FPunctualEnemySpawnRule Rule)
 {
-	if (GameState->GetGameTime() >= Rule.Time)
+	if (GameMode->GetGameTime() >= Rule.Time)
 	{
 		for (int32 i = 0; i < Rule.Number; i++)
 		{
@@ -84,17 +82,15 @@ void AEnemySpawnerManager::EvaluateRangeRules(float DeltaTime)
 
 bool AEnemySpawnerManager::EvaluateRangeRule(float DeltaTime, FRangeEnemySpawnRule& Rule)
 {
-	AMobSurvivorGameState* gameState = GameMode->GetGameState<AMobSurvivorGameState>();
-
 	float minTime = 0;
 	float maxTime = 0;
 	Rule.SpawnCurve.GetRichCurve()->GetTimeRange(minTime, maxTime);
 
-	if (gameState->GetGameTime() > maxTime) return true;
+	if (GameMode->GetGameTime() > maxTime) return true;
 
-	if (gameState->GetGameTime() >= minTime)
+	if (GameMode->GetGameTime() >= minTime)
 	{
-		float currentAmount = Rule.SpawnCurve.GetRichCurve()->Eval(gameState->GetGameTime());
+		float currentAmount = Rule.SpawnCurve.GetRichCurve()->Eval(GameMode->GetGameTime());
 
 		Rule.NumberOfEnemyToSpawn += currentAmount * DeltaTime;
 

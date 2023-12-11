@@ -10,6 +10,8 @@
 #include "ProgGameplayProtoCharacter.generated.h"
 
 
+struct FProjectileCharacteristics;
+struct FWeaponCharacteristics;
 class UProjectileData;
 struct FInputActionValue;
 struct FMobSurvivorParameters;
@@ -123,7 +125,7 @@ public:
 	virtual void RegisterInstance();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetupComponents(const FMobSurvivorParameters& Parameters);
+	virtual void SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
 
 	virtual void InitializeCharacterVariables();
 

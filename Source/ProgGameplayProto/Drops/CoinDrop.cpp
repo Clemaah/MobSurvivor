@@ -13,7 +13,7 @@ void ACoinDrop::Collect()
 
 	if (IsValid(GameSave))
 	{
-		GameSave->ParametersToSave.TotalCoins += CoinAmount;
+		GameSave->TotalCoins += CoinAmount;
 	}
 
 	Destroy();

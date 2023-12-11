@@ -7,6 +7,8 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameUtils.generated.h"
 
+class UMobSurvivorGameInstance;
+class UMobSurvivorSaveGame;
 class AProgGameplayProtoCharacter;
 
 /**
@@ -20,9 +22,12 @@ class PROGGAMEPLAYPROTO_API UGameUtils : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure, Category = "Manager")
+	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
 	static AProgGameplayProtoCharacter* GetMainCharacter();
 
-	UFUNCTION(BlueprintPure, Category = "Manager")
-	static UMobSurvivorSaveGame* GetSaveGame(UWorld* World);
+	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
+	static UMobSurvivorGameInstance* GetGameInstance(const UWorld* World);
+
+	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
+	static UMobSurvivorSaveGame* GetSaveGame(const UWorld* World);
 };

@@ -46,7 +46,7 @@ protected:
 public:
 	UWeaponComponent();
 
-	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, const FMobSurvivorParameters& Parameters);
+	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
 
 	// --- BEHAVIOUR
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

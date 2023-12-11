@@ -4,12 +4,10 @@
 #include "WeaponComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
-#include "ProgGameplayProto/Weapons/WeaponData.h"
 #include "ProgGameplayProto/Weapons/WeaponCharacteristics.h"
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 #include "ProgGameplayProto/Projectiles/Projectile.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
-#include "ProgGameplayProto/System/MobSurvivorParameters.h"
 
 
 
@@ -20,11 +18,11 @@ UWeaponComponent::UWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 }
 
-void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, const FMobSurvivorParameters& Parameters)
+void UWeaponComponent::InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics)
 {
 	Character = NewCharacter;
-	WeaponCharacteristics = Parameters.SelectedWeapon->GetLevelCharacteristics(Parameters.WeaponsLevel[Parameters.SelectedWeapon]);
-	ProjectileCharacteristics = Parameters.SelectedProjectile->GetLevelCharacteristics(Parameters.WeaponsLevel[Parameters.SelectedWeapon]);
+	WeaponCharacteristics = InWeaponCharacteristics;
+	ProjectileCharacteristics = InProjectileCharacteristics;
 }
 
 

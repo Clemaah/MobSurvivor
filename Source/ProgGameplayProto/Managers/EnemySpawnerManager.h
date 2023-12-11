@@ -27,9 +27,6 @@ protected:
 	AMobSurvivorGameMode* GameMode;
 
 	UPROPERTY()
-	AMobSurvivorGameState* GameState;
-
-	UPROPERTY()
 	TArray<FPunctualEnemySpawnRule> PunctualEnemySpawnRules;
 
 	UPROPERTY()
