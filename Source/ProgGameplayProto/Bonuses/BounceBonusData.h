@@ -1,16 +1,16 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#pragma once
+/*#pragma once
 
 #include "CoreMinimal.h"
 #include "BonusData.h"
 #include "BounceBonusData.generated.h"
 
-class UBounceEffect;
+class UBounceEffect;*/
 /**
  *
  */
-UCLASS()
+/*UCLASS()
 class PROGGAMEPLAYPROTO_API UBounceBonusData : public UBonusData
 {
 	GENERATED_BODY()
@@ -25,3 +25,4 @@ protected:
 public:
 	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon) override;
 };
+*/

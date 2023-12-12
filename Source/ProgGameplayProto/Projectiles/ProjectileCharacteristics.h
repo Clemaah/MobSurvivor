@@ -21,7 +21,8 @@ struct PROGGAMEPLAYPROTO_API FProjectileCharacteristics
 		Speed = 0;
 		CriticalHitChance = 0;
 		CriticalHitMultiplier = 0;
-		NumberOfHitsBeforeDestroy = 1;
+		NumberOfBouncesBeforeDestroy = 1;
+		NumberOfPierceBeforeDestroy = 1;
 	}
 
 	FProjectileCharacteristics& operator+=(const FProjectileCharacteristics& Other)
@@ -32,7 +33,8 @@ struct PROGGAMEPLAYPROTO_API FProjectileCharacteristics
 		Speed += Other.Speed;
 		CriticalHitChance += Other.CriticalHitChance;
 		CriticalHitMultiplier += Other.CriticalHitMultiplier;
-		NumberOfHitsBeforeDestroy += Other.NumberOfHitsBeforeDestroy;
+		NumberOfBouncesBeforeDestroy += Other.NumberOfBouncesBeforeDestroy;
+		NumberOfPierceBeforeDestroy += Other.NumberOfPierceBeforeDestroy;
 
 		return *this;
 	}
@@ -62,5 +64,8 @@ struct PROGGAMEPLAYPROTO_API FProjectileCharacteristics
 	float CriticalHitMultiplier;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
-	int NumberOfHitsBeforeDestroy;
+	int NumberOfBouncesBeforeDestroy;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Projectile")
+	int NumberOfPierceBeforeDestroy;
 };

@@ -15,7 +15,7 @@ class PROGGAMEPLAYPROTO_API UBounceEffect : public UProjectileHitEffect
 	GENERATED_BODY()
 
 public:
-	int32 NumberOfAdditionalBounces;
+	int32 NumberOfAdditionalBounces = 1;
 
 public:
 	virtual void RegisterProjectile(AProjectile* Projectile) override;

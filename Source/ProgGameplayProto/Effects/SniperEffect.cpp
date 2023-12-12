@@ -4,5 +4,5 @@
 void USniperEffect::RegisterProjectile(AProjectile* Projectile)
 {
 	Super::RegisterProjectile(Projectile);
-	Projectile->GetCharacteristics()->NumberOfHitsBeforeDestroy += NumberOfEnemyToPierce;
+	Projectile->GetCharacteristics()->NumberOfPierceBeforeDestroy += NumberOfEnemyToPierce;
 }

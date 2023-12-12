@@ -100,10 +100,17 @@ void AProjectile::HitSomething(AActor* OtherActor, FVector HitLocation, FVector 
 
 	OnProjectileHitDelegate.Broadcast(this, HitLocation, OriginLocation);
 
-	Characteristics.NumberOfHitsBeforeDestroy -= 1;
 
-	if (Characteristics.NumberOfHitsBeforeDestroy < 1)
+	Characteristics.NumberOfBouncesBeforeDestroy -= 1;
+	Characteristics.NumberOfPierceBeforeDestroy -= 1;
+
+	if (Characteristics.NumberOfBouncesBeforeDestroy < 1)
 		DestroyProjectile();
+
+	if (Characteristics.NumberOfPierceBeforeDestroy < 1)
+		DestroyProjectile();
+
+
 }
 
 void AProjectile::SetRandomDirection()
