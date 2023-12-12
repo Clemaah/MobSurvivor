@@ -164,7 +164,7 @@ int UMobSurvivorGameInstance::GetWeaponCurrentLevel(UWeaponData* Weapon) const
     if (!IsValid(Weapon))
         return -1;
 
-    return SaveGameInstance->WeaponsCurrentLevel[Weapon] + 1;
+    return SaveGameInstance->WeaponsCurrentLevel[Weapon];
 }
 
 int UMobSurvivorGameInstance::GetProjectileCurrentLevel(UProjectileData* Projectile) const

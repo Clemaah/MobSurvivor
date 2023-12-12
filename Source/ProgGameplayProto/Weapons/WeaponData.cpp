@@ -10,9 +10,34 @@ UWeaponData::UWeaponData()
 	Levels.Init(FWeaponLevel(), 5);
 }
 
-TMap<FString, float> UWeaponData::GetMap(const int Level)
+TMap<FString, float> UWeaponData::GetCumulativeLevelsMap(const int Level)
 {
-	const FWeaponCharacteristics Characteristics = GetLevelCharacteristics(Level);
+	if (Level >= Levels.Num() || Level < 0)
+	{
+		TMap<FString, float> EmptyMap;
+		return EmptyMap;
+	}
+
+	const FWeaponCharacteristics characteristics = GetCumulativeLevelsCharacteristics(Level);
+
+	return GetMap(characteristics, Level);
+}
+
+TMap<FString, float> UWeaponData::GetLevelMap(const int Level)
+{
+	if (Level >= Levels.Num() || Level < 0)
+	{
+		TMap<FString, float> EmptyMap;
+		return EmptyMap;
+	}
+
+	const FWeaponCharacteristics characteristics = Levels[Level].Characteristics;
+
+	return GetMap(characteristics, Level);
+}
+
+TMap<FString, float> UWeaponData::GetMap(const FWeaponCharacteristics& Characteristics, const int Level)
+{
 	TMap<FString, float> ReturnMap;
 
 	ReturnMap.Add(TEXT("FireRate"), Characteristics.FireRate);
@@ -29,7 +54,7 @@ TMap<FString, float> UWeaponData::GetMap(const int Level)
 	return ReturnMap;
 }
 
-FWeaponCharacteristics UWeaponData::GetLevelCharacteristics(const int Level)
+FWeaponCharacteristics UWeaponData::GetCumulativeLevelsCharacteristics(const int Level)
 {
 	FWeaponCharacteristics ReturnStruct;
 

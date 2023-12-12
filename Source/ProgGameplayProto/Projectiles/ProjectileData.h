@@ -32,17 +32,6 @@ class PROGGAMEPLAYPROTO_API UProjectileData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UProjectileData();
-
-	UFUNCTION(BlueprintPure)
-	TMap<FString, float> GetMap(const int Level);
-
-	UFUNCTION(BlueprintPure)
-	FProjectileCharacteristics GetLevelCharacteristics(const int Level);
-
-	UFUNCTION(BlueprintPure)
-	int GetLevelPrice(const int Level);
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
 	FString Name;
 
@@ -55,9 +44,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Effects")
 	TArray<TSubclassOf<UProjectileEffect>> Effects;
 
-public:
+	UProjectileData();
+
+	UFUNCTION(BlueprintPure)
+	TMap<FString, float> GetCumulativeLevelsMap(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	TMap<FString, float> GetLevelMap(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	FProjectileCharacteristics GetCumulativeLevelsCharacteristics(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	int GetLevelPrice(const int Level);
+
 	UFUNCTION(BlueprintCallable)
 	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 
 	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
+
+protected:
+	static TMap<FString, float> GetMap(const FProjectileCharacteristics& Characteristics, const int Level);
 };

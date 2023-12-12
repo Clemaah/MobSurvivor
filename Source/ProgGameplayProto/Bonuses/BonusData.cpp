@@ -36,3 +36,22 @@ void UBonusData::ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponCom
 		Weapon->AddEffect(effect);
 	}
 }
+
+int UBonusData::GetRarityValue()
+{
+	switch (Rarity)
+	{
+	case Common:
+		return 30;
+	case Uncommon:
+		return 15;
+	case Rare:
+		return 8;
+	case Epic:
+		return 3;
+	case Legendary:
+		return 1;
+	default:
+		return 0;
+	}
+}

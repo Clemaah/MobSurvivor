@@ -16,6 +16,10 @@ class UWeaponComponent;
  *
  */
 
+UENUM(BlueprintType)
+enum ERarity { Legendary, Epic, Rare, Uncommon, Common };
+
+
 UCLASS(BlueprintType)
 class PROGGAMEPLAYPROTO_API UBonusData : public UPrimaryDataAsset
 {
@@ -25,11 +29,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true))
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true, ClampMin = 1, ClampMax = 10))
-	int MaxStack = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (ClampMin = 1, ClampMax = 10))
+	int LevelMax = 1;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true, ClampMin = 1, ClampMax = 10))
-	int RarityWeight = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta")
+	TEnumAsByte<ERarity> Rarity = Common;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Effects")
 	TArray<TSubclassOf<UProjectileEffect>> Effects;
@@ -50,4 +54,6 @@ public:
 	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 
 	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
+
+	virtual int GetRarityValue();
 };

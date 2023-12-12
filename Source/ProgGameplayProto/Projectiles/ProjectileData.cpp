@@ -6,7 +6,6 @@
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
-#include "ProgGameplayProto/Effects/BounceEffect.h"
 
 
 UProjectileData::UProjectileData()
@@ -14,9 +13,34 @@ UProjectileData::UProjectileData()
 	Levels.Init(FProjectileLevel(), 5);
 }
 
-TMap<FString, float> UProjectileData::GetMap(const int Level)
+TMap<FString, float> UProjectileData::GetCumulativeLevelsMap(const int Level)
 {
-	const FProjectileCharacteristics Characteristics = GetLevelCharacteristics(Level);
+	if (Level >= Levels.Num() || Level < 0)
+	{
+		TMap<FString, float> EmptyMap;
+		return EmptyMap;
+	}
+
+	const FProjectileCharacteristics characteristics = GetCumulativeLevelsCharacteristics(Level);
+
+	return GetMap(characteristics, Level);
+}
+
+TMap<FString, float> UProjectileData::GetLevelMap(const int Level)
+{
+	if (Level >= Levels.Num() || Level < 0)
+	{
+		TMap<FString, float> EmptyMap;
+		return EmptyMap;
+	}
+
+	const FProjectileCharacteristics characteristics = Levels[Level].Characteristics;
+
+	return GetMap(characteristics, Level);
+}
+
+TMap<FString, float> UProjectileData::GetMap(const FProjectileCharacteristics& Characteristics, const int Level)
+{
 	TMap<FString, float> ReturnMap;
 
 	ReturnMap.Add(TEXT("Damages"), Characteristics.Damages);
@@ -29,7 +53,7 @@ TMap<FString, float> UProjectileData::GetMap(const int Level)
 	return ReturnMap;
 }
 
-FProjectileCharacteristics UProjectileData::GetLevelCharacteristics(const int Level)
+FProjectileCharacteristics UProjectileData::GetCumulativeLevelsCharacteristics(const int Level)
 {
 	FProjectileCharacteristics ReturnStruct;
 

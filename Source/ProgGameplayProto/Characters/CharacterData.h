@@ -31,17 +31,6 @@ class PROGGAMEPLAYPROTO_API UCharacterData : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
-	UCharacterData();
-
-	UFUNCTION(BlueprintPure)
-	TMap<FString, float> GetMap(const int Level);
-
-	UFUNCTION(BlueprintPure)
-	FCharacterCharacteristics GetLevelCharacteristics(const int Level);
-
-	UFUNCTION(BlueprintPure)
-	int GetLevelPrice(const int Level);
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
 	FString Name;
 
@@ -50,4 +39,21 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
 	TArray<FCharacterLevel> Levels;
+
+	UCharacterData();
+
+	UFUNCTION(BlueprintPure)
+	TMap<FString, float> GetCumulativeLevelsMap(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	TMap<FString, float> GetLevelMap(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	FCharacterCharacteristics GetCumulativeLevelsCharacteristics(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	int GetLevelPrice(const int Level);
+
+protected:
+	static TMap<FString, float> GetMap(const FCharacterCharacteristics& Characteristics, const int Level);
 };

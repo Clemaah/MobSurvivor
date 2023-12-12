@@ -28,7 +28,7 @@ void ADrop::MoveTowardCollectingTarget(float DeltaTime)
 	float squaredMoveAmount = CollectionSpeed * DeltaTime;
 	squaredMoveAmount *= squaredMoveAmount;
 
-	if (squaredCurrentDistance - squaredMoveAmount < collectionSqrdDistance)
+	if (squaredCurrentDistance - squaredMoveAmount < CollectionSqrdDistance)
 	{
 		Collect();
 	}

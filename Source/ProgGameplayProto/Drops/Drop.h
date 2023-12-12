@@ -26,7 +26,7 @@ protected:
 
 	bool bIsBeingCollected = false;
 
-	float collectionSqrdDistance = 2500;
+	float CollectionSqrdDistance = 2500;
 
 protected:
 	// Called when the game starts or when spawned

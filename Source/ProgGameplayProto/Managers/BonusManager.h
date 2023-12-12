@@ -28,7 +28,11 @@ class PROGGAMEPLAYPROTO_API ABonusManager : public AInfo
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void LoadBonuses();
+	UFUNCTION(BlueprintCallable)
+	void LoadBonuses();
+
+	UFUNCTION(BlueprintCallable)
+	void ResetAvailableBonuses();
 
 	UFUNCTION(BlueprintCallable)
 	UBonusData* GetRandomBonus();

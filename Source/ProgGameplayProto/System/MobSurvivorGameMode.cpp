@@ -43,6 +43,13 @@ void AMobSurvivorGameMode::Tick(float DeltaSeconds)
 	}
 		
 	GameTime += DeltaSeconds;
+}
 
-	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "Game Time: " + FString::SanitizeFloat(GameTime));
+float AMobSurvivorGameMode::GetCurrentProgressionPercentage() const
+{
+	float output = GameTime / GameLevelData->Duration;
+
+	output = FMath::Clamp(output, 0, 1);
+
+	return output;
 }

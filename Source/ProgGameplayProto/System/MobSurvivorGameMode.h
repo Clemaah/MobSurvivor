@@ -45,4 +45,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE float GetGameTime() const { return GameTime; }
+
+	UFUNCTION(BlueprintPure)
+	float GetCurrentProgressionPercentage() const;
 };

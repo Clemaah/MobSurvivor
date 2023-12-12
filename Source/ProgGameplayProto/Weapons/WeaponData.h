@@ -30,17 +30,6 @@ class PROGGAMEPLAYPROTO_API UWeaponData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UWeaponData();
-
-	UFUNCTION(BlueprintPure)
-	TMap<FString, float> GetMap(const int Level);
-
-	UFUNCTION(BlueprintPure)
-	FWeaponCharacteristics GetLevelCharacteristics(const int Level);
-
-	UFUNCTION(BlueprintPure)
-	int GetLevelPrice(const int Level);
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Meta")
 	FString Name;
 
@@ -49,4 +38,21 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
 	TArray<FWeaponLevel> Levels;
+
+	UWeaponData();
+
+	UFUNCTION(BlueprintPure)
+	TMap<FString, float> GetCumulativeLevelsMap(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	TMap<FString, float> GetLevelMap(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	FWeaponCharacteristics GetCumulativeLevelsCharacteristics(const int Level);
+
+	UFUNCTION(BlueprintPure)
+	int GetLevelPrice(const int Level);
+
+protected:
+	static TMap<FString, float> GetMap(const FWeaponCharacteristics& Characteristics, const int Level);
 };

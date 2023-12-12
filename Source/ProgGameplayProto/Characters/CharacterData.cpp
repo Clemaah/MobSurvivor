@@ -10,9 +10,34 @@ UCharacterData::UCharacterData()
 	Levels.Init(FCharacterLevel(), 5);
 }
 
-TMap<FString, float> UCharacterData::GetMap(const int Level)
+TMap<FString, float> UCharacterData::GetCumulativeLevelsMap(const int Level)
 {
-	const FCharacterCharacteristics Characteristics = GetLevelCharacteristics(Level);
+	if (Level >= Levels.Num() || Level < 0)
+	{
+		TMap<FString, float> EmptyMap;
+		return EmptyMap;
+	}
+
+	const FCharacterCharacteristics characteristics = GetCumulativeLevelsCharacteristics(Level);
+
+	return GetMap(characteristics, Level);
+}
+
+TMap<FString, float> UCharacterData::GetLevelMap(const int Level)
+{
+	if (Level >= Levels.Num() || Level < 0)
+	{
+		TMap<FString, float> EmptyMap;
+		return EmptyMap;
+	}
+
+	const FCharacterCharacteristics characteristics = Levels[Level].Characteristics;
+
+	return GetMap(characteristics, Level);
+}
+
+TMap<FString, float> UCharacterData::GetMap(const FCharacterCharacteristics& Characteristics, const int Level)
+{
 	TMap<FString, float> ReturnMap;
 
 	ReturnMap.Add(TEXT("MaxHealth"), Characteristics.MaxHealth);
@@ -32,7 +57,7 @@ TMap<FString, float> UCharacterData::GetMap(const int Level)
 	return ReturnMap;
 }
 
-FCharacterCharacteristics UCharacterData::GetLevelCharacteristics(const int Level)
+FCharacterCharacteristics UCharacterData::GetCumulativeLevelsCharacteristics(const int Level)
 {
 	FCharacterCharacteristics ReturnStruct;
 
