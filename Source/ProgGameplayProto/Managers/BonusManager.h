@@ -16,11 +16,14 @@ class PROGGAMEPLAYPROTO_API ABonusManager : public AInfo
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<UBonusData*> AllBonuses;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TArray<UBonusData*> AvailableBonuses;
+
+	UPROPERTY(VisibleAnywhere)
+	TMap<UBonusData*, int> HeldBonus;
 
 protected:
 	virtual void BeginPlay() override;
@@ -29,6 +32,11 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	UBonusData* GetRandomBonus();
+
+	UFUNCTION(BlueprintCallable)
+	void AddToHeldBonuses(UBonusData* Bonus);
+
+	int GetWeightedIndex();
 
 public:
 	UPROPERTY(BlueprintReadOnly)

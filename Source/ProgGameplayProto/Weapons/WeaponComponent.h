@@ -32,6 +32,7 @@ protected:
 
 	FProjectileCharacteristics ProjectileCharacteristics;
 
+	UPROPERTY(EditAnywhere)
 	TArray<UProjectileEffect*> Effects;
 
 	float TimeElapsedSinceLastShoot = 0;

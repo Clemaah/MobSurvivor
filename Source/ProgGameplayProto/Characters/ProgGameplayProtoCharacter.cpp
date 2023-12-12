@@ -79,13 +79,13 @@ AProgGameplayProtoCharacter::AProgGameplayProtoCharacter()
 	DropsCollector = CreateDefaultSubobject<USphereComponent>("Drops Collector");
 	DropsCollector->SetRelativeLocation(FVector(0, 0, -90));
 	DropsCollector->SetupAttachment(GetCapsuleComponent());
+
+	RegisterInstance();
 }
 
 void AProgGameplayProtoCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
-	RegisterInstance();
 
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))

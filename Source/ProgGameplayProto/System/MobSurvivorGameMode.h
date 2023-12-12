@@ -32,11 +32,16 @@ protected:
 
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 
+	virtual void BeginPlay() override;
+
 public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnWin();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnLoose();
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE float GetGameTime() const { return GameTime; }

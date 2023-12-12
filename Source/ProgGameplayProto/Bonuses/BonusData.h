@@ -25,8 +25,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true))
 	FText Description;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true))
-	int MaxStack;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true, ClampMin = 1, ClampMax = 10))
+	int MaxStack = 1;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true, ClampMin = 1, ClampMax = 10))
+	int RarityWeight = 1;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Effects")
 	TArray<TSubclassOf<UProjectileEffect>> Effects;

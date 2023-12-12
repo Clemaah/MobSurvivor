@@ -2,7 +2,10 @@
 
 #include "MobSurvivorGameMode.h"
 
+#include "GameUtils.h"
+#include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/LevelData.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Managers/EnemySpawnerManager.h"
 #include "ProgGameplayProto/Managers/BonusManager.h"
 #include "UObject/ConstructorHelpers.h"
@@ -21,6 +24,13 @@ void AMobSurvivorGameMode::InitGame(const FString& MapName, const FString& Optio
 	BonusManager = GetWorld()->SpawnActor<ABonusManager>();
 }
 
+void AMobSurvivorGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	UGameUtils::GetMainCharacter()->GetHealth()->OnHealthDie.AddDynamic(this, &AMobSurvivorGameMode::OnLoose);
+}
+
 
 void AMobSurvivorGameMode::Tick(float DeltaSeconds)
 {
@@ -33,8 +43,6 @@ void AMobSurvivorGameMode::Tick(float DeltaSeconds)
 	}
 		
 	GameTime += DeltaSeconds;
-
-
 
 	GEngine->AddOnScreenDebugMessage(-1, 0, FColor::Green, "Game Time: " + FString::SanitizeFloat(GameTime));
 }
