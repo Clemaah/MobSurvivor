@@ -9,7 +9,7 @@
 class UCharacterData;
 class UWeaponData;
 class UProjectileData;
-class UDefaultParametersData;
+class UGamePlayElementsData;
 class UMobSurvivorSaveGame;
 /**
  * 
@@ -24,7 +24,7 @@ protected:
 	FString SaveName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MobSurvivor|SaveSettings", Meta = (ShowOnlyInnerProperties))
-	UDefaultParametersData* FirstSaveParameters;
+	UGamePlayElementsData* GamePlayElementsData;
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "MobSurvivor|SaveSettings")
@@ -110,6 +110,5 @@ public:
 private:
 	virtual void LogResultOfSaveGame(const bool IsSaved);
 
-	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
-	virtual bool ResetSaveGameParameters();
+	virtual bool UpdateData();
 };

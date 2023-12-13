@@ -8,7 +8,7 @@
 
 #include "MobSurvivorSaveGame.generated.h"
 
-class UDefaultParametersData;
+class UGamePlayElementsData;
 class UProjectileData;
 class UWeaponData;
 class UCharacterData;
@@ -38,4 +38,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SavedParameters")
 	TMap<UProjectileData*, int> ProjectilesCurrentLevel;
+
+
+	UMobSurvivorSaveGame() : TotalCoins(0), TotalPoints(0), PlayerToken("") {}
 };

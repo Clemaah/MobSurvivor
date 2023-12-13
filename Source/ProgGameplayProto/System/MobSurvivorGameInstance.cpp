@@ -3,7 +3,7 @@
 
 #include "MobSurvivorGameInstance.h"
 
-#include "DefaultParametersData.h"
+#include "GamePlayElementsData.h"
 #include "ProgGameplayProto/System/MobSurvivorSaveGame.h"
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 #include "ProgGameplayProto/Characters/CharacterData.h"
@@ -17,7 +17,7 @@ UMobSurvivorGameInstance::UMobSurvivorGameInstance()
 {
     SaveName = "MobSurvivor";
 	GamePoints = 0;
-    FirstSaveParameters = nullptr;
+    GamePlayElementsData = nullptr;
     SaveGameInstance = nullptr;
     SelectedCharacter = nullptr;
     SelectedWeapon = nullptr;
@@ -27,6 +27,8 @@ UMobSurvivorGameInstance::UMobSurvivorGameInstance()
 void UMobSurvivorGameInstance::OnStart()
 {
     LoadGame();
+
+    if (!UpdateData()) return;
 
     if(SaveGameInstance->CharactersCurrentLevel.Num() > 0)
 		SelectedCharacter = SaveGameInstance->CharactersCurrentLevel.begin()->Key;
@@ -50,9 +52,6 @@ void UMobSurvivorGameInstance::LoadGame()
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("No saved games found. Trying to save a new one."));
 
         SaveGameInstance = Cast<UMobSurvivorSaveGame>(UGameplayStatics::CreateSaveGameObject(UMobSurvivorSaveGame::StaticClass()));
-
-        if (!ResetSaveGameParameters())
-            return;
 
         SaveGame();
     }
@@ -84,21 +83,44 @@ void UMobSurvivorGameInstance::LogResultOfSaveGame(const bool IsSaved)
     }
 }
 
-bool UMobSurvivorGameInstance::ResetSaveGameParameters()
+bool UMobSurvivorGameInstance::UpdateData()
 {
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Checking for update."));
 
-    if (!IsValid(FirstSaveParameters))
+    if (!IsValid(GamePlayElementsData))
     {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("No default parameters found."));
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("No update's data found."));
         return false;
     }
 
-    SaveGameInstance->TotalCoins = FirstSaveParameters->TotalCoins;
-    SaveGameInstance->TotalPoints = FirstSaveParameters->TotalPoints;
-    SaveGameInstance->PlayerToken = FirstSaveParameters->PlayerToken;
-    SaveGameInstance->CharactersCurrentLevel = FirstSaveParameters->CharactersCurrentLevel;
-    SaveGameInstance->WeaponsCurrentLevel = FirstSaveParameters->WeaponsCurrentLevel;
-    SaveGameInstance->ProjectilesCurrentLevel = FirstSaveParameters->ProjectilesCurrentLevel;
+    // Adding new GamePlayElement Data
+    for (auto& Element : GamePlayElementsData->Characters)
+        SaveGameInstance->CharactersCurrentLevel.FindOrAdd(Element, 0);
+
+    for (auto& Element : GamePlayElementsData->Weapons)
+        SaveGameInstance->WeaponsCurrentLevel.FindOrAdd(Element, 0);
+
+    for (auto& Element : GamePlayElementsData->Projectiles)
+        SaveGameInstance->ProjectilesCurrentLevel.FindOrAdd(Element, 0);
+
+    // Removing old GamePlayElement Data
+    for(auto Iterator = SaveGameInstance->CharactersCurrentLevel.CreateIterator(); Iterator; ++Iterator)
+    {
+        if (GamePlayElementsData->Characters.Find(Iterator.Key()) == INDEX_NONE)
+            Iterator.RemoveCurrent();
+    }
+
+    for (auto Iterator = SaveGameInstance->WeaponsCurrentLevel.CreateIterator(); Iterator; ++Iterator)
+    {
+        if (GamePlayElementsData->Weapons.Find(Iterator.Key()) == INDEX_NONE)
+            Iterator.RemoveCurrent();
+    }
+
+    for (auto Iterator = SaveGameInstance->ProjectilesCurrentLevel.CreateIterator(); Iterator; ++Iterator)
+    {
+        if (GamePlayElementsData->Projectiles.Find(Iterator.Key()) == INDEX_NONE)
+            Iterator.RemoveCurrent();
+    }
 
     return true;
 }

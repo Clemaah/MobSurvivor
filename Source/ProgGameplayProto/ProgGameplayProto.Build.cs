@@ -9,8 +9,6 @@ public class ProgGameplayProto : ModuleRules
         PrivateDependencyModuleNames.AddRange(new string[] { "CADKernel" });
         PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput" });
-
-        PrivateDependencyModuleNames.Add("HTTP");
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "HTTP", "Json" });
     }
 }
