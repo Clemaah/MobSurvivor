@@ -124,7 +124,6 @@ void UHttpManager::GetLeaderBoard(TArray<TSharedPtr<FJsonValue>>& ResponseArray)
             JSonObject->GetStringField("projectileUsed"),
             JSonObject->GetNumberField("score")
         );
-        UE_LOG(LogTemp, Display, TEXT("Score : %f"), Scores[i]->Score);
     }
 
     OnGetScoresDelegate.Broadcast(Scores);
