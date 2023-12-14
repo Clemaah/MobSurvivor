@@ -8,6 +8,8 @@
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 #include "ProgGameplayProto/Characters/CharacterData.h"
 #include "ProgGameplayProto/Weapons/WeaponData.h"
+
+#include "Json.h"
 #include "Kismet/GameplayStatics.h"
 
 /**
@@ -15,18 +17,25 @@
  */
 UMobSurvivorGameInstance::UMobSurvivorGameInstance()
 {
-    SaveName = "MobSurvivor";
+	SaveName = "MobSurvivor";
 	GamePoints = 0;
-    GamePlayElementsData = nullptr;
-    SaveGameInstance = nullptr;
-    SelectedCharacter = nullptr;
-    SelectedWeapon = nullptr;
-    SelectedProjectile = nullptr;
+	GamePlayElementsData = nullptr;
+	SaveGameInstance = nullptr;
+	SelectedCharacter = nullptr;
+	SelectedWeapon = nullptr;
+	SelectedProjectile = nullptr;
+    HttpManager = NewObject<UHttpManager>();
+    bActivateServer = true;
 }
 
 void UMobSurvivorGameInstance::OnStart()
 {
     LoadGame();
+
+    if(bActivateServer)
+    {
+        HttpManager->Initialize(this);
+    }
 
     if (!UpdateData()) return;
 

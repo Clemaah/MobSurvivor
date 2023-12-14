@@ -8,7 +8,6 @@
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Managers/EnemySpawnerManager.h"
 #include "ProgGameplayProto/Managers/BonusManager.h"
-#include "UObject/ConstructorHelpers.h"
 
 
 AMobSurvivorGameMode::AMobSurvivorGameMode()
