@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Http.h"
+#include "ProgGameplayProto/Managers/HTTPManager.h"
 #include "MobSurvivorGameInstance.generated.h"
 
 class UCharacterData;
@@ -29,6 +31,12 @@ protected:
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "MobSurvivor|SaveSettings")
 	UMobSurvivorSaveGame* SaveGameInstance;
+
+	UPROPERTY(BlueprintReadOnly, Category = "MobSurvivor|GameSettings")
+	UHttpManager* HttpManager;
+
+	UPROPERTY(EditAnywhere, Category = "MobSurvivor|GameSettings")
+	bool bActivateServer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
 	int GamePoints;
@@ -108,7 +116,8 @@ public:
 
 
 private:
-	virtual void LogResultOfSaveGame(const bool IsSaved);
 
 	virtual bool UpdateData();
+
+	void LogResultOfSaveGame(const bool IsSaved);
 };

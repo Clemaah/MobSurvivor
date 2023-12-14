@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "MenuGameMode.generated.h"
 
-class UStartDatas;
+class UScore;
 class AUpgradesManager;
 /**
  * 
@@ -20,6 +20,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	AUpgradesManager* UpgradesManager;
 
+	UFUNCTION(BlueprintImplementableEvent)
+	void InsertScores(const TArray<UScore*>& Scores);
+
 protected:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+
 };
