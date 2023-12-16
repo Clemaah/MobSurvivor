@@ -15,12 +15,14 @@ struct PROGGAMEPLAYPROTO_API FEnemyCharacteristics
 
 	FEnemyCharacteristics()
 	{
-		FireRate = 0;
+		Health = 0;
+		Speed = 0;
 	}
 
 	FEnemyCharacteristics& operator+=(const FEnemyCharacteristics& Other)
 	{
-		FireRate += Other.FireRate;
+		Health += Other.Health;
+		Speed += Other.Speed;
 
 		return *this;
 	}
@@ -31,7 +33,10 @@ struct PROGGAMEPLAYPROTO_API FEnemyCharacteristics
 		return One;
 	}
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy|General")
-		float FireRate;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy|Health")
+		float Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy|Movement")
+		float Speed;
 
 };

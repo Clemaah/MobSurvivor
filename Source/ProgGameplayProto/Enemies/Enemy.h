@@ -4,11 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
+#include "EnemyCharacteristics.h"
 #include "Enemy.generated.h"
+
 
 class UEnemyDropperComponent;
 class UCapsuleComponent;
 class UHealthComponent;
+class UWeaponComponent;
 
 UCLASS()
 class PROGGAMEPLAYPROTO_API AEnemy : public APawn
@@ -38,6 +42,12 @@ public:
 	int Points;
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Enemy")
+	FEnemyCharacteristics EnemyCharacteristics;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
+	UWeaponComponent* Weapon;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -45,6 +55,7 @@ protected:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Die();
+
 
 public:
 	// Called every frame
@@ -56,6 +67,21 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void TryAttacking(AActor* Target);
 
+	virtual void SetupComponents(/*const FCharacterCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void Attack_BP(AActor* Target);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Projectile")
+	TSubclassOf<AProjectile> WeaponProjectileToSpawn;
+
+	// --- GETTERS
+	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
+
+	FORCEINLINE FEnemyCharacteristics GetCharacteristics() const { return EnemyCharacteristics; }
+
+	// --- SETTERS
+	//UFUNCTION()
+	//virtual void UpdateCharacteristics(FEnemyCharacteristics& Other);
+
 };

@@ -6,11 +6,15 @@
 #include "Components/CapsuleComponent.h"
 #include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/HealthComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"
 #include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
+#include "ProgGameplayProto/Weapons/WeaponComponent.h"
 
-// Sets default values
+//////////////////////////////////////////////////////////////////////////
+// --- INITIALIZATION
+
 AEnemy::AEnemy()
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -20,6 +24,8 @@ AEnemy::AEnemy()
 	SetRootComponent(Collision);
 
 	Health = CreateDefaultSubobject<UHealthComponent>("Health");
+
+	Weapon = CreateDefaultSubobject<UWeaponComponent>("Weapon");
 
 	Dropper = CreateDefaultSubobject<UEnemyDropperComponent>("Dropper");
 	Dropper->SetupAttachment(Collision);
@@ -66,6 +72,21 @@ void AEnemy::Tick(float DeltaTime)
 	MoveTowardPlayer(DeltaTime);
 }
 
+void AEnemy::SetupComponents(/*const FEnemyCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics)
+{
+	//EnemyCharacteristics = InCharacterCharacteristics;
+	//Weapon->InitializeWeapon(InWeaponCharacteristics, InProjectileCharacteristics);
+
+	//InitializeCharacterVariables();
+}
+
+/*void AEnemy::InitializeCharacterVariables()
+{
+	DropsCollector->SetSphereRadius(EnemyCharacteristics.DropCollectorRadius * 100);
+	Health->InitializeHealth(EnemyCharacteristics.MaxHealth, EnemyCharacteristics.RegenerationRate);
+	GetCharacterMovement()->MaxWalkSpeed = EnemyCharacteristics.Speed * 1000;
+}*/
+
 // Called to bind functionality to input
 void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -85,3 +106,11 @@ void AEnemy::TryAttacking(AActor* Target)
 
 	Attack_BP(Target);
 }
+
+/*void AEnemy::UpdateCharacteristics(FEnemyCharacteristics& CharacterBonuses)
+{
+	EnemyCharacteristics += CharacterBonuses;
+
+	Health->SetMaxHealth(EnemyCharacteristics.Health);
+	GetMovementComponent()->MaxWalkSpeed = EnemyCharacteristics.Speed * 1000;
+}*/
