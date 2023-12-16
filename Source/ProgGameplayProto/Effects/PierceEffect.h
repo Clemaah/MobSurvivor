@@ -1,16 +1,14 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
-#pragma once
+﻿#pragma once
 
 #include "CoreMinimal.h"
 #include "ProjectileTransformEffect.h"
-#include "BounceEffect.generated.h"
+#include "PierceEffect.generated.h"
 
 /**
  *
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API UBounceEffect : public UProjectileTransformEffect
+class PROGGAMEPLAYPROTO_API UPierceEffect : public UProjectileTransformEffect
 {
 	GENERATED_BODY()
 

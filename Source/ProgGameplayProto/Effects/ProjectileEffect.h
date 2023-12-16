@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "ProjectileEffect.generated.h"
 
 class AProjectile;
@@ -20,9 +19,8 @@ public:
 	virtual void RegisterProjectile(AProjectile* Projectile);
 
 	UFUNCTION()
-	virtual void OnProjectileDestroy(AProjectile* Projectile);
+	virtual void OnProjectileHit(AProjectile* Projectile, FVector HitLocation, FVector OriginLocation);
 
-protected:
-	UPROPERTY()
-	AProjectile* CurrentProjectile;
+	UFUNCTION()
+	virtual void OnProjectileDestroy(AProjectile* Projectile);
 };

@@ -100,10 +100,6 @@ protected:
 
 	// --- OTHER VARIABLES
 
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Projectile")
-	TSubclassOf<AProjectile> WeaponProjectileToSpawn;
-
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Character")
 	FCharacterCharacteristics CharacterCharacteristics;
@@ -141,7 +137,7 @@ public:
 
 	void AutoFire(const FInputActionValue& Value);
 
-	virtual bool WantsToShoot();
+	virtual void WantsToShoot();
 
 
 	// --- EVENTS

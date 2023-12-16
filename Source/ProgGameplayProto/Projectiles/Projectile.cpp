@@ -5,6 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "ProgGameplayProto/ProjectileInteraction.h"
+#include "ProgGameplayProto/Effects/ProjectileEffect.h"
+#include "ProgGameplayProto/Effects/ProjectileTransformEffect.h"
 #include "ProgGameplayProto/Weapons/WeaponCharacteristics.h"
 
 
@@ -23,7 +25,7 @@ AProjectile::AProjectile()
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void AProjectile::InitializeProjectile(const FProjectileCharacteristics& ProjectileCharacteristics, const FWeaponCharacteristics& WeaponCharacteristics)
+void AProjectile::InitializeProjectile(const FWeaponCharacteristics& WeaponCharacteristics, const FProjectileCharacteristics& ProjectileCharacteristics, TArray<UProjectileEffect*> ProjectileEffects)
 {
 	Characteristics = ProjectileCharacteristics;
 
@@ -34,6 +36,19 @@ void AProjectile::InitializeProjectile(const FProjectileCharacteristics& Project
 	Characteristics.CriticalHitChance *= WeaponCharacteristics.CriticalHitChanceMultiplier;
 
 	SetActorScale3D(FVector(Characteristics.Size));
+
+	Effects = ProjectileEffects;
+
+	for (auto effect : Effects)
+	{
+		if (!effect->IsA(UProjectileTransformEffect::StaticClass()) || !bHasTransformEffect)
+		{
+			effect->RegisterProjectile(this);
+
+			if (!bHasTransformEffect)
+				bHasTransformEffect = true;
+		}
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -72,16 +87,14 @@ void AProjectile::CheckForCollisionsAfterMovement(const FVector OriginLocation)
 	params.AddIgnoredActor(this);
 	GetWorld()->SweepMultiByChannel(outHits, OriginLocation, GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_Visibility, shape, params);
 
-	for (int i = 0; i < outHits.Num(); i++)
+	for (auto outHit : outHits)
 	{
 		if (IsValid(LastActorHit))
 		{
-			if (LastActorHit == outHits[i].GetActor()) continue;
+			if (LastActorHit == outHit.GetActor()) continue;
 		}
 
-		HitSomething(outHits[i].GetActor(), outHits[i].Location, OriginLocation);
-
-		OnProjectileHitDelegate.Broadcast(this, outHits[i].Location, OriginLocation);
+		HitSomething(outHit.GetActor(), outHit.Location, OriginLocation);
 
 		if (!bCanPierce) break;
 	}
@@ -100,17 +113,20 @@ void AProjectile::HitSomething(AActor* OtherActor, FVector HitLocation, FVector 
 
 	OnProjectileHitDelegate.Broadcast(this, HitLocation, OriginLocation);
 
+	if (!bHasTransformEffect) {
+		Destroy();
+		return;
+	}
 
-	Characteristics.NumberOfBouncesBeforeDestroy -= 1;
-	Characteristics.NumberOfPierceBeforeDestroy -= 1;
-
-	if (Characteristics.NumberOfBouncesBeforeDestroy < 1)
-		DestroyProjectile();
-
-	if (Characteristics.NumberOfPierceBeforeDestroy < 1)
-		DestroyProjectile();
-
-
+	for (const auto effect : Effects)
+	{
+		if (effect->IsA(UProjectileTransformEffect::StaticClass()))
+		{
+			effect->RegisterProjectile(this);
+			bHasTransformEffect = true;
+			break;
+		}
+	}
 }
 
 void AProjectile::SetRandomDirection()
@@ -139,4 +155,9 @@ float AProjectile::GetDamages()
 FProjectileCharacteristics* AProjectile::GetCharacteristics()
 {
 	return &Characteristics;
+}
+
+void AProjectile::RemoveTransformEffect(UProjectileTransformEffect* Effect)
+{
+	Effects.Remove(Effect);
 }

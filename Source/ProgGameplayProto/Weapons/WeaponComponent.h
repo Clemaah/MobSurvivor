@@ -24,7 +24,7 @@ class PROGGAMEPLAYPROTO_API UWeaponComponent : public UActorComponent
 
 protected:
 	// --- CHARACTER REFERENCE
-	TObjectPtr<AProgGameplayProtoCharacter> Character;
+	TObjectPtr<APawn> Pawn;
 
 
 	// --- OTHER VARIABLES
@@ -37,7 +37,13 @@ protected:
 
 	float TimeElapsedSinceLastShoot = 0;
 
-	bool isDoubleShotActivated;
+	bool bIsDoubleShotActivated;
+
+public:
+	bool bWantsToShoot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Projectile")
+	TSubclassOf<AProjectile> WeaponProjectileToSpawn;
 
 
 
@@ -47,7 +53,7 @@ protected:
 public:
 	UWeaponComponent();
 
-	virtual void InitializeWeapon(AProgGameplayProtoCharacter* NewCharacter, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
+	virtual void InitializeWeapon(APawn* NewPawn, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
 
 	// --- BEHAVIOUR
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

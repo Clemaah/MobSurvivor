@@ -7,6 +7,7 @@
 #include "ProjectileCharacteristics.h"
 #include "Projectile.generated.h"
 
+class UProjectileTransformEffect;
 struct FWeaponCharacteristics;
 class UProjectileEffect;
 class USphereComponent;
@@ -45,7 +46,8 @@ protected:
 
 	float ElapsedRange;
 
-	bool bCanPierce;
+	bool bCanPierce = false;
+	bool bHasTransformEffect = false;
 
 
 	// --- DELEGATES
@@ -63,7 +65,7 @@ public:
 	// --- INITIALIZATION
 	AProjectile();
 
-	virtual void InitializeProjectile(const FProjectileCharacteristics& ProjectileCharacteristics, const FWeaponCharacteristics& WeaponCharacteristics);
+	virtual void InitializeProjectile(const FWeaponCharacteristics& WeaponCharacteristics, const FProjectileCharacteristics& ProjectileCharacteristics, TArray<UProjectileEffect*> ProjectileEffects);
 
 
 	// --- BEHAVIOUR
@@ -87,4 +89,6 @@ public:
 	FORCEINLINE virtual void SetDirection(FVector NewDirection) { Direction = NewDirection; }
 
 	virtual void SetRandomDirection();
+
+	virtual void RemoveTransformEffect(UProjectileTransformEffect* Effect);
 };

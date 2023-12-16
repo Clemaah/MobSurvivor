@@ -173,21 +173,24 @@ void AProgGameplayProtoCharacter::Move(const FInputActionValue& Value)
 void AProgGameplayProtoCharacter::Shoot(const FInputActionValue& Value)
 {
 	bIsHoldingShoot = true;
+	WantsToShoot();
 }
 
 void AProgGameplayProtoCharacter::StopShoot(const FInputActionValue& Value)
 {
 	bIsHoldingShoot = false;
+	WantsToShoot();
 }
 
 void AProgGameplayProtoCharacter::AutoFire(const FInputActionValue& Value)
 {
 	bIsAutoFire = !bIsAutoFire;
+	WantsToShoot();
 }
 
-bool AProgGameplayProtoCharacter::WantsToShoot()
+void AProgGameplayProtoCharacter::WantsToShoot()
 {
-	return bIsHoldingShoot || bIsAutoFire;
+	Weapon->bWantsToShoot = bIsHoldingShoot || bIsAutoFire;
 }
 
 
