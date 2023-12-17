@@ -33,7 +33,7 @@ protected:
 	FProjectileCharacteristics ProjectileCharacteristics;
 
 	UPROPERTY(EditAnywhere)
-	TArray<UProjectileEffect*> Effects;
+	TArray<TSubclassOf<UProjectileEffect>> Effects;
 
 	float TimeElapsedSinceLastShoot = 0;
 
@@ -53,7 +53,7 @@ public:
 public:
 	UWeaponComponent();
 
-	virtual void InitializeWeapon(APawn* NewPawn, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
+	virtual void InitializeWeapon(APawn* NewPawn, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
 
 	// --- BEHAVIOUR
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -85,5 +85,5 @@ protected:
 public:
 	virtual void UpdateCharacteristics(FWeaponCharacteristics& WeaponBonuses, FProjectileCharacteristics& ProjectileBonuses);
 
-	virtual void AddEffect(UProjectileEffect* Effect);
+	virtual void AddEffect(TSubclassOf<UProjectileEffect> Effect);
 };

@@ -104,10 +104,10 @@ void AProgGameplayProtoCharacter::RegisterInstance()
 	Instance = this;
 }
 
-void AProgGameplayProtoCharacter::SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics)
+void AProgGameplayProtoCharacter::SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
 {
 	CharacterCharacteristics = InCharacterCharacteristics;
-	Weapon->InitializeWeapon(this, InWeaponCharacteristics, InProjectileCharacteristics);
+	Weapon->InitializeWeapon(this, InWeaponCharacteristics, InProjectileCharacteristics, ProjectileEffects);
 
 	InitializeCharacterVariables();
 }

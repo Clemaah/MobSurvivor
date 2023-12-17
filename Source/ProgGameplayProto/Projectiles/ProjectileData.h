@@ -58,11 +58,6 @@ public:
 	UFUNCTION(BlueprintPure)
 	int GetLevelPrice(const int Level);
 
-	UFUNCTION(BlueprintCallable)
-	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
-
-	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
-
 protected:
 	static TMap<FString, float> GetMap(const FProjectileCharacteristics& Characteristics, const int Level);
 };

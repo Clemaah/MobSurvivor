@@ -46,7 +46,6 @@ protected:
 
 	float ElapsedRange;
 
-	bool bCanPierce = false;
 	bool bHasTransformEffect = false;
 
 
@@ -65,7 +64,9 @@ public:
 	// --- INITIALIZATION
 	AProjectile();
 
-	virtual void InitializeProjectile(const FWeaponCharacteristics& WeaponCharacteristics, const FProjectileCharacteristics& ProjectileCharacteristics, TArray<UProjectileEffect*> ProjectileEffects);
+	virtual void InitializeProjectile(const FWeaponCharacteristics& WeaponCharacteristics, const FProjectileCharacteristics& ProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>>& ProjectileEffects);
+
+	void ApplyEffects(const TArray<TSubclassOf<UProjectileEffect>>& ProjectileEffects);
 
 
 	// --- BEHAVIOUR

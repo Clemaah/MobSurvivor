@@ -21,20 +21,11 @@ void UBonusData::ApplyOnMainCharacter()
 
 void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
 {
-	ApplyEffects(Character, Weapon);
-
 	Character->UpdateCharacteristics(CharacterBonuses);
 	Weapon->UpdateCharacteristics(WeaponBonuses, ProjectileBonuses);
-}
 
-void UBonusData::ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
-{
-	for (int32 i = 0; i < Effects.Num(); i++)
-	{
-		UProjectileEffect* effect = NewObject<UProjectileEffect>(this, Effects[i]);
-
+	for (TSubclassOf<UProjectileEffect> effect : Effects)
 		Weapon->AddEffect(effect);
-	}
 }
 
 int UBonusData::GetRarityValue()

@@ -10,6 +10,7 @@
 #include "ProgGameplayProtoCharacter.generated.h"
 
 
+class UProjectileEffect;
 struct FProjectileCharacteristics;
 struct FWeaponCharacteristics;
 class UProjectileData;
@@ -121,7 +122,7 @@ public:
 	virtual void RegisterInstance();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
+	virtual void SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
 
 	virtual void InitializeCharacterVariables();
 

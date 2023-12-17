@@ -53,7 +53,5 @@ public:
 
 	virtual void Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
 
-	virtual void ApplyEffects(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon);
-
 	virtual int GetRarityValue();
 };

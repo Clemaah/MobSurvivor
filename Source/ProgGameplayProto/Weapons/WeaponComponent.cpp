@@ -19,11 +19,12 @@ UWeaponComponent::UWeaponComponent()
 	bWantsToShoot = false;
 }
 
-void UWeaponComponent::InitializeWeapon(APawn* NewPawn, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics)
+void UWeaponComponent::InitializeWeapon(APawn* NewPawn, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
 {
 	Pawn = NewPawn;
 	WeaponCharacteristics = InWeaponCharacteristics;
 	ProjectileCharacteristics = InProjectileCharacteristics;
+	Effects = ProjectileEffects;
 }
 
 
@@ -42,7 +43,7 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 
 	if (!IsValid(Pawn))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Is Not Valid !"));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Pawn is not valid !"));
 		return;
 	}
 
@@ -74,7 +75,7 @@ void UWeaponComponent::Shoot()
 {
 	if (!IsValid(WeaponProjectileToSpawn))
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("no weapon proj to spawn!"));
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("No weapon projectile to spawn!"));
 		return;
 	}
 
@@ -204,7 +205,7 @@ void UWeaponComponent::UpdateCharacteristics(FWeaponCharacteristics& WeaponBonus
 	ProjectileCharacteristics += ProjectileBonuses;
 }
 
-void UWeaponComponent::AddEffect(UProjectileEffect* Effect)
+void UWeaponComponent::AddEffect(TSubclassOf<UProjectileEffect> Effect)
 {
 	Effects.Add(Effect);
 }

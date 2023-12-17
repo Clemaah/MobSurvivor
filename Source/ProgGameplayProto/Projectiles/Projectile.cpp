@@ -25,7 +25,7 @@ AProjectile::AProjectile()
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
-void AProjectile::InitializeProjectile(const FWeaponCharacteristics& WeaponCharacteristics, const FProjectileCharacteristics& ProjectileCharacteristics, TArray<UProjectileEffect*> ProjectileEffects)
+void AProjectile::InitializeProjectile(const FWeaponCharacteristics& WeaponCharacteristics, const FProjectileCharacteristics& ProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>>& ProjectileEffects)
 {
 	Characteristics = ProjectileCharacteristics;
 
@@ -37,10 +37,16 @@ void AProjectile::InitializeProjectile(const FWeaponCharacteristics& WeaponChara
 
 	SetActorScale3D(FVector(Characteristics.Size));
 
-	Effects = ProjectileEffects;
+	ApplyEffects(ProjectileEffects);
+}
 
-	for (auto effect : Effects)
+void AProjectile::ApplyEffects(const TArray<TSubclassOf<UProjectileEffect>>& ProjectileEffects)
+{
+	for (auto projectileEffects : ProjectileEffects)
 	{
+		UProjectileEffect* effect = NewObject<UProjectileEffect>(this, projectileEffects);
+		Effects.Add(effect);
+
 		if (!effect->IsA(UProjectileTransformEffect::StaticClass()) || !bHasTransformEffect)
 		{
 			effect->RegisterProjectile(this);
@@ -95,8 +101,6 @@ void AProjectile::CheckForCollisionsAfterMovement(const FVector OriginLocation)
 		}
 
 		HitSomething(outHit.GetActor(), outHit.Location, OriginLocation);
-
-		if (!bCanPierce) break;
 	}
 }
 
@@ -113,8 +117,9 @@ void AProjectile::HitSomething(AActor* OtherActor, FVector HitLocation, FVector 
 
 	OnProjectileHitDelegate.Broadcast(this, HitLocation, OriginLocation);
 
-	if (!bHasTransformEffect) {
-		Destroy();
+	if (bHasTransformEffect)
+	{
+		bHasTransformEffect = false;
 		return;
 	}
 
@@ -127,6 +132,9 @@ void AProjectile::HitSomething(AActor* OtherActor, FVector HitLocation, FVector 
 			break;
 		}
 	}
+
+	if (!bHasTransformEffect)
+		DestroyProjectile();
 }
 
 void AProjectile::SetRandomDirection()
@@ -140,6 +148,7 @@ void AProjectile::SetRandomDirection()
 
 void AProjectile::DestroyProjectile()
 {
+	OnProjectileDestroyDelegate.Broadcast(this);
 	Destroy();
 }
 
