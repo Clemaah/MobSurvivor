@@ -60,6 +60,8 @@ public:
 
 	virtual void TryShooting(float DeltaTime);
 
+	virtual void SpawnProjectile(FVector Direction);
+
 protected:
 	virtual void Shoot();
 
@@ -67,7 +69,6 @@ protected:
 
 	virtual bool CanActivateDoubleShot();
 
-	virtual void SpawnProjectile(FVector Direction);
 
 
 	// --- GETTERS

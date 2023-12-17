@@ -40,9 +40,18 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 {
 	TimeElapsedSinceLastShoot += DeltaTime;
 
-	if (!IsValid(Pawn)) return;
+	if (!IsValid(Pawn))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Is Not Valid !"));
+		return;
+	}
 
-	if (!bWantsToShoot) return;
+
+	if (!bWantsToShoot)
+	{
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("want to shoot fail !"));
+		return;
+	}
 
 	if (TimeElapsedSinceLastShoot >= GetShootDelay())
 	{
@@ -63,7 +72,11 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 
 void UWeaponComponent::Shoot()
 {
-	if (!IsValid(WeaponProjectileToSpawn)) return;
+	if (!IsValid(WeaponProjectileToSpawn))
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("no weapon proj to spawn!"));
+		return;
+	}
 
 	TArray<FVector> shootDirections = ComputeSpreadDirections();
 

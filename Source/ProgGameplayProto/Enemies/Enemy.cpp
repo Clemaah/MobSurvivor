@@ -3,10 +3,11 @@
 
 #include "Enemy.h"
 
+#include "EnemyData.h"
 #include "Components/CapsuleComponent.h"
 #include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/HealthComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
+//#include "GameFramework/CharacterMovementComponent.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"
 #include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
@@ -49,9 +50,20 @@ void AEnemy::MoveTowardPlayer(float DeltaTime)
 	direction.Z = 0;
 	direction.Normalize();
 
-	FVector movement = direction * MoveSpeed * DeltaTime;
+	
+	if (EnemyData->WeaponData && (GetActorLocation() - player->GetActorLocation()).Size() < EnemyData->RangedAttackMaxRange)
+	{
+		Weapon->bWantsToShoot = true;
+		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Attack !"));
+	}
+	else
+	{
+		FVector movement = direction * MoveSpeed * DeltaTime;
+		AddActorWorldOffset(movement);
+		Weapon->bWantsToShoot = false;
 
-	AddActorWorldOffset(movement);
+	}
+
 }
 
 void AEnemy::Die()
@@ -75,9 +87,9 @@ void AEnemy::Tick(float DeltaTime)
 void AEnemy::SetupComponents(/*const FEnemyCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics)
 {
 	//EnemyCharacteristics = InCharacterCharacteristics;
-	//Weapon->InitializeWeapon(InWeaponCharacteristics, InProjectileCharacteristics);
+	Weapon->InitializeWeapon(this,InWeaponCharacteristics, InProjectileCharacteristics);
 
-	//InitializeCharacterVariables();
+	//InitializeCharacterVariables(); 
 }
 
 /*void AEnemy::InitializeCharacterVariables()

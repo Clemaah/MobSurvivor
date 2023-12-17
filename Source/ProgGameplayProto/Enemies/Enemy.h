@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
 #include "EnemyCharacteristics.h"
+#include "EnemyData.h"
 #include "Enemy.generated.h"
 
 
@@ -13,6 +14,7 @@ class UEnemyDropperComponent;
 class UCapsuleComponent;
 class UHealthComponent;
 class UWeaponComponent;
+class UEnemyData;
 
 UCLASS()
 class PROGGAMEPLAYPROTO_API AEnemy : public APawn
@@ -41,12 +43,18 @@ public:
 	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
 	int Points;
 
+	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
+	UEnemyData* EnemyData;
+
+
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Enemy")
 	FEnemyCharacteristics EnemyCharacteristics;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
 	UWeaponComponent* Weapon;
+
+	
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -66,7 +74,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void TryAttacking(AActor* Target);
-
+	UFUNCTION(BlueprintCallable)
 	virtual void SetupComponents(/*const FCharacterCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
 
 	UFUNCTION(BlueprintImplementableEvent)
@@ -79,6 +87,8 @@ public:
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
 
 	FORCEINLINE FEnemyCharacteristics GetCharacteristics() const { return EnemyCharacteristics; }
+
+	//FORCEINLINE UEnemyData GetEnemyData() const { return EnemyData; }
 
 	// --- SETTERS
 	//UFUNCTION()
