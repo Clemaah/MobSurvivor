@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "MenuGameMode.generated.h"
 
+class UHttpManager;
 class UScore;
 class AUpgradesManager;
 /**
@@ -18,10 +19,19 @@ class PROGGAMEPLAYPROTO_API AMenuGameMode : public AGameModeBase
 
 public:
 	UPROPERTY(BlueprintReadOnly)
-	AUpgradesManager* UpgradesManager;
+	UHttpManager* HttpManager;
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void InsertScores(const TArray<UScore*>& Scores);
+	void GetScores(const TArray<UScore*>& Scores);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void Connect(const FString& Pseudo);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DisplayError(const FString& Error);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void DisplayMessage(const FString& Message);
 
 protected:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;

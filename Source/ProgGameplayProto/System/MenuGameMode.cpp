@@ -5,13 +5,15 @@
 
 #include "GameUtils.h"
 #include "MobSurvivorGameInstance.h"
-#include "ProgGameplayProto/Managers/UpgradesManager.h"
 
 void AMenuGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	UpgradesManager = GetWorld()->SpawnActor<AUpgradesManager>();
+	HttpManager = UGameUtils::GetGameInstance(GetWorld())->HttpManager;
 
-	UGameUtils::GetGameInstance(GetWorld())->HttpManager->OnGetScoresDelegate.AddDynamic(this, &AMenuGameMode::InsertScores);
+	HttpManager->OnGetScoresDelegate.AddDynamic(this, &AMenuGameMode::GetScores);
+	HttpManager->OnGetUserDelegate.AddDynamic(this, &AMenuGameMode::Connect);
+	HttpManager->OnErrorDelegate.AddDynamic(this, &AMenuGameMode::DisplayError);
+	HttpManager->OnMessageDelegate.AddDynamic(this, &AMenuGameMode::DisplayMessage);
 }

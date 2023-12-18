@@ -6,7 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "ProgGameplayProto/ProjectileInteraction.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
-#include "ProgGameplayProto/Effects/ProjectileTransformEffect.h"
+#include "ProgGameplayProto/Effects/ProjectilePierceEffect.h"
 #include "ProgGameplayProto/Weapons/WeaponCharacteristics.h"
 
 
@@ -47,12 +47,12 @@ void AProjectile::ApplyEffects(const TArray<TSubclassOf<UProjectileEffect>>& Pro
 		UProjectileEffect* effect = NewObject<UProjectileEffect>(this, projectileEffects);
 		Effects.Add(effect);
 
-		if (!effect->IsA(UProjectileTransformEffect::StaticClass()) || !bHasTransformEffect)
+		if (!effect->IsA(UProjectilePierceEffect::StaticClass()) || !bCanPierce)
 		{
 			effect->RegisterProjectile(this);
 
-			if (!bHasTransformEffect)
-				bHasTransformEffect = true;
+			if (!bCanPierce)
+				bCanPierce = true;
 		}
 	}
 }
@@ -91,7 +91,7 @@ void AProjectile::CheckForCollisionsAfterMovement(const FVector OriginLocation)
 	const FCollisionShape shape = FCollisionShape::MakeSphere(Collision->GetScaledSphereRadius());
 	FCollisionQueryParams params;
 	params.AddIgnoredActor(this);
-	GetWorld()->SweepMultiByChannel(outHits, OriginLocation, GetActorLocation(), FQuat::Identity, ECollisionChannel::ECC_Visibility, shape, params);
+	GetWorld()->SweepMultiByChannel(outHits, OriginLocation, GetActorLocation(), FQuat::Identity, ProjectileType, shape, params);
 
 	for (auto outHit : outHits)
 	{
@@ -117,24 +117,24 @@ void AProjectile::HitSomething(AActor* OtherActor, FVector HitLocation, FVector 
 
 	OnProjectileHitDelegate.Broadcast(this, HitLocation, OriginLocation);
 
-	if (bHasTransformEffect)
+
+	if (!bCanPierce)
 	{
-		bHasTransformEffect = false;
+		DestroyProjectile();
 		return;
 	}
 
+	bCanPierce = false;
+
 	for (const auto effect : Effects)
 	{
-		if (effect->IsA(UProjectileTransformEffect::StaticClass()))
+		if (effect->IsA(UProjectilePierceEffect::StaticClass()))
 		{
 			effect->RegisterProjectile(this);
-			bHasTransformEffect = true;
+			bCanPierce = true;
 			break;
 		}
 	}
-
-	if (!bHasTransformEffect)
-		DestroyProjectile();
 }
 
 void AProjectile::SetRandomDirection()
@@ -166,7 +166,7 @@ FProjectileCharacteristics* AProjectile::GetCharacteristics()
 	return &Characteristics;
 }
 
-void AProjectile::RemoveTransformEffect(UProjectileTransformEffect* Effect)
+void AProjectile::RemoveTransformEffect(UProjectilePierceEffect* Effect)
 {
 	Effects.Remove(Effect);
 }

@@ -7,7 +7,7 @@
 #include "ProjectileCharacteristics.h"
 #include "Projectile.generated.h"
 
-class UProjectileTransformEffect;
+class UProjectilePierceEffect;
 struct FWeaponCharacteristics;
 class UProjectileEffect;
 class USphereComponent;
@@ -31,6 +31,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* Mesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TEnumAsByte<ECollisionChannel> ProjectileType;
+
 
 	// --- OTHER VARIABLES
 	UPROPERTY()
@@ -46,7 +49,7 @@ protected:
 
 	float ElapsedRange;
 
-	bool bHasTransformEffect = false;
+	bool bCanPierce = false;
 
 
 	// --- DELEGATES
@@ -91,5 +94,5 @@ public:
 
 	virtual void SetRandomDirection();
 
-	virtual void RemoveTransformEffect(UProjectileTransformEffect* Effect);
+	virtual void RemoveTransformEffect(UProjectilePierceEffect* Effect);
 };

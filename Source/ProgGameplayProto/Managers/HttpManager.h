@@ -4,11 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Info.h"
-#include "Http.h"
-#include "Json.h"
 #include "HttpManager.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGetScoresSignature, const TArray<UScore*>&, Scores);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStringResponseSignature, const FString&, String);
 
 class UMobSurvivorGameInstance;
 /**
@@ -27,21 +26,42 @@ class PROGGAMEPLAYPROTO_API UHttpManager : public UObject
 public:
 	FOnGetScoresSignature OnGetScoresDelegate;
 
+	FOnStringResponseSignature OnGetUserDelegate;
+
+	FOnStringResponseSignature OnErrorDelegate;
+
+	FOnStringResponseSignature OnMessageDelegate;
+
 	void Initialize(UMobSurvivorGameInstance* InGameInstance);
 
 	UFUNCTION(BlueprintCallable)
+	void GetToken(FString pseudo, FString password);
+
+	UFUNCTION(BlueprintCallable)
+	void GetUser(FString token);
+
+	UFUNCTION(BlueprintCallable)
+	void GetLeaderBoard();
+
+	UFUNCTION(BlueprintCallable)
+	void InsertUser(FString email, FString pseudo, FString password);
+
+	UFUNCTION(BlueprintCallable)
+	void InsertScore(FString token, FString character, FString weapon, FString projectile, int score);
+
+private:
 	void SendRequest(const FString& Action, const TMap<FString, FString>& Arguments);
 
-	void ProcessResponse(const FString Action, TArray<TSharedPtr<FJsonValue>>& ResponseArray);
+	void ProcessResponseObject(const FString Action, TSharedPtr<FJsonObject>& ResponseArray);
 
-	void Connection(TSharedPtr<FJsonObject> ResponseObject);
+	void GetTokenResponse(TSharedPtr<FJsonObject> ResponseObject);
 
-	void GetUser(TSharedPtr<FJsonObject> ResponseObject);
+	void GetUserResponse(TSharedPtr<FJsonObject> ResponseObject);
 
-	void GetLeaderBoard(TArray<TSharedPtr<FJsonValue>>& ResponseArray);
+	void GetLeaderBoardResponse(TArray<TSharedPtr<FJsonValue>>& ResponseArray);
 
-	void InsertUser(TSharedPtr<FJsonObject> ResponseObject);
+	void InsertUserResponse(TSharedPtr<FJsonObject> ResponseObject);
 
-	void InsertScore(TSharedPtr<FJsonObject> ResponseObject);
+	void InsertScoreResponse(TSharedPtr<FJsonObject> ResponseObject);
 
 };

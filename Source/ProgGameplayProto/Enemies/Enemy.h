@@ -10,6 +10,10 @@
 #include "Enemy.generated.h"
 
 
+struct FWeaponCharacteristics;
+class UProjectileEffect;
+struct FProjectileCharacteristics;
+class AProjectile;
 class UEnemyDropperComponent;
 class UCapsuleComponent;
 class UHealthComponent;
@@ -74,8 +78,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	virtual void TryAttacking(AActor* Target);
+
 	UFUNCTION(BlueprintCallable)
-	virtual void SetupComponents(/*const FCharacterCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics);
+	virtual void SetupComponents(/*const FCharacterCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void Attack_BP(AActor* Target);

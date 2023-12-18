@@ -1,9 +1,9 @@
-﻿#include "ProjectileTransformEffect.h"
+﻿#include "ProjectilePierceEffect.h"
 
 #include "ProgGameplayProto/Projectiles/Projectile.h"
 
 
-void UProjectileTransformEffect::OnProjectileHit(AProjectile* Projectile, FVector HitLocation, FVector OriginLocation)
+void UProjectilePierceEffect::OnProjectileHit(AProjectile* Projectile, FVector HitLocation, FVector OriginLocation)
 {
 	Super::OnProjectileHit(Projectile, HitLocation, OriginLocation);
 

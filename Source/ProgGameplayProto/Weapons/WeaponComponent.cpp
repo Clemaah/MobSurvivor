@@ -3,11 +3,12 @@
 
 #include "WeaponComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Weapons/WeaponCharacteristics.h"
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 #include "ProgGameplayProto/Projectiles/Projectile.h"
 #include "ProgGameplayProto/Effects/ProjectileEffect.h"
-
+#include "ProgGameplayProto/System/GameUtils.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -41,18 +42,9 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 {
 	TimeElapsedSinceLastShoot += DeltaTime;
 
-	if (!IsValid(Pawn))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Pawn is not valid !"));
-		return;
-	}
+	if (!IsValid(Pawn)) return;
 
-
-	if (!bWantsToShoot)
-	{
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("want to shoot fail !"));
-		return;
-	}
+	if (!bWantsToShoot) return;
 
 	if (TimeElapsedSinceLastShoot >= GetShootDelay())
 	{
@@ -71,22 +63,6 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 	}
 }
 
-void UWeaponComponent::Shoot()
-{
-	if (!IsValid(WeaponProjectileToSpawn))
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("No weapon projectile to spawn!"));
-		return;
-	}
-
-	TArray<FVector> shootDirections = ComputeSpreadDirections();
-
-	for (int i = 0; i < shootDirections.Num(); i++)
-	{
-		SpawnProjectile(shootDirections[i]);
-	}
-}
-
 bool UWeaponComponent::CanActivateDoubleShot()
 {
 	const float value = WeaponCharacteristics.DoubleShotChance;
@@ -97,11 +73,28 @@ bool UWeaponComponent::CanActivateDoubleShot()
 	return diceRoll <= value * multiplier;
 }
 
+void UWeaponComponent::Shoot()
+{
+	if (!IsValid(WeaponProjectileToSpawn)) return;
+
+	TArray<FVector> shootDirections = ComputeSpreadDirections();
+
+	for (int i = 0; i < shootDirections.Num(); i++)
+	{
+		SpawnProjectile(shootDirections[i]);
+	}
+}
+
 TArray<FVector> UWeaponComponent::ComputeSpreadDirections()
 {
 	TArray<FVector> directions;
+	FVector centralDirection;
 
-	FVector centralDirection = GetMouseDirection();
+	if(Pawn->IsA(AProgGameplayProtoCharacter::StaticClass()))
+		centralDirection = GetMouseDirection();
+	else
+		centralDirection = GetPlayerDirection();
+
 	const int numberOfProjectiles = WeaponCharacteristics.ShotsNumber;
 
 	if (numberOfProjectiles < 2)
@@ -126,21 +119,6 @@ TArray<FVector> UWeaponComponent::ComputeSpreadDirections()
 	}
 
 	return directions;
-}
-
-void UWeaponComponent::SpawnProjectile(FVector Direction)
-{
-	const FVector spawnLocation = Pawn->GetActorLocation();
-	const FRotator spawnRotation = FRotator::ZeroRotator;
-
-	AProjectile* projectile = Pawn->GetWorld()->SpawnActor<AProjectile>(WeaponProjectileToSpawn, spawnLocation, spawnRotation);
-
-	projectile->InitializeProjectile(WeaponCharacteristics, ProjectileCharacteristics, Effects);
-
-	if (Direction == FVector::ZeroVector)
-		Direction = Pawn->GetActorForwardVector();
-
-	projectile->SetDirection(Direction);
 }
 
 FVector UWeaponComponent::GetMouseDirection()
@@ -169,6 +147,32 @@ FVector UWeaponComponent::GetMouseDirection()
 	}
 
 	return Pawn->GetActorForwardVector();
+}
+
+FVector UWeaponComponent::GetPlayerDirection()
+{
+	FVector pawnLocation = Pawn->GetActorLocation();
+	FVector playerLocation = UGameUtils::GetMainCharacter()->GetActorLocation();
+
+	FVector direction = playerLocation - pawnLocation;
+	direction.Normalize();
+
+	return direction;
+}
+
+void UWeaponComponent::SpawnProjectile(FVector Direction)
+{
+	const FVector spawnLocation = Pawn->GetActorLocation();
+	const FRotator spawnRotation = FRotator::ZeroRotator;
+
+	AProjectile* projectile = Pawn->GetWorld()->SpawnActor<AProjectile>(WeaponProjectileToSpawn, spawnLocation, spawnRotation);
+
+	projectile->InitializeProjectile(WeaponCharacteristics, ProjectileCharacteristics, Effects);
+
+	if (Direction == FVector::ZeroVector)
+		Direction = Pawn->GetActorForwardVector();
+
+	projectile->SetDirection(Direction);
 }
 
 float UWeaponComponent::GetShootDelay()

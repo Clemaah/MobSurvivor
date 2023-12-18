@@ -8,8 +8,6 @@
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
 #include "ProgGameplayProto/Characters/CharacterData.h"
 #include "ProgGameplayProto/Weapons/WeaponData.h"
-
-#include "Json.h"
 #include "Kismet/GameplayStatics.h"
 
 /**
@@ -25,17 +23,11 @@ UMobSurvivorGameInstance::UMobSurvivorGameInstance()
 	SelectedWeapon = nullptr;
 	SelectedProjectile = nullptr;
     HttpManager = NewObject<UHttpManager>();
-    bActivateServer = true;
 }
 
 void UMobSurvivorGameInstance::OnStart()
 {
     LoadGame();
-
-    if(bActivateServer)
-    {
-        HttpManager->Initialize(this);
-    }
 
     if (!UpdateData()) return;
 
@@ -47,6 +39,12 @@ void UMobSurvivorGameInstance::OnStart()
 
     if (SaveGameInstance->ProjectilesCurrentLevel.Num() > 0)
 		SelectedProjectile = SaveGameInstance->ProjectilesCurrentLevel.begin()->Key;
+
+    HttpManager->Initialize(this);
+
+    if(!SaveGameInstance->PlayerToken.IsEmpty()) 
+		HttpManager->GetUser(SaveGameInstance->PlayerToken);
+    
 }
 
 void UMobSurvivorGameInstance::LoadGame()

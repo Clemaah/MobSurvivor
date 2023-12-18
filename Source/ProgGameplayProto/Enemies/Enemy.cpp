@@ -61,7 +61,6 @@ void AEnemy::MoveTowardPlayer(float DeltaTime)
 		FVector movement = direction * MoveSpeed * DeltaTime;
 		AddActorWorldOffset(movement);
 		Weapon->bWantsToShoot = false;
-
 	}
 
 }
@@ -84,10 +83,10 @@ void AEnemy::Tick(float DeltaTime)
 	MoveTowardPlayer(DeltaTime);
 }
 
-void AEnemy::SetupComponents(/*const FEnemyCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics)
+void AEnemy::SetupComponents(/*const FEnemyCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
 {
 	//EnemyCharacteristics = InCharacterCharacteristics;
-	Weapon->InitializeWeapon(this,InWeaponCharacteristics, InProjectileCharacteristics);
+	Weapon->InitializeWeapon(this,InWeaponCharacteristics, InProjectileCharacteristics, ProjectileEffects);
 
 	//InitializeCharacterVariables(); 
 }

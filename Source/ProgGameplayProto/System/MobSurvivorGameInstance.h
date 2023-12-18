@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "Http.h"
 #include "ProgGameplayProto/Managers/HTTPManager.h"
 #include "MobSurvivorGameInstance.generated.h"
 
@@ -35,8 +34,8 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "MobSurvivor|GameSettings")
 	UHttpManager* HttpManager;
 
-	UPROPERTY(EditAnywhere, Category = "MobSurvivor|GameSettings")
-	bool bActivateServer;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
+	FString PlayerPseudo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
 	int GamePoints;

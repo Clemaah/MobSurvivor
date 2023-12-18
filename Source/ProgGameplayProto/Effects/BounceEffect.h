@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProjectileTransformEffect.h"
+#include "ProjectilePierceEffect.h"
 #include "BounceEffect.generated.h"
 
 /**
  *
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API UBounceEffect : public UProjectileTransformEffect
+class PROGGAMEPLAYPROTO_API UBounceEffect : public UProjectilePierceEffect
 {
 	GENERATED_BODY()
 

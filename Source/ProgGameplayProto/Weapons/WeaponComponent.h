@@ -74,6 +74,8 @@ protected:
 	// --- GETTERS
 	virtual FVector GetMouseDirection();
 
+	FVector GetPlayerDirection();
+
 	virtual float GetShootDelay();
 
 	virtual float GetPrecisionRandomAngle();

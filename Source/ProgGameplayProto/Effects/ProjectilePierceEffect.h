@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "ProjectileEffect.h"
-#include "ProjectileTransformEffect.generated.h"
+#include "ProjectilePierceEffect.generated.h"
 
 /**
  *
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API UProjectileTransformEffect : public UProjectileEffect
+class PROGGAMEPLAYPROTO_API UProjectilePierceEffect : public UProjectileEffect
 {
 	GENERATED_BODY()
 

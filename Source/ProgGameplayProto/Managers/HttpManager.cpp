@@ -1,12 +1,61 @@
 ﻿#include "HttpManager.h"
 
+#include "Http.h"
 #include "ProgGameplayProto/Score.h"
 #include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
+#include "ProgGameplayProto/System/MobSurvivorSaveGame.h"
 
 void UHttpManager::Initialize(UMobSurvivorGameInstance* InGameInstance)
 {
     GameInstance = InGameInstance;
 }
+
+void UHttpManager::GetToken(FString pseudo, FString password)
+{
+    TMap<FString, FString> arguments;
+    arguments.Add("pseudo", pseudo);
+    arguments.Add("password", password);
+
+    SendRequest("getToken", arguments);
+}
+
+void UHttpManager::GetUser(FString token)
+{
+    TMap<FString, FString> arguments;
+    arguments.Add("token", token);
+
+    SendRequest("getUser", arguments);
+}
+
+void UHttpManager::GetLeaderBoard()
+{
+    TMap<FString, FString> arguments;
+    SendRequest("getLeaderBoard", arguments);
+}
+
+void UHttpManager::InsertUser(FString email, FString pseudo, FString password)
+{
+    TMap<FString, FString> arguments;
+    arguments.Add("email", email);
+    arguments.Add("pseudo", pseudo);
+    arguments.Add("password", password);
+
+    SendRequest("insertUser", arguments);
+}
+
+void UHttpManager::InsertScore(FString token, FString character, FString weapon, FString projectile, int score)
+{
+    TMap<FString, FString> arguments;
+    arguments.Add("token", token);
+    arguments.Add("character", character);
+    arguments.Add("weapon", weapon);
+    arguments.Add("projectile", projectile);
+    arguments.Add("score", FString::FromInt(score));
+
+    SendRequest("insertScore", arguments);
+}
+
+
 
 void UHttpManager::SendRequest(const FString& Action, const TMap<FString, FString>& Arguments)
 {
@@ -35,13 +84,19 @@ void UHttpManager::SendRequest(const FString& Action, const TMap<FString, FStrin
 
                 check(IsInGameThread());
 
-                TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(Response->GetContentAsString());
-                TArray<TSharedPtr<FJsonValue>> ResponseArray;
+                FString actionResponse = Request->GetURL().Mid(BaseUrl.Len());
 
-                if (FJsonSerializer::Deserialize(JsonReader, ResponseArray))
-                {
-                    ProcessResponse(Request->GetURL().Mid(BaseUrl.Len()), ResponseArray);
-                }
+                TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(Response->GetContentAsString());
+
+                TArray<TSharedPtr<FJsonValue>> ResponseArray;
+                TSharedPtr<FJsonObject> ResponseObject;
+
+
+	            if (actionResponse == "getLeaderBoard" && FJsonSerializer::Deserialize(JsonReader, ResponseArray))
+                    GetLeaderBoardResponse(ResponseArray);
+
+                else if (FJsonSerializer::Deserialize(JsonReader, ResponseObject))
+                    ProcessResponseObject(actionResponse, ResponseObject);
 
                 else
                     UE_LOG(LogTemp, Error, TEXT("Failed to deserialize Server response"));
@@ -60,57 +115,61 @@ void UHttpManager::SendRequest(const FString& Action, const TMap<FString, FStrin
     UE_LOG(LogTemp, Log, TEXT("Server request: %s; content:%s"), *url, *RequestContent);
 }
 
-void UHttpManager::ProcessResponse(const FString Action, TArray<TSharedPtr<FJsonValue>>& ResponseArray)
+void UHttpManager::ProcessResponseObject(const FString Action, TSharedPtr<FJsonObject>& ResponseObject)
 {
-    if (Action == "connect")
+    if (Action == "getToken")
     {
-        Connection(ResponseArray[0]->AsObject());
+        GetTokenResponse(ResponseObject);
         return;
     }
 
     if (Action == "getUser")
     {
-        GetUser(ResponseArray[0]->AsObject());
-        return;
-    }
-
-    if (Action == "getLeaderBoard")
-    {
-        GetLeaderBoard(ResponseArray);
+        GetUserResponse(ResponseObject);
         return;
     }
 
     if (Action == "insertScore")
     {
-        InsertScore(ResponseArray[0]->AsObject());
+        InsertScoreResponse(ResponseObject);
         return;
     }
 
     if (Action == "insertUser")
     {
-        InsertUser(ResponseArray[0]->AsObject());
+        InsertUserResponse(ResponseObject);
         return;
     }
 
     UE_LOG(LogTemp, Error, TEXT("Unknown action : %s"), *Action);
 }
 
-
-
-
-
-
-
-
-void UHttpManager::Connection(TSharedPtr<FJsonObject> ResponseObject)
+void UHttpManager::GetTokenResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
+    if (!ResponseObject->GetBoolField("success"))
+    {
+        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        return;
+    }
+
+    GameInstance->SaveGameInstance->PlayerToken = ResponseObject->GetStringField("token");
+    GameInstance->SaveGame();
+    GetUser(ResponseObject->GetStringField("token"));
 }
 
-void UHttpManager::GetUser(TSharedPtr<FJsonObject> ResponseObject)
+void UHttpManager::GetUserResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
+    if(!ResponseObject->GetBoolField("success"))
+    {
+        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        return;
+    }
+
+	OnGetUserDelegate.Broadcast(ResponseObject->GetStringField("pseudo"));
+    OnMessageDelegate.Broadcast(ResponseObject->GetStringField("message"));
 }
 
-void UHttpManager::GetLeaderBoard(TArray<TSharedPtr<FJsonValue>>& ResponseArray)
+void UHttpManager::GetLeaderBoardResponse(TArray<TSharedPtr<FJsonValue>>& ResponseArray)
 {
     TArray<UScore*> Scores;
     for (int i = 0; i < ResponseArray.Num(); ++i)
@@ -129,11 +188,25 @@ void UHttpManager::GetLeaderBoard(TArray<TSharedPtr<FJsonValue>>& ResponseArray)
     OnGetScoresDelegate.Broadcast(Scores);
 }
 
-void UHttpManager::InsertUser(TSharedPtr<FJsonObject> ResponseObject)
+void UHttpManager::InsertUserResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
+    if (!ResponseObject->GetBoolField("success"))
+    {
+        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        return;
+    }
+
+    OnMessageDelegate.Broadcast(ResponseObject->GetStringField("message"));
 }
 
-void UHttpManager::InsertScore(TSharedPtr<FJsonObject> ResponseObject)
+void UHttpManager::InsertScoreResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
+    if (!ResponseObject->GetBoolField("success"))
+    {
+        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        return;
+    }
+
+    OnMessageDelegate.Broadcast(ResponseObject->GetStringField("message"));
 }
 
