@@ -39,17 +39,10 @@ public:
 	UEnemyDropperComponent* Dropper;
 
 	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
-	float MoveSpeed;
-
-	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
-	float Damages;
-
-	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
-	int Points;
-
-	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
 	UEnemyData* EnemyData;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FVector ClusterMovementDirection;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Enemy")

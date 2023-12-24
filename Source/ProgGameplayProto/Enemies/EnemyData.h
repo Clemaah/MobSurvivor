@@ -11,6 +11,15 @@ class UCharacterData;
 class UWeaponData;
 class UProjectileData;
 
+
+UENUM(BlueprintType)
+enum class EEnemyType : uint8 {
+	CAC		 UMETA(DisplayName = "CAC"),
+	Distance    UMETA(DisplayName = "Distance"),
+	Weak     UMETA(DisplayName = "Weak"),
+	Big     UMETA(DisplayName = "Big"),
+	Boss     UMETA(DisplayName = "Boss"),
+};
 /**
  * 
  */
@@ -23,11 +32,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 		FString Name;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+		EEnemyType EnemyType;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", Meta = (MultiLine = true))
 		FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+		int Points;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 		float HitPoints;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+		float MoveSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 		float Damage_CAC;
@@ -37,7 +55,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 		UWeaponData* WeaponData;
-
 };
 
 

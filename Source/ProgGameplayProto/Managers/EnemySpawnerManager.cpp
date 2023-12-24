@@ -58,9 +58,34 @@ bool AEnemySpawnerManager::EvaluatePunctualRule(FPunctualEnemySpawnRule Rule)
 {
 	if (GameMode->GetGameTime() >= Rule.Time)
 	{
-		for (int32 i = 0; i < Rule.Number; i++)
+		if (Rule.Enemy->GetDefaultObject<AEnemy>()->EnemyData->EnemyType == EEnemyType::Weak)
 		{
-			SpawnEnemy(Rule.Enemy);
+			AActor* mainCharacter = UGameUtils::GetMainCharacter();
+			if (!IsValid(mainCharacter))
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, TEXT("No Character !"));
+				return false;
+			}
+
+			const FVector ClusterSpawnLocation = GetSpawnLocation();
+			FVector ClusterMovementDirection = mainCharacter->GetActorLocation() - ClusterSpawnLocation;
+			ClusterMovementDirection.Z = 0;
+			ClusterMovementDirection.Normalize();
+
+			//if (ClusterMovementDirection == mainCharacter->GetActorLocation())
+			//	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("BBBB !"));
+
+			for (int32 i = 0; i < Rule.Number; i++)
+			{
+				SpawnEnemyInCluster(Rule.Enemy, ClusterSpawnLocation, ClusterMovementDirection);
+			}
+		}
+		else
+		{
+			for (int32 i = 0; i < Rule.Number; i++)
+			{
+				SpawnEnemy(Rule.Enemy);
+			}
 		}
 
 		return true;
@@ -112,6 +137,17 @@ void AEnemySpawnerManager::SpawnEnemy(TSubclassOf<AEnemy> EnemyClass)
 	GetWorld()->SpawnActor<AEnemy>(EnemyClass, spawnLocation, FRotator::ZeroRotator);
 }
 
+void AEnemySpawnerManager::SpawnEnemyInCluster(TSubclassOf<AEnemy> EnemyClass, FVector ClusterSpawnLocation, FVector ClusterMovementDirection)
+{
+	const FVector spawnLocation = GetSpawnLocationForCluster(ClusterSpawnLocation);
+
+	lastEnemySpawned = GetWorld()->SpawnActor<AEnemy>(EnemyClass, spawnLocation, FRotator::ZeroRotator);
+
+	if (lastEnemySpawned == nullptr)
+		GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("AAAAAAAAAAAAAAAA !"));
+	else lastEnemySpawned->ClusterMovementDirection = ClusterMovementDirection;
+}
+
 FVector AEnemySpawnerManager::GetSpawnLocation()
 {
 	AActor* mainCharacter = UGameUtils::GetMainCharacter();
@@ -123,6 +159,18 @@ FVector AEnemySpawnerManager::GetSpawnLocation()
 
 	FVector offset = direction * 2000;
 	FVector output = mainCharacter->GetActorLocation() + offset;
+
+	return output;
+}
+
+FVector AEnemySpawnerManager::GetSpawnLocationForCluster(FVector ClusterSpawnLocation)
+{
+
+	FVector direction = FVector::ForwardVector;
+	direction = direction.RotateAngleAxis(FMath::FRandRange(0.0f, 360.0f), FVector::UpVector);
+
+	FVector offset = direction * FMath::FRandRange(100.0f, 400.0f);
+	FVector output = ClusterSpawnLocation + offset;
 
 	return output;
 }

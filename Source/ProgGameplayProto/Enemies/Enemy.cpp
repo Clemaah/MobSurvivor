@@ -51,16 +51,28 @@ void AEnemy::MoveTowardPlayer(float DeltaTime)
 	direction.Normalize();
 
 	
-	if (EnemyData->WeaponData && (GetActorLocation() - player->GetActorLocation()).Size() < EnemyData->RangedAttackMaxRange)
+	if (EnemyData->EnemyType == EEnemyType::Distance)
 	{
-		Weapon->bWantsToShoot = true;
-		//GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, TEXT("Attack !"));
+		if((GetActorLocation() - player->GetActorLocation()).Size() < EnemyData->RangedAttackMaxRange)
+		{
+			Weapon->bWantsToShoot = true;
+		}
+		else
+		{
+			const FVector movement = direction * EnemyData->MoveSpeed * DeltaTime;
+			AddActorWorldOffset(movement);
+			Weapon->bWantsToShoot = false;
+		}
+	}
+	else if (EnemyData->EnemyType == EEnemyType::Weak)
+	{
+		const FVector movement = ClusterMovementDirection * EnemyData->MoveSpeed * DeltaTime;
+		AddActorWorldOffset(movement);
 	}
 	else
 	{
-		FVector movement = direction * MoveSpeed * DeltaTime;
+		const FVector movement = direction * EnemyData->MoveSpeed * DeltaTime;
 		AddActorWorldOffset(movement);
-		Weapon->bWantsToShoot = false;
 	}
 
 }
@@ -70,7 +82,7 @@ void AEnemy::Die()
 	UMobSurvivorGameInstance* GameInstance = UGameUtils::GetGameInstance(GetWorld());
 
 	if (IsValid(GameInstance))
-		GameInstance->GamePoints += Points;
+		GameInstance->GamePoints += EnemyData->Points;
 
 	Destroy();
 }
@@ -113,7 +125,7 @@ void AEnemy::TryAttacking(AActor* Target)
 
 	if (!IsValid(targetHealth)) return;
 
-	targetHealth->HitByAttack(Damages, this);
+	targetHealth->HitByAttack(EnemyData->Damage_CAC, this);
 
 	Attack_BP(Target);
 }

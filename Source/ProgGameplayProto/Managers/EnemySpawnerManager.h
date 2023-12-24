@@ -32,6 +32,8 @@ protected:
 	UPROPERTY()
 	TArray<FRangeEnemySpawnRule> RangeEnemySpawnRules;
 
+	UPROPERTY()
+	AEnemy* lastEnemySpawned;
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
@@ -53,5 +55,9 @@ protected:
 
 	virtual void SpawnEnemy(TSubclassOf<AEnemy> EnemyClass);
 
+	virtual void SpawnEnemyInCluster(TSubclassOf<AEnemy> EnemyClass, FVector ClusterSpawnLocation, FVector ClusterMovementDirection);
+
 	virtual FVector GetSpawnLocation();
+
+	virtual FVector GetSpawnLocationForCluster(FVector ClusterSpawnLocation);
 };
