@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
 #include "ProjectileCharacteristics.h"
+#include "ProgGameplayProto/DisplayablePlayerElementInterface.h"
 #include "ProjectileData.generated.h"
 
 class UProjectileEffect;
@@ -27,7 +28,7 @@ struct PROGGAMEPLAYPROTO_API FProjectileLevel
 };
 
 UCLASS(BlueprintType)
-class PROGGAMEPLAYPROTO_API UProjectileData : public UDataAsset
+class PROGGAMEPLAYPROTO_API UProjectileData : public UDataAsset, public IDisplayablePlayerElementInterface
 {
 	GENERATED_BODY()
 
@@ -46,18 +47,18 @@ public:
 
 	UProjectileData();
 
-	UFUNCTION(BlueprintPure)
-	TMap<FString, float> GetCumulativeLevelsMap(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual TArray<FDisplayableCharacteristic> GetDisplayableCharacteristics_Implementation(const int Level) override;
 
-	UFUNCTION(BlueprintPure)
-	TMap<FString, float> GetLevelMap(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual int GetLevelPrice_Implementation(const int Level) override;
 
-	UFUNCTION(BlueprintPure)
-	FProjectileCharacteristics GetCumulativeLevelsCharacteristics(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual FText GetName_Implementation() override;
 
-	UFUNCTION(BlueprintPure)
-	int GetLevelPrice(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual FText GetDescription_Implementation() override;
 
-protected:
-	static TMap<FString, float> GetMap(const FProjectileCharacteristics& Characteristics, const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual FProjectileCharacteristics GetCurrentCharacteristics(const int Level);
 };

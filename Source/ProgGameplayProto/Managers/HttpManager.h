@@ -9,7 +9,6 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGetScoresSignature, const TArray<UScore*>&, Scores);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStringResponseSignature, const FString&, String);
 
-class UMobSurvivorGameInstance;
 /**
  *
  */
@@ -18,9 +17,7 @@ class PROGGAMEPLAYPROTO_API UHttpManager : public UObject
 {
 	GENERATED_BODY()
 
-	UMobSurvivorGameInstance* GameInstance;
-
-	FString BaseUrl = "http://localhost:3000/";
+	FString BaseUrl = "http://mob-survivor.alwaysdata.net/";
 
 
 public:
@@ -32,7 +29,7 @@ public:
 
 	FOnStringResponseSignature OnMessageDelegate;
 
-	void Initialize(UMobSurvivorGameInstance* InGameInstance);
+	FOnStringResponseSignature OnTokenChangedDelegate;
 
 	UFUNCTION(BlueprintCallable)
 	void GetToken(FString pseudo, FString password);

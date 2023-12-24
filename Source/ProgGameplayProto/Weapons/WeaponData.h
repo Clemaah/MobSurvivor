@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "WeaponCharacteristics.h"
 #include "Engine/DataAsset.h"
+#include "ProgGameplayProto/DisplayablePlayerElementInterface.h"
 #include "WeaponData.generated.h"
 
 /**
@@ -25,7 +26,7 @@ struct PROGGAMEPLAYPROTO_API FWeaponLevel
 
 
 UCLASS(BlueprintType)
-class PROGGAMEPLAYPROTO_API UWeaponData : public UDataAsset
+class PROGGAMEPLAYPROTO_API UWeaponData : public UDataAsset, public IDisplayablePlayerElementInterface
 {
 	GENERATED_BODY()
 
@@ -41,18 +42,18 @@ public:
 
 	UWeaponData();
 
-	UFUNCTION(BlueprintPure)
-	TMap<FString, float> GetCumulativeLevelsMap(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual TArray<FDisplayableCharacteristic> GetDisplayableCharacteristics_Implementation(const int Level) override;
 
-	UFUNCTION(BlueprintPure)
-	TMap<FString, float> GetLevelMap(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual int GetLevelPrice_Implementation(const int Level) override;
 
-	UFUNCTION(BlueprintPure)
-	FWeaponCharacteristics GetCumulativeLevelsCharacteristics(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual FText GetName_Implementation() override;
 
-	UFUNCTION(BlueprintPure)
-	int GetLevelPrice(const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual FText GetDescription_Implementation() override;
 
-protected:
-	static TMap<FString, float> GetMap(const FWeaponCharacteristics& Characteristics, const int Level);
+	UFUNCTION(BlueprintCallable)
+	virtual FWeaponCharacteristics GetCurrentCharacteristics(const int Level);
 };

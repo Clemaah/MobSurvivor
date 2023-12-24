@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProgGameplayProto/Characteristics.h"
 #include "CharacterCharacteristics.generated.h"
 
 /**
  * 
  */
 USTRUCT(BlueprintType)
-struct PROGGAMEPLAYPROTO_API FCharacterCharacteristics
+struct PROGGAMEPLAYPROTO_API FCharacterCharacteristics : public FCharacteristics
 {
 	GENERATED_BODY()
 

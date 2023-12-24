@@ -30,4 +30,7 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
 	static UMobSurvivorSaveGame* GetSaveGame(const UWorld* World);
+
+	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
+	static bool IsAValidEmail(const FString& Email);
 };

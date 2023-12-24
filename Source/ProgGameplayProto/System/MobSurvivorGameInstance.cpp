@@ -22,7 +22,7 @@ UMobSurvivorGameInstance::UMobSurvivorGameInstance()
 	SelectedCharacter = nullptr;
 	SelectedWeapon = nullptr;
 	SelectedProjectile = nullptr;
-    HttpManager = NewObject<UHttpManager>();
+    HttpManager = nullptr;
 }
 
 void UMobSurvivorGameInstance::OnStart()
@@ -40,11 +40,8 @@ void UMobSurvivorGameInstance::OnStart()
     if (SaveGameInstance->ProjectilesCurrentLevel.Num() > 0)
 		SelectedProjectile = SaveGameInstance->ProjectilesCurrentLevel.begin()->Key;
 
-    HttpManager->Initialize(this);
-
-    if(!SaveGameInstance->PlayerToken.IsEmpty()) 
-		HttpManager->GetUser(SaveGameInstance->PlayerToken);
-    
+    HttpManager = NewObject<UHttpManager>();
+    HttpManager->OnTokenChangedDelegate.AddDynamic(this, &UMobSurvivorGameInstance::ChangePlayerToken);
 }
 
 void UMobSurvivorGameInstance::LoadGame()
@@ -245,4 +242,10 @@ void UMobSurvivorGameInstance::ChangeTotalCoinsBy(const int Quantity) const
 void UMobSurvivorGameInstance::AddGamePointsToTotal() const
 {
     SaveGameInstance->TotalPoints += GamePoints;
+}
+
+void UMobSurvivorGameInstance::ChangePlayerToken(const FString& Token)
+{
+    SaveGameInstance->PlayerToken = Token;
+    SaveGame();
 }

@@ -113,6 +113,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
 	void AddGamePointsToTotal() const;
 
+	UFUNCTION()
+	void ChangePlayerToken(const FString& Token);
+
 
 private:
 

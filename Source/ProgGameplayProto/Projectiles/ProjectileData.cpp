@@ -2,10 +2,8 @@
 
 
 #include "ProjectileData.h"
-
-#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
-#include "ProgGameplayProto/Weapons/WeaponComponent.h"
-#include "ProgGameplayProto/Effects/ProjectileEffect.h"
+#include "ProjectileCharacteristics.h"
+#include "ProgGameplayProto/DisplayablePlayerElementInterface.h"
 
 
 UProjectileData::UProjectileData()
@@ -13,47 +11,33 @@ UProjectileData::UProjectileData()
 	Levels.Init(FProjectileLevel(), 5);
 }
 
-TMap<FString, float> UProjectileData::GetCumulativeLevelsMap(const int Level)
+TArray<FDisplayableCharacteristic> UProjectileData::GetDisplayableCharacteristics_Implementation(const int Level)
 {
+	TArray<FDisplayableCharacteristic> ReturnArray;
 	if (Level >= Levels.Num() || Level < 0)
-	{
-		TMap<FString, float> EmptyMap;
-		return EmptyMap;
-	}
+		return ReturnArray;
 
-	const FProjectileCharacteristics characteristics = GetCumulativeLevelsCharacteristics(Level);
+	const FProjectileCharacteristics currentCharacteristics = GetCurrentCharacteristics(Level);
+	const FProjectileCharacteristics nextLevelCharacteristics = (Level + 1 >= Levels.Num()) ? FProjectileCharacteristics() : Levels[Level + 1].Characteristics;
 
-	return GetMap(characteristics, Level);
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("D\u00E9g\u00E2ts"), currentCharacteristics.Damages, nextLevelCharacteristics.Damages));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Port\u00E9e"), currentCharacteristics.Range, nextLevelCharacteristics.Range));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Taille"), currentCharacteristics.Size, nextLevelCharacteristics.Size));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Vitesse"), currentCharacteristics.Speed, nextLevelCharacteristics.Speed));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Chance de critique"), currentCharacteristics.CriticalHitChance, nextLevelCharacteristics.CriticalHitChance));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. critique"), currentCharacteristics.CriticalHitMultiplier, nextLevelCharacteristics.CriticalHitMultiplier));
+
+	return ReturnArray;
 }
 
-TMap<FString, float> UProjectileData::GetLevelMap(const int Level)
+int UProjectileData::GetLevelPrice_Implementation(const int Level)
 {
-	if (Level >= Levels.Num() || Level < 0)
-	{
-		TMap<FString, float> EmptyMap;
-		return EmptyMap;
-	}
+	if (Level < 0 || Level >= Levels.Num()) return 0;
 
-	const FProjectileCharacteristics characteristics = Levels[Level].Characteristics;
-
-	return GetMap(characteristics, Level);
+	return Levels[Level].Price;
 }
 
-TMap<FString, float> UProjectileData::GetMap(const FProjectileCharacteristics& Characteristics, const int Level)
-{
-	TMap<FString, float> ReturnMap;
-
-	ReturnMap.Add(TEXT("Damages"), Characteristics.Damages);
-	ReturnMap.Add(TEXT("Range"), Characteristics.Range);
-	ReturnMap.Add(TEXT("Size"), Characteristics.Size);
-	ReturnMap.Add(TEXT("Speed"), Characteristics.Speed);
-	ReturnMap.Add(TEXT("CriticalHitChance"), Characteristics.CriticalHitChance);
-	ReturnMap.Add(TEXT("CriticalHitMultiplier"), Characteristics.CriticalHitMultiplier);
-
-	return ReturnMap;
-}
-
-FProjectileCharacteristics UProjectileData::GetCumulativeLevelsCharacteristics(const int Level)
+FProjectileCharacteristics UProjectileData::GetCurrentCharacteristics(const int Level)
 {
 	FProjectileCharacteristics ReturnStruct;
 
@@ -70,10 +54,12 @@ FProjectileCharacteristics UProjectileData::GetCumulativeLevelsCharacteristics(c
 	return ReturnStruct;
 }
 
-int UProjectileData::GetLevelPrice(const int Level)
+FText UProjectileData::GetName_Implementation()
 {
-	if (Level < 0 || Level >= Levels.Num()) 
-		return -1;
+	return FText::FromString(Name);
+}
 
-	return Levels[Level].Price;
+FText UProjectileData::GetDescription_Implementation()
+{
+	return Description;
 }

@@ -2,13 +2,6 @@
 
 #include "Http.h"
 #include "ProgGameplayProto/Score.h"
-#include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
-#include "ProgGameplayProto/System/MobSurvivorSaveGame.h"
-
-void UHttpManager::Initialize(UMobSurvivorGameInstance* InGameInstance)
-{
-    GameInstance = InGameInstance;
-}
 
 void UHttpManager::GetToken(FString pseudo, FString password)
 {
@@ -152,8 +145,7 @@ void UHttpManager::GetTokenResponse(TSharedPtr<FJsonObject> ResponseObject)
         return;
     }
 
-    GameInstance->SaveGameInstance->PlayerToken = ResponseObject->GetStringField("token");
-    GameInstance->SaveGame();
+    OnTokenChangedDelegate.Broadcast(ResponseObject->GetStringField("token"));
     GetUser(ResponseObject->GetStringField("token"));
 }
 
@@ -161,6 +153,7 @@ void UHttpManager::GetUserResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
     if(!ResponseObject->GetBoolField("success"))
     {
+        OnTokenChangedDelegate.Broadcast("");
         OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
         return;
     }

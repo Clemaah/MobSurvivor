@@ -2,6 +2,8 @@
 
 
 #include "WeaponData.h"
+#include "WeaponCharacteristics.h"
+#include "ProgGameplayProto/DisplayablePlayerElementInterface.h"
 
 
 
@@ -10,51 +12,37 @@ UWeaponData::UWeaponData()
 	Levels.Init(FWeaponLevel(), 5);
 }
 
-TMap<FString, float> UWeaponData::GetCumulativeLevelsMap(const int Level)
+TArray<FDisplayableCharacteristic> UWeaponData::GetDisplayableCharacteristics_Implementation(const int Level)
 {
+	TArray<FDisplayableCharacteristic> ReturnArray;
 	if (Level >= Levels.Num() || Level < 0)
-	{
-		TMap<FString, float> EmptyMap;
-		return EmptyMap;
-	}
+		return ReturnArray;
 
-	const FWeaponCharacteristics characteristics = GetCumulativeLevelsCharacteristics(Level);
+	const FWeaponCharacteristics currentCharacteristics = GetCurrentCharacteristics(Level);
+	const FWeaponCharacteristics nextLevelCharacteristics = (Level + 1 >= Levels.Num()) ? FWeaponCharacteristics() : Levels[Level + 1].Characteristics;
 
-	return GetMap(characteristics, Level);
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Cadence de tir"), currentCharacteristics.FireRate, nextLevelCharacteristics.FireRate));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Pr\u00E9cision"), currentCharacteristics.Precision, nextLevelCharacteristics.Precision));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Spread"), currentCharacteristics.Spread, nextLevelCharacteristics.Spread));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Double Shot"), currentCharacteristics.DoubleShotChance, nextLevelCharacteristics.DoubleShotChance));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Nombre de projectiles"), currentCharacteristics.ShotsNumber, nextLevelCharacteristics.ShotsNumber));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. d\u00E9g\u00E2ts"), currentCharacteristics.DamagesMultiplier, nextLevelCharacteristics.DamagesMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. port\u00E9e des projectiles"), currentCharacteristics.RangeMultiplier, nextLevelCharacteristics.RangeMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. taille des projectiles"), currentCharacteristics.ProjectileSizeMultiplier, nextLevelCharacteristics.ProjectileSizeMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. vitesse des projectiles"), currentCharacteristics.ProjectileSpeedMultiplier, nextLevelCharacteristics.ProjectileSpeedMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. chance critiques"), currentCharacteristics.CriticalHitChanceMultiplier, nextLevelCharacteristics.CriticalHitChanceMultiplier));
+
+	return ReturnArray;
 }
 
-TMap<FString, float> UWeaponData::GetLevelMap(const int Level)
+int UWeaponData::GetLevelPrice_Implementation(const int Level)
 {
-	if (Level >= Levels.Num() || Level < 0)
-	{
-		TMap<FString, float> EmptyMap;
-		return EmptyMap;
-	}
+	if (Level < 0 || Level >= Levels.Num()) return 0;
 
-	const FWeaponCharacteristics characteristics = Levels[Level].Characteristics;
-
-	return GetMap(characteristics, Level);
+	return Levels[Level].Price;
 }
 
-TMap<FString, float> UWeaponData::GetMap(const FWeaponCharacteristics& Characteristics, const int Level)
-{
-	TMap<FString, float> ReturnMap;
-
-	ReturnMap.Add(TEXT("FireRate"), Characteristics.FireRate);
-	ReturnMap.Add(TEXT("Precision"), Characteristics.Precision);
-	ReturnMap.Add(TEXT("Spread"), Characteristics.Spread);
-	ReturnMap.Add(TEXT("DoubleShotsChance"), Characteristics.DoubleShotChance);
-	ReturnMap.Add(TEXT("ShotsNumber"), Characteristics.ShotsNumber);
-	ReturnMap.Add(TEXT("DamagesMultiplier"), Characteristics.DamagesMultiplier);
-	ReturnMap.Add(TEXT("RangeMultiplier"), Characteristics.RangeMultiplier);
-	ReturnMap.Add(TEXT("ProjectileSizeMultiplier"), Characteristics.ProjectileSizeMultiplier);
-	ReturnMap.Add(TEXT("ProjectileSpeedMultiplier"), Characteristics.ProjectileSpeedMultiplier);
-	ReturnMap.Add(TEXT("CriticalHitChanceMultiplier"), Characteristics.CriticalHitChanceMultiplier);
-
-	return ReturnMap;
-}
-
-FWeaponCharacteristics UWeaponData::GetCumulativeLevelsCharacteristics(const int Level)
+FWeaponCharacteristics UWeaponData::GetCurrentCharacteristics(const int Level)
 {
 	FWeaponCharacteristics ReturnStruct;
 
@@ -71,9 +59,12 @@ FWeaponCharacteristics UWeaponData::GetCumulativeLevelsCharacteristics(const int
 	return ReturnStruct;
 }
 
-int UWeaponData::GetLevelPrice(const int Level)
+FText UWeaponData::GetName_Implementation()
 {
-	if (Level < 0 || Level >= Levels.Num()) return 0;
+	return FText::FromString(Name);
+}
 
-	return Levels[Level].Price;
+FText UWeaponData::GetDescription_Implementation()
+{
+	return Description;
 }

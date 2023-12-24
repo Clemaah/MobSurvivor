@@ -3,6 +3,7 @@
 
 #include "CharacterData.h"
 #include "CharacterCharacteristics.h"
+#include "ProgGameplayProto/DisplayablePlayerElementInterface.h"
 
 
 UCharacterData::UCharacterData()
@@ -10,54 +11,40 @@ UCharacterData::UCharacterData()
 	Levels.Init(FCharacterLevel(), 5);
 }
 
-TMap<FString, float> UCharacterData::GetCumulativeLevelsMap(const int Level)
+TArray<FDisplayableCharacteristic> UCharacterData::GetDisplayableCharacteristics_Implementation(const int Level)
 {
+	TArray<FDisplayableCharacteristic> ReturnArray;
 	if (Level >= Levels.Num() || Level < 0)
-	{
-		TMap<FString, float> EmptyMap;
-		return EmptyMap;
-	}
+		return ReturnArray;
 
-	const FCharacterCharacteristics characteristics = GetCumulativeLevelsCharacteristics(Level);
+	const FCharacterCharacteristics currentCharacteristics = GetCurrentCharacteristics(Level);
+	const FCharacterCharacteristics nextLevelCharacteristics = (Level + 1 >= Levels.Num()) ? FCharacterCharacteristics() : Levels[Level + 1].Characteristics;
 
-	return GetMap(characteristics, Level);
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Vie Max"), currentCharacteristics.MaxHealth, nextLevelCharacteristics.MaxHealth));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("R\u00E9g\u00E9n\u00E9ration"), currentCharacteristics.RegenerationRate, nextLevelCharacteristics.RegenerationRate));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Vitesse"), currentCharacteristics.Speed, nextLevelCharacteristics.Speed));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Zone de collecte"), currentCharacteristics.DropCollectorRadius, nextLevelCharacteristics.DropCollectorRadius));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Nombre de bonus par niveau"), currentCharacteristics.UpgradesNumber, nextLevelCharacteristics.UpgradesNumber));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. exp\u00E9rience"), currentCharacteristics.ExperienceMultiplier, nextLevelCharacteristics.ExperienceMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. pi\u00E8ces"), currentCharacteristics.CoinMultiplier, nextLevelCharacteristics.CoinMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. chance d'apparition de pi\u00E8ces"), currentCharacteristics.CoinDropChanceMultiplier, nextLevelCharacteristics.CoinDropChanceMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. chance d'apparition de bonus"), currentCharacteristics.UpgradeDropChanceMultiplier, nextLevelCharacteristics.UpgradeDropChanceMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. chance de double shot"), currentCharacteristics.DoubleShotChanceMultiplier, nextLevelCharacteristics.DoubleShotChanceMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. cadence de tir"), currentCharacteristics.FireRateMultiplier, nextLevelCharacteristics.FireRateMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. pr\u00E9cision"), currentCharacteristics.PrecisionMultiplier, nextLevelCharacteristics.PrecisionMultiplier));
+	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Mult. spread"), currentCharacteristics.SpreadMultiplier, nextLevelCharacteristics.SpreadMultiplier));
+
+	return ReturnArray;
 }
 
-TMap<FString, float> UCharacterData::GetLevelMap(const int Level)
+int UCharacterData::GetLevelPrice_Implementation(const int Level)
 {
-	if (Level >= Levels.Num() || Level < 0)
-	{
-		TMap<FString, float> EmptyMap;
-		return EmptyMap;
-	}
+	if (Level < 0 || Level >= Levels.Num()) return 0;
 
-	const FCharacterCharacteristics characteristics = Levels[Level].Characteristics;
-
-	return GetMap(characteristics, Level);
+	return Levels[Level].Price;
 }
 
-TMap<FString, float> UCharacterData::GetMap(const FCharacterCharacteristics& Characteristics, const int Level)
-{
-	TMap<FString, float> ReturnMap;
-
-	ReturnMap.Add(TEXT("MaxHealth"), Characteristics.MaxHealth);
-	ReturnMap.Add(TEXT("RegenerationRate"), Characteristics.RegenerationRate);
-	ReturnMap.Add(TEXT("Speed"), Characteristics.Speed);
-	ReturnMap.Add(TEXT("DropCollectorRadius"), Characteristics.DropCollectorRadius);
-	ReturnMap.Add(TEXT("ExperienceMultiplier"), Characteristics.ExperienceMultiplier);
-	ReturnMap.Add(TEXT("CoinMultiplier"), Characteristics.CoinMultiplier);
-	ReturnMap.Add(TEXT("CoinDropChanceMultiplier"), Characteristics.CoinDropChanceMultiplier);
-	ReturnMap.Add(TEXT("UpgradeDropChanceMultiplier"), Characteristics.UpgradeDropChanceMultiplier);
-	ReturnMap.Add(TEXT("UpgradesNumber"), Characteristics.UpgradesNumber);
-	ReturnMap.Add(TEXT("DoubleShotChanceMultiplier"), Characteristics.DoubleShotChanceMultiplier);
-	ReturnMap.Add(TEXT("FireRateMultiplier"), Characteristics.FireRateMultiplier);
-	ReturnMap.Add(TEXT("PrecisionMultiplier"), Characteristics.PrecisionMultiplier);
-	ReturnMap.Add(TEXT("SpreadMultiplier"), Characteristics.SpreadMultiplier);
-
-	return ReturnMap;
-}
-
-FCharacterCharacteristics UCharacterData::GetCumulativeLevelsCharacteristics(const int Level)
+FCharacterCharacteristics UCharacterData::GetCurrentCharacteristics(const int Level)
 {
 	FCharacterCharacteristics ReturnStruct;
 
@@ -74,9 +61,12 @@ FCharacterCharacteristics UCharacterData::GetCumulativeLevelsCharacteristics(con
 	return ReturnStruct;
 }
 
-int UCharacterData::GetLevelPrice(const int Level)
+FText UCharacterData::GetName_Implementation()
 {
-	if (Level < 0 || Level >= Levels.Num()) return 0;
+	return FText::FromString(Name);
+}
 
-	return Levels[Level].Price;
+FText UCharacterData::GetDescription_Implementation()
+{
+	return Description;
 }

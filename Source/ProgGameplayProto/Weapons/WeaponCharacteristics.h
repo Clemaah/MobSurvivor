@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ProgGameplayProto/Characteristics.h"
 #include "WeaponCharacteristics.generated.h"
 
 /**
  * 
  */
 USTRUCT(BlueprintType)
-struct PROGGAMEPLAYPROTO_API FWeaponCharacteristics
+struct PROGGAMEPLAYPROTO_API FWeaponCharacteristics : public FCharacteristics
 {
 	GENERATED_BODY()
 
