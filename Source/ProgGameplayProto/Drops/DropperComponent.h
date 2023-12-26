@@ -9,7 +9,7 @@
 class ADrop;
 
 UENUM(BlueprintType)
-enum EDropType { Coin, Experience, Upgrade };
+enum EDropType { Coin, Experience, Heal, Upgrade };
 
 USTRUCT(BlueprintType)
 struct FDropAndWeight

@@ -18,6 +18,14 @@ void ADrop::BeginPlay()
 
 }
 
+// Called every frame
+void ADrop::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	MoveTowardCollectingTarget(DeltaTime);
+}
+
 void ADrop::MoveTowardCollectingTarget(float DeltaTime)
 {
 	if (!bIsBeingCollected) return;
@@ -40,14 +48,6 @@ void ADrop::MoveTowardCollectingTarget(float DeltaTime)
 
 		AddActorWorldOffset(movement);
 	}
-}
-
-// Called every frame
-void ADrop::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	MoveTowardCollectingTarget(DeltaTime);
 }
 
 void ADrop::StartCollection(AActor* NewTarget)

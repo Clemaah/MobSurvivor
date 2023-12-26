@@ -50,8 +50,11 @@ void UDropperComponent::Drop()
 				numberOfDrops *= mainCharacter->GetCharacteristics().ExperienceMultiplier;
 				break;
 
-			default:
+			case Upgrade:
 				dropChance *= mainCharacter->GetCharacteristics().UpgradeDropChanceMultiplier;
+				break;
+
+			default:
 				break;
 		}
 

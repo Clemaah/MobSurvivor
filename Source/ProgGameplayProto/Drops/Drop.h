@@ -18,7 +18,7 @@ public:
 	ADrop();
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Drop")
 	float CollectionSpeed = 1000;
 
 	UPROPERTY()
