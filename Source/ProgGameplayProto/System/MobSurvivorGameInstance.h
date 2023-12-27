@@ -12,6 +12,8 @@ class UWeaponData;
 class UProjectileData;
 class UGamePlayElementsData;
 class UMobSurvivorSaveGame;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCoinsChangedSignature, const int, value);
 /**
  * 
  */
@@ -28,6 +30,9 @@ protected:
 	UGamePlayElementsData* GamePlayElementsData;
 
 public:
+	UPROPERTY(BlueprintAssignable)
+	FCoinsChangedSignature OnTotalCoinsChanged;
+
 	UPROPERTY(BlueprintReadOnly, Category = "MobSurvivor|SaveSettings")
 	UMobSurvivorSaveGame* SaveGameInstance;
 
@@ -36,9 +41,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
 	FString PlayerPseudo;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
-	int GamePoints;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
 	UCharacterData* SelectedCharacter;
@@ -55,6 +57,7 @@ public:
 	UMobSurvivorGameInstance();
 
 	virtual void OnStart() override;
+	void NewSave();
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
 	void LoadGame();
@@ -108,10 +111,10 @@ public:
 	bool HasEnoughCoinsToSpend(const int Quantity) const;
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
-	void ChangeTotalCoinsBy(const int Quantity) const;
+	void ChangeTotalCoinsBy(const int Quantity);
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
-	void AddGamePointsToTotal() const;
+	void ChangeTotalPointsBy(const int Quantity);
 
 	UFUNCTION()
 	void ChangePlayerToken(const FString& Token);

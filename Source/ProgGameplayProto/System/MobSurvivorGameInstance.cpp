@@ -16,7 +16,6 @@
 UMobSurvivorGameInstance::UMobSurvivorGameInstance()
 {
 	SaveName = "MobSurvivor";
-	GamePoints = 0;
 	GamePlayElementsData = nullptr;
 	SaveGameInstance = nullptr;
 	SelectedCharacter = nullptr;
@@ -44,27 +43,6 @@ void UMobSurvivorGameInstance::OnStart()
     HttpManager->OnTokenChangedDelegate.AddDynamic(this, &UMobSurvivorGameInstance::ChangePlayerToken);
 }
 
-void UMobSurvivorGameInstance::LoadGame()
-{
-    USaveGame* LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveName, 0);
-    SaveGameInstance = Cast<UMobSurvivorSaveGame>(LoadedGame);
-
-    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Trying to load a saved game."));
-
-    if (!IsValid(SaveGameInstance))
-    {
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("No saved games found. Trying to save a new one."));
-
-        SaveGameInstance = Cast<UMobSurvivorSaveGame>(UGameplayStatics::CreateSaveGameObject(UMobSurvivorSaveGame::StaticClass()));
-
-        SaveGame();
-    }
-
-    else
-        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Saved game found. Loaded."));
-
-}
-
 void UMobSurvivorGameInstance::SaveGame()
 {
     GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Saving game..."));
@@ -75,16 +53,36 @@ void UMobSurvivorGameInstance::SaveGame()
 
 }
 
+void UMobSurvivorGameInstance::NewSave()
+{
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("No saved games found. Trying to save a new one."));
+
+    SaveGameInstance = Cast<UMobSurvivorSaveGame>(UGameplayStatics::CreateSaveGameObject(UMobSurvivorSaveGame::StaticClass()));
+
+    SaveGame();
+}
+
+void UMobSurvivorGameInstance::LoadGame()
+{
+    USaveGame* LoadedGame = UGameplayStatics::LoadGameFromSlot(SaveName, 0);
+    SaveGameInstance = Cast<UMobSurvivorSaveGame>(LoadedGame);
+
+    GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Trying to load a saved game."));
+
+    if (!IsValid(SaveGameInstance))
+        NewSave();
+
+    else
+        GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Saved game found. Loaded."));
+
+}
+
 void UMobSurvivorGameInstance::LogResultOfSaveGame(const bool IsSaved)
 {
     if (IsSaved)
-    {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Green, TEXT("Game saved."));
-    }
     else
-    {
         GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("Cannot save the game."));
-    }
 }
 
 bool UMobSurvivorGameInstance::UpdateData()
@@ -234,14 +232,15 @@ bool UMobSurvivorGameInstance::HasEnoughCoinsToSpend(const int Quantity) const
     return (SaveGameInstance->TotalCoins >= Quantity);
 }
 
-void UMobSurvivorGameInstance::ChangeTotalCoinsBy(const int Quantity) const
+void UMobSurvivorGameInstance::ChangeTotalCoinsBy(const int Quantity)
 {
     SaveGameInstance->TotalCoins += Quantity;
+    OnTotalCoinsChanged.Broadcast(SaveGameInstance->TotalCoins);
 }
 
-void UMobSurvivorGameInstance::AddGamePointsToTotal() const
+void UMobSurvivorGameInstance::ChangeTotalPointsBy(const int Quantity)
 {
-    SaveGameInstance->TotalPoints += GamePoints;
+    SaveGameInstance->TotalPoints += Quantity;
 }
 
 void UMobSurvivorGameInstance::ChangePlayerToken(const FString& Token)
