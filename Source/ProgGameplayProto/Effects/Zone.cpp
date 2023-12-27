@@ -20,27 +20,31 @@ AZone::AZone()
 	Sphere1->InitSphereRadius(250.0f);
 	Sphere1->SetupAttachment(RootComponent);
 
-	Sphere1->OnComponentBeginOverlap.AddDynamic(this, &AZone::OnOverlapBegin);
 	Sphere1->OnComponentEndOverlap.AddDynamic(this, &AZone::OnOverlapEnd);
 }
 
-void AZone::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AZone::CheckForCollisions(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	AActor *ActorHit = SweepResult.GetActor();
+	TArray<FHitResult> outHits;
+	const FCollisionShape shape = FCollisionShape::MakeSphere(Sphere1->GetScaledSphereRadius());
+	FCollisionQueryParams params;
+	params.AddIgnoredActor(this);
+	GetWorld()->SweepMultiByChannel(outHits, GetActorLocation(), GetActorLocation(), FQuat::Identity, ECC_EngineTraceChannel2, shape, params);
 
-	UHealthComponent* healthEnemy = ActorHit->FindComponentByClass<UHealthComponent>();
-
-	if (IsValid(healthEnemy))
+	for (auto outHit : outHits)
 	{
-		healthEnemy->AddHealth(-10);
+		HitSomething(outHit.GetActor());
 	}
-	if (OtherActor && (OtherActor != this) && OtherComp)
+}
+
+void AZone::HitSomething(AActor* OtherActor)
+{
+	UHealthComponent* HealthComponent = OtherActor->FindComponentByClass<UHealthComponent>();
+
+	if (IsValid(HealthComponent))
 	{
-		ToggleLight();
+		HealthComponent->AddHealth(-10);
 	}
-
-
-
 }
 
 void AZone::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
