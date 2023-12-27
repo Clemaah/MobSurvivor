@@ -7,7 +7,7 @@
 #include "ExperienceComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnExperienceChanged, float, NewExperienceValue);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnLevelUp, int32, NewLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnLevelUp, int32, NewLevel, float, NewExperienceTarget);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROGGAMEPLAYPROTO_API UExperienceComponent : public UActorComponent
@@ -28,8 +28,13 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UCurveFloat* ExperienceCurve;
 
+	UPROPERTY(BlueprintReadOnly)
 	float CurrentExperience = 0;
+
+	UPROPERTY(BlueprintReadOnly)
 	float CurrentLevelExperienceTarget = 0;
+
+	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentLevel = 0;
 
 protected:
@@ -43,7 +48,4 @@ public:
 	virtual void AddExperience(float Amount);
 
 	virtual void LevelUp();
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	virtual float GetCurrentExperiencePercentage();
 };

@@ -71,23 +71,15 @@ void UHealthComponent::Die()
 	OnHealthDie.Broadcast();
 }
 
-float UHealthComponent::GetCurrentHealthPercentage()
-{
-	float output = CurrentHealth / MaxHealth;
-
-	output = FMath::Clamp(output, 0, 1);
-
-	return output;
-}
-
 
 void UHealthComponent::SetMaxHealth(float NewMaxHealth)
 {
 	MaxHealth = NewMaxHealth;
-	OnHealthChanged.Broadcast(CurrentHealth);
+	OnMaxHealthChanged.Broadcast(MaxHealth);
 }
 
 void UHealthComponent::SetRegenerationRate(float NewRegenerationRate)
 {
 	RegenerationRate = NewRegenerationRate;
+	OnRegenerationRateChanged.Broadcast(RegenerationRate);
 }

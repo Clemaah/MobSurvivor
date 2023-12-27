@@ -11,6 +11,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Builders/CylinderBuilder.h"
 #include "Components/SphereComponent.h"
 #include "ProgGameplayProto/Drops/Drop.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
@@ -80,6 +81,10 @@ AProgGameplayProtoCharacter::AProgGameplayProtoCharacter()
 	DropsCollector->SetRelativeLocation(FVector(0, 0, -90));
 	DropsCollector->SetupAttachment(GetCapsuleComponent());
 
+	DropsCollectorMesh = CreateDefaultSubobject<UStaticMeshComponent>("Drops Collector Mesh");
+	DropsCollectorMesh->SetRelativeScale3D(FVector(2, 2, 0.01));
+	DropsCollectorMesh->SetupAttachment(DropsCollector);
+
 	RegisterInstance();
 }
 
@@ -115,6 +120,7 @@ void AProgGameplayProtoCharacter::SetupComponents(const FCharacterCharacteristic
 void AProgGameplayProtoCharacter::InitializeCharacterVariables()
 {
 	DropsCollector->SetSphereRadius(CharacterCharacteristics.DropCollectorRadius * 100);
+	DropsCollectorMesh->SetRelativeScale3D(FVector(CharacterCharacteristics.DropCollectorRadius * 2, CharacterCharacteristics.DropCollectorRadius * 2, 0.01));
 	Health->InitializeHealth(CharacterCharacteristics.MaxHealth, CharacterCharacteristics.RegenerationRate);
 	GetCharacterMovement()->MaxWalkSpeed = CharacterCharacteristics.Speed * 1000;
 }
@@ -218,6 +224,7 @@ void AProgGameplayProtoCharacter::UpdateCharacteristics(FCharacterCharacteristic
 	CharacterCharacteristics += CharacterBonuses;
 
 	DropsCollector->SetSphereRadius(CharacterCharacteristics.DropCollectorRadius * 100);
+	DropsCollectorMesh->SetRelativeScale3D(FVector(CharacterCharacteristics.DropCollectorRadius * 2, CharacterCharacteristics.DropCollectorRadius * 2, 0.01));
 	Health->SetMaxHealth(CharacterCharacteristics.MaxHealth);
 	Health->SetRegenerationRate(CharacterCharacteristics.RegenerationRate);
 	GetCharacterMovement()->MaxWalkSpeed = CharacterCharacteristics.Speed * 1000;

@@ -83,11 +83,13 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Inputs", meta = (AllowPrivateAccess = "true"))
 	UInputAction* PauseAction;
 
-
 protected:
 	// --- COMPONENTS
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
 	USphereComponent* DropsCollector;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
+	UStaticMeshComponent* DropsCollectorMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
 	UHealthComponent* Health;

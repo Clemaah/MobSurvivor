@@ -22,6 +22,9 @@ void UExperienceComponent::BeginPlay()
 	// ...
 
 	CurrentLevelExperienceTarget = ExperienceCurve->GetFloatValue(CurrentLevel);
+
+	OnLevelUp.Broadcast(CurrentLevel, CurrentLevelExperienceTarget);
+	OnExperienceChanged.Broadcast(CurrentExperience);
 }
 
 
@@ -38,13 +41,9 @@ void UExperienceComponent::AddExperience(float Amount)
 	CurrentExperience += Amount;
 
 	if (CurrentExperience >= CurrentLevelExperienceTarget)
-	{
 		LevelUp();
-	}
 	else
-	{
 		OnExperienceChanged.Broadcast(CurrentExperience);
-	}
 }
 
 void UExperienceComponent::LevelUp()
@@ -55,15 +54,6 @@ void UExperienceComponent::LevelUp()
 
 	CurrentLevelExperienceTarget = ExperienceCurve->GetFloatValue(CurrentLevel);
 
+	OnLevelUp.Broadcast(CurrentLevel, CurrentLevelExperienceTarget);
 	OnExperienceChanged.Broadcast(CurrentExperience);
-	OnLevelUp.Broadcast(CurrentLevel);
-}
-
-float UExperienceComponent::GetCurrentExperiencePercentage()
-{
-	float output = CurrentExperience / CurrentLevelExperienceTarget;
-
-	output = FMath::Clamp(output, 0, 1);
-
-	return output;
 }

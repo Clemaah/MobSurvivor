@@ -7,7 +7,7 @@
 #include "HealthComponent.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnHealthDie);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealthValue);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthParamChanged, float, NewParamValue);
 
 /**
  *
@@ -37,7 +37,13 @@ public:
 	FOnHealthDie OnHealthDie;
 
 	UPROPERTY(BlueprintAssignable)
-	FOnHealthChanged OnHealthChanged;
+	FOnHealthParamChanged OnHealthChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthParamChanged OnMaxHealthChanged;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthParamChanged OnRegenerationRateChanged;
 
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -58,13 +64,4 @@ public:
 
 	virtual void SetMaxHealth(float NewMaxHealth);
 	virtual void SetRegenerationRate(float NewRegenerationRate);
-
-	virtual float GetMaxHealth() { return MaxHealth; }
-	virtual float GetRegenerationRate() { return RegenerationRate; }
-
-	UFUNCTION(BlueprintCallable)
-	FORCEINLINE float GetCurrentHealth() { return CurrentHealth; }
-
-	UFUNCTION(BlueprintCallable, BlueprintPure)
-	virtual float GetCurrentHealthPercentage();
 };
