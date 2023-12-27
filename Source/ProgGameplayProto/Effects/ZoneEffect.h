@@ -12,8 +12,4 @@ class PROGGAMEPLAYPROTO_API UZoneEffect : public UProjectileEffect
 
 	public:
 		virtual void OnProjectileDestroy(AProjectile* Projectile) override;
-
-	/*protected:
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Zone")
-		TSubclassOf<AZone> ZoneToSpawn;*/
 };

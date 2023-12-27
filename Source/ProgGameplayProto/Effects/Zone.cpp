@@ -4,6 +4,9 @@
 #include "Components/SphereComponent.h"
 #include <ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h>
 
+#include "ProgGameplayProto/HealthComponent.h"
+#include "ProgGameplayProto/ProjectileInteraction.h"
+
 AZone::AZone()
 {
 	DesiredIntensity = 3000.0f;
@@ -23,10 +26,21 @@ AZone::AZone()
 
 void AZone::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	AActor *ActorHit = SweepResult.GetActor();
+
+	UHealthComponent* healthEnemy = ActorHit->FindComponentByClass<UHealthComponent>();
+
+	if (IsValid(healthEnemy))
+	{
+		healthEnemy->AddHealth(-10);
+	}
 	if (OtherActor && (OtherActor != this) && OtherComp)
 	{
 		ToggleLight();
 	}
+
+
+
 }
 
 void AZone::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
