@@ -4,17 +4,16 @@
 #include "CoinDrop.h"
 
 #include "ProgGameplayProto/System/GameUtils.h"
+#include "ProgGameplayProto/System/MobSurvivorGameMode.h"
 
 void ACoinDrop::Collect()
 {
 	Super::Collect();
 
-	UMobSurvivorSaveGame* GameSave = UGameUtils::GetSaveGame(GetWorld());
+	AMobSurvivorGameMode* GameMode = UGameUtils::GetGameMode(GetWorld());
 
-	if (IsValid(GameSave))
-	{
-		GameSave->TotalCoins += CoinAmount;
-	}
+	if (IsValid(GameMode))
+		GameMode->ChangeGameCoinsBy(CoinAmount);
 
 	Destroy();
 }

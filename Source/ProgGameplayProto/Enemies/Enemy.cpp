@@ -10,7 +10,7 @@
 //#include "GameFramework/CharacterMovementComponent.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"
-#include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
+#include "ProgGameplayProto/System/MobSurvivorGameMode.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
@@ -79,10 +79,10 @@ void AEnemy::MoveTowardPlayer(float DeltaTime)
 
 void AEnemy::Die()
 {
-	UMobSurvivorGameInstance* GameInstance = UGameUtils::GetGameInstance(GetWorld());
+	AMobSurvivorGameMode* GameMode = UGameUtils::GetGameMode(GetWorld());
 
-	if (IsValid(GameInstance))
-		GameInstance->GamePoints += EnemyData->Points;
+	if (IsValid(GameMode))
+		GameMode->ChangeGamePointsBy(EnemyData->Points);
 
 	Destroy();
 }

@@ -7,6 +7,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameUtils.generated.h"
 
+class AMobSurvivorGameMode;
 class UMobSurvivorGameInstance;
 class UMobSurvivorSaveGame;
 class AProgGameplayProtoCharacter;
@@ -29,7 +30,7 @@ public:
 	static UMobSurvivorGameInstance* GetGameInstance(const UWorld* World);
 
 	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
-	static UMobSurvivorSaveGame* GetSaveGame(const UWorld* World);
+	static AMobSurvivorGameMode* GetGameMode(const UWorld* World);
 
 	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
 	static bool IsAValidEmail(const FString& Email);

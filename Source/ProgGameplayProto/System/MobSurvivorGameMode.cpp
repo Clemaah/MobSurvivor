@@ -41,14 +41,24 @@ void AMobSurvivorGameMode::Tick(float DeltaSeconds)
 		return;
 	}
 		
-	GameTime += DeltaSeconds;
+	GameSecond += DeltaSeconds;
+
+	if (GameSecond > 1)
+	{
+		GameTime += GameSecond;
+		GameSecond = 0;
+		OnTimerChanged.Broadcast(GameTime);
+	}
 }
 
-float AMobSurvivorGameMode::GetCurrentProgressionPercentage() const
+void AMobSurvivorGameMode::ChangeGameCoinsBy(const int Quantity)
 {
-	float output = GameTime / GameLevelData->Duration;
+	GameCoins += Quantity;
+	OnCoinsChanged.Broadcast(GameCoins);
+}
 
-	output = FMath::Clamp(output, 0, 1);
-
-	return output;
+void AMobSurvivorGameMode::ChangeGamePointsBy(const int Quantity)
+{
+	GamePoints += Quantity;
+	OnPointsChanged.Broadcast(GamePoints);
 }
