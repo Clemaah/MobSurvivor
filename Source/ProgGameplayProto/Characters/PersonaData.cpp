@@ -1,24 +1,24 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CharacterData.h"
-#include "CharacterCharacteristics.h"
+#include "PersonaData.h"
+#include "PersonaCharacteristics.h"
 #include "ProgGameplayProto/DisplayablePlayerElementInterface.h"
 
 
-UCharacterData::UCharacterData()
+UPersonaData::UPersonaData()
 {
-	Levels.Init(FCharacterLevel(), 5);
+	Levels.Init(FPersonaLevel(), 5);
 }
 
-TArray<FDisplayableCharacteristic> UCharacterData::GetDisplayableCharacteristics_Implementation(const int Level)
+TArray<FDisplayableCharacteristic> UPersonaData::GetDisplayableCharacteristics_Implementation(const int Level)
 {
 	TArray<FDisplayableCharacteristic> ReturnArray;
 	if (Level >= Levels.Num() || Level < 0)
 		return ReturnArray;
 
-	const FCharacterCharacteristics currentCharacteristics = GetCurrentCharacteristics(Level);
-	const FCharacterCharacteristics nextLevelCharacteristics = (Level + 1 >= Levels.Num()) ? FCharacterCharacteristics() : Levels[Level + 1].Characteristics;
+	const FPersonaCharacteristics currentCharacteristics = GetCurrentCharacteristics(Level);
+	const FPersonaCharacteristics nextLevelCharacteristics = (Level + 1 >= Levels.Num()) ? FPersonaCharacteristics() : Levels[Level + 1].Characteristics;
 
 	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("Vie Max"), currentCharacteristics.MaxHealth, nextLevelCharacteristics.MaxHealth));
 	ReturnArray.Add(FDisplayableCharacteristic(FText::INVTEXT("R\u00E9g\u00E9n\u00E9ration"), currentCharacteristics.RegenerationRate, nextLevelCharacteristics.RegenerationRate));
@@ -37,16 +37,16 @@ TArray<FDisplayableCharacteristic> UCharacterData::GetDisplayableCharacteristics
 	return ReturnArray;
 }
 
-int UCharacterData::GetLevelPrice_Implementation(const int Level)
+int UPersonaData::GetLevelPrice_Implementation(const int Level)
 {
 	if (Level < 0 || Level >= Levels.Num()) return 0;
 
 	return Levels[Level].Price;
 }
 
-FCharacterCharacteristics UCharacterData::GetCurrentCharacteristics(const int Level)
+FPersonaCharacteristics UPersonaData::GetCurrentCharacteristics(const int Level)
 {
-	FCharacterCharacteristics ReturnStruct;
+	FPersonaCharacteristics ReturnStruct;
 
 	if (Level < 0 || Level >= Levels.Num()) return ReturnStruct;
 
@@ -61,12 +61,12 @@ FCharacterCharacteristics UCharacterData::GetCurrentCharacteristics(const int Le
 	return ReturnStruct;
 }
 
-FText UCharacterData::GetName_Implementation()
+FText UPersonaData::GetName_Implementation()
 {
 	return FText::FromString(Name);
 }
 
-FText UCharacterData::GetDescription_Implementation()
+FText UPersonaData::GetDescription_Implementation()
 {
 	return Description;
 }

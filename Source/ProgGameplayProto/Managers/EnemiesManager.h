@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Info.h"
-#include "EnemySpawnerManager.generated.h"
+#include "EnemiesManager.generated.h"
 
 class AEnemy;
 class AMobSurvivorGameMode;
@@ -15,12 +15,12 @@ struct FRangeEnemySpawnRule;
  *
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API AEnemySpawnerManager : public AInfo
+class PROGGAMEPLAYPROTO_API AEnemiesManager : public AInfo
 {
 	GENERATED_BODY()
 
 public:
-	AEnemySpawnerManager();
+	AEnemiesManager();
 
 protected:
 	UPROPERTY()
@@ -33,13 +33,18 @@ protected:
 	TArray<FRangeEnemySpawnRule> RangeEnemySpawnRules;
 
 	UPROPERTY()
-	AEnemy* lastEnemySpawned;
+	TArray<AEnemy*> AliveEnemiesList;
+
+	UPROPERTY()
+	TArray<AEnemy*> DeadEnemiesList;
 
 public:
 	virtual void Tick(float DeltaSeconds) override;
 
 protected:
 	virtual void BeginPlay() override;
+	
+	virtual void MoveEnemies(float DeltaSeconds);
 
 	virtual void LoadSpawnRules();
 
@@ -53,11 +58,16 @@ protected:
 	// returns true if should remove rule after evaluation
 	virtual bool EvaluateRangeRule(float DeltaTime, FRangeEnemySpawnRule& Rule);
 
-	virtual void SpawnEnemy(TSubclassOf<AEnemy> EnemyClass);
+	virtual void SpawnEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnLocation);
 
-	virtual void SpawnEnemyInCluster(TSubclassOf<AEnemy> EnemyClass, FVector ClusterSpawnLocation, FVector ClusterMovementDirection);
+	UFUNCTION()
+	virtual void AddEnemyToDeadList(AEnemy* Enemy);
+
+	virtual void DestroyEnemy(AEnemy* Enemy);
+
+	//virtual void SpawnEnemyInCluster(TSubclassOf<AEnemy> EnemyClass, FVector ClusterSpawnLocation, FVector ClusterMovementDirection);
 
 	virtual FVector GetSpawnLocation();
 
-	virtual FVector GetSpawnLocationForCluster(FVector ClusterSpawnLocation);
+	//virtual FVector GetSpawnLocationForCluster(FVector ClusterSpawnLocation);
 };

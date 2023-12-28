@@ -7,7 +7,7 @@
 #include "EnemyData.generated.h"
 
 
-class UCharacterData;
+class UPersonaData;
 class UWeaponData;
 class UProjectileData;
 
@@ -30,31 +30,31 @@ class PROGGAMEPLAYPROTO_API UEnemyData : public UPrimaryDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		FString Name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		EEnemyType EnemyType;
+	FString Name;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy", Meta = (MultiLine = true))
-		FText Description;
+	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		int Points;
+	EEnemyType EnemyType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		float HitPoints;
+	int Points;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		float MoveSpeed;
+	float MinDistanceToShoot;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		float Damage_CAC;
+	bool IsTargettingPlayer;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		float RangedAttackMaxRange;
+	UPersonaData* PersonaData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
-		UWeaponData* WeaponData;
+	UWeaponData* WeaponData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	UProjectileData* ProjectileData;
 };
 
 

@@ -21,7 +21,7 @@ void UBonusData::ApplyOnMainCharacter()
 
 void UBonusData::Apply(AProgGameplayProtoCharacter* Character, UWeaponComponent* Weapon)
 {
-	Character->UpdateCharacteristics(CharacterBonuses);
+	Character->UpdateCharacteristics(PersonaBonuses);
 	Weapon->UpdateCharacteristics(WeaponBonuses, ProjectileBonuses);
 
 	for (TSubclassOf<UProjectileEffect> effect : Effects)
@@ -33,11 +33,11 @@ int UBonusData::GetRarityValue()
 	switch (Rarity)
 	{
 	case Common:
-		return 30;
-	case Uncommon:
 		return 15;
+	case Uncommon:
+		return 10;
 	case Rare:
-		return 8;
+		return 5;
 	case Epic:
 		return 3;
 	case Legendary:

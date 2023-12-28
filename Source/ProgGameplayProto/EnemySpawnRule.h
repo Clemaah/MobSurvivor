@@ -2,7 +2,6 @@
 
 #include "CoreMinimal.h"
 #include "Enemies/Enemy.h"
-#include "Iris/Core/IrisProfiler.h"
 #include "EnemySpawnRule.generated.h"
 
 USTRUCT()
@@ -16,6 +15,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int32 Number = 0;
+
+	UPROPERTY(EditAnywhere)
+	bool IsACluster = false;
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AEnemy> Enemy;

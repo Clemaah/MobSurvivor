@@ -5,21 +5,19 @@
 
 #include "EnemyData.h"
 #include "Components/CapsuleComponent.h"
-#include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/HealthComponent.h"
-//#include "GameFramework/CharacterMovementComponent.h"
-#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
+#include "ProgGameplayProto/Characters/PersonaData.h"
 #include "ProgGameplayProto/Drops/EnemyDropperComponent.h"
-#include "ProgGameplayProto/System/MobSurvivorGameMode.h"
+#include "ProgGameplayProto/Projectiles/ProjectileData.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
+#include "ProgGameplayProto/Weapons/WeaponData.h"
 
 //////////////////////////////////////////////////////////////////////////
 // --- INITIALIZATION
 
 AEnemy::AEnemy()
 {
-	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	Collision = CreateDefaultSubobject<UCapsuleComponent>("Collision");
 	SetRootComponent(Collision);
@@ -37,103 +35,48 @@ void AEnemy::BeginPlay()
 {
 	Super::BeginPlay();
 
+	SetupComponents();
 	Health->OnHealthDie.AddDynamic(this, &AEnemy::Die);
 }
 
-void AEnemy::MoveTowardPlayer(float DeltaTime)
+void AEnemy::ChangeDirection(FVector Target)
 {
-	const AProgGameplayProtoCharacter* player = UGameUtils::GetMainCharacter();
+	Direction = Target - GetActorLocation();
+	Direction.Z = 0;
+	Direction.Normalize();
+}
 
-	if (!IsValid(player)) return;
+void AEnemy::Move(float DeltaTime, FVector PlayerPosition)
+{
+	if(EnemyData->IsTargettingPlayer)
+		ChangeDirection(PlayerPosition);
 
-	FVector direction = player->GetActorLocation() - GetActorLocation();
-	direction.Z = 0;
-	direction.Normalize();
+	if((GetActorLocation() - PlayerPosition).Size() < EnemyData->MinDistanceToShoot)
+		Weapon->bWantsToShoot = true;
 
-	
-	if (EnemyData->EnemyType == EEnemyType::Distance)
-	{
-		if((GetActorLocation() - player->GetActorLocation()).Size() < EnemyData->RangedAttackMaxRange)
-		{
-			Weapon->bWantsToShoot = true;
-		}
-		else
-		{
-			const FVector movement = direction * EnemyData->MoveSpeed * DeltaTime;
-			AddActorWorldOffset(movement);
-			Weapon->bWantsToShoot = false;
-		}
-	}
-	else if (EnemyData->EnemyType == EEnemyType::Weak)
-	{
-		const FVector movement = ClusterMovementDirection * EnemyData->MoveSpeed * DeltaTime;
-		AddActorWorldOffset(movement);
-	}
 	else
 	{
-		const FVector movement = direction * EnemyData->MoveSpeed * DeltaTime;
+		const FVector movement = Direction * Speed * DeltaTime;
 		AddActorWorldOffset(movement);
+		Weapon->bWantsToShoot = false;
 	}
-
 }
 
 void AEnemy::Die()
 {
-	AMobSurvivorGameMode* GameMode = UGameUtils::GetGameMode(GetWorld());
-
-	if (IsValid(GameMode))
-		GameMode->ChangeGamePointsBy(EnemyData->Points);
-
-	Destroy();
+	DieDelegate.Broadcast(this);
 }
 
-// Called every frame
-void AEnemy::Tick(float DeltaTime)
+void AEnemy::SetupComponents()
 {
-	Super::Tick(DeltaTime);
+	PersonaCharacteristics = EnemyData->PersonaData->GetCurrentCharacteristics(0);
+	Weapon->InitializeWeapon(this, &PersonaCharacteristics, EnemyData->WeaponData->GetCurrentCharacteristics(0), EnemyData->ProjectileData->GetCurrentCharacteristics(0), EnemyData->ProjectileData->Effects);
 
-	MoveTowardPlayer(DeltaTime);
+	InitializeEnnemyVariables(); 
 }
 
-void AEnemy::SetupComponents(/*const FEnemyCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
+void AEnemy::InitializeEnnemyVariables()
 {
-	//EnemyCharacteristics = InCharacterCharacteristics;
-	Weapon->InitializeWeapon(this,InWeaponCharacteristics, InProjectileCharacteristics, ProjectileEffects);
-
-	//InitializeCharacterVariables(); 
+	Health->InitializeHealth(PersonaCharacteristics.MaxHealth, PersonaCharacteristics.RegenerationRate);
+	Speed = PersonaCharacteristics.Speed * 1000;
 }
-
-/*void AEnemy::InitializeCharacterVariables()
-{
-	DropsCollector->SetSphereRadius(EnemyCharacteristics.DropCollectorRadius * 100);
-	Health->InitializeHealth(EnemyCharacteristics.MaxHealth, EnemyCharacteristics.RegenerationRate);
-	GetCharacterMovement()->MaxWalkSpeed = EnemyCharacteristics.Speed * 1000;
-}*/
-
-// Called to bind functionality to input
-void AEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
-
-void AEnemy::TryAttacking(AActor* Target)
-{
-	if (!Target->IsA(AProgGameplayProtoCharacter::StaticClass())) return;
-
-	UHealthComponent* targetHealth = Target->FindComponentByClass<UHealthComponent>();
-
-	if (!IsValid(targetHealth)) return;
-
-	targetHealth->HitByAttack(EnemyData->Damage_CAC, this);
-
-	Attack_BP(Target);
-}
-
-/*void AEnemy::UpdateCharacteristics(FEnemyCharacteristics& CharacterBonuses)
-{
-	EnemyCharacteristics += CharacterBonuses;
-
-	Health->SetMaxHealth(EnemyCharacteristics.Health);
-	GetMovementComponent()->MaxWalkSpeed = EnemyCharacteristics.Speed * 1000;
-}*/

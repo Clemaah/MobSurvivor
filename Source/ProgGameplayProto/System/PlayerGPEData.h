@@ -4,23 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "GamePlayElementsData.generated.h"
+#include "PlayerGPEData.generated.h"
 
-class UCharacterData;
+class UPersonaData;
 class UWeaponData;
 class UProjectileData;
 /**
  *
  */
 UCLASS()
-class PROGGAMEPLAYPROTO_API UGamePlayElementsData : public UPrimaryDataAsset
+class PROGGAMEPLAYPROTO_API UPlayerGPEData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 
 public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
-	TArray<UCharacterData*> Characters;
+	TArray<UPersonaData*> Personas;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Parameters")
 	TArray<UWeaponData*> Weapons;

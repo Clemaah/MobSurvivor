@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "ProgGameplayProto/Projectiles/ProjectileCharacteristics.h"
 #include "WeaponCharacteristics.h"
+#include "ProgGameplayProto/Characters/PersonaCharacteristics.h"
 #include "WeaponComponent.generated.h"
 
 struct FMobSurvivorParameters;
@@ -28,6 +29,8 @@ protected:
 
 
 	// --- OTHER VARIABLES
+	FPersonaCharacteristics* PersonaCharacteristics;
+
 	FWeaponCharacteristics WeaponCharacteristics;
 
 	FProjectileCharacteristics ProjectileCharacteristics;
@@ -53,7 +56,8 @@ public:
 public:
 	UWeaponComponent();
 
-	virtual void InitializeWeapon(APawn* NewPawn, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
+	virtual void InitializeWeapon(APawn* InPawn, FPersonaCharacteristics* InPersonaCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const
+	                              FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
 
 	// --- BEHAVIOUR
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

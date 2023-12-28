@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "GameFramework/Character.h"
-#include "EnemyCharacteristics.h"
 #include "EnemyData.h"
+#include "ProgGameplayProto/Characters/PersonaCharacteristics.h"
 #include "Enemy.generated.h"
 
 
+struct FPersonaCharacteristics;
 struct FWeaponCharacteristics;
 class UProjectileEffect;
 struct FProjectileCharacteristics;
@@ -20,76 +21,64 @@ class UHealthComponent;
 class UWeaponComponent;
 class UEnemyData;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDie, AEnemy*, Enemy);
+
 UCLASS()
 class PROGGAMEPLAYPROTO_API AEnemy : public APawn
 {
 	GENERATED_BODY()
 
 public:
+	FOnEnemyDie DieDelegate;
+
 	// Sets default values for this pawn's properties
 	AEnemy();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UCapsuleComponent* Collision;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UHealthComponent* Health;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	UEnemyDropperComponent* Dropper;
-
-	UPROPERTY(Category = "EnemyParameters", EditAnywhere, BlueprintReadWrite)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	UEnemyData* EnemyData;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FVector ClusterMovementDirection;
-
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Enemy")
-	FEnemyCharacteristics EnemyCharacteristics;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	UCapsuleComponent* Collision;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	UEnemyDropperComponent* Dropper;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	UHealthComponent* Health;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
 	UWeaponComponent* Weapon;
 
-	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Enemy")
+	FPersonaCharacteristics PersonaCharacteristics;
+
+	FVector Direction;
+
+	float Speed;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	virtual void MoveTowardPlayer(float DeltaTime);
+public:
+
+	virtual void Move(float DeltaTime, FVector PlayerPosition);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Die();
 
-
-public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-
 	UFUNCTION(BlueprintCallable)
-	virtual void TryAttacking(AActor* Target);
+	virtual void SetupComponents();
 
-	UFUNCTION(BlueprintCallable)
-	virtual void SetupComponents(/*const FCharacterCharacteristics InCharacterCharacteristics,*/ const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
+	void InitializeEnnemyVariables();
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void Attack_BP(AActor* Target);
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Projectile")
-	TSubclassOf<AProjectile> WeaponProjectileToSpawn;
+	void ChangeDirection(FVector Target);
 
 	// --- GETTERS
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
 
-	FORCEINLINE FEnemyCharacteristics GetCharacteristics() const { return EnemyCharacteristics; }
+	FORCEINLINE UEnemyData* GetEnemyData() const { return EnemyData; }
 
-	//FORCEINLINE UEnemyData GetEnemyData() const { return EnemyData; }
-
-	// --- SETTERS
-	//UFUNCTION()
-	//virtual void UpdateCharacteristics(FEnemyCharacteristics& Other);
-
+	FORCEINLINE FPersonaCharacteristics GetCharacteristics() const { return PersonaCharacteristics; }
 };

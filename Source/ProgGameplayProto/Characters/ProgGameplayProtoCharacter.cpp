@@ -11,11 +11,10 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
-#include "Builders/CylinderBuilder.h"
 #include "Components/SphereComponent.h"
 #include "ProgGameplayProto/Drops/Drop.h"
 #include "ProgGameplayProto/Weapons/WeaponComponent.h"
-#include "ProgGameplayProto/Characters/CharacterData.h"
+#include "ProgGameplayProto/Characters/PersonaData.h"
 #include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/ExperienceComponent.h"
 #include "ProgGameplayProto/Projectiles/ProjectileData.h"
@@ -109,20 +108,20 @@ void AProgGameplayProtoCharacter::RegisterInstance()
 	Instance = this;
 }
 
-void AProgGameplayProtoCharacter::SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
+void AProgGameplayProtoCharacter::SetupComponents(const FPersonaCharacteristics InPersonaCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
 {
-	CharacterCharacteristics = InCharacterCharacteristics;
-	Weapon->InitializeWeapon(this, InWeaponCharacteristics, InProjectileCharacteristics, ProjectileEffects);
+	PersonaCharacteristics = InPersonaCharacteristics;
+	Weapon->InitializeWeapon(this, &PersonaCharacteristics, InWeaponCharacteristics, InProjectileCharacteristics, ProjectileEffects);
 
 	InitializeCharacterVariables();
 }
 
 void AProgGameplayProtoCharacter::InitializeCharacterVariables()
 {
-	DropsCollector->SetSphereRadius(CharacterCharacteristics.DropCollectorRadius * 100);
-	DropsCollectorMesh->SetRelativeScale3D(FVector(CharacterCharacteristics.DropCollectorRadius * 2, CharacterCharacteristics.DropCollectorRadius * 2, 0.01));
-	Health->InitializeHealth(CharacterCharacteristics.MaxHealth, CharacterCharacteristics.RegenerationRate);
-	GetCharacterMovement()->MaxWalkSpeed = CharacterCharacteristics.Speed * 1000;
+	DropsCollector->SetSphereRadius(PersonaCharacteristics.DropCollectorRadius * 100);
+	DropsCollectorMesh->SetRelativeScale3D(FVector(PersonaCharacteristics.DropCollectorRadius * 2, PersonaCharacteristics.DropCollectorRadius * 2, 0.01));
+	Health->InitializeHealth(PersonaCharacteristics.MaxHealth, PersonaCharacteristics.RegenerationRate);
+	GetCharacterMovement()->MaxWalkSpeed = PersonaCharacteristics.Speed * 1000;
 }
 
 void AProgGameplayProtoCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -219,13 +218,13 @@ void AProgGameplayProtoCharacter::OnDropsCollectorBeginOverlap(UPrimitiveCompone
 //////////////////////////////////////////////////////////////////////////
 // --- SETTERS
 
-void AProgGameplayProtoCharacter::UpdateCharacteristics(FCharacterCharacteristics& CharacterBonuses)
+void AProgGameplayProtoCharacter::UpdateCharacteristics(FPersonaCharacteristics& CharacterBonuses)
 {
-	CharacterCharacteristics += CharacterBonuses;
+	PersonaCharacteristics += CharacterBonuses;
 
-	DropsCollector->SetSphereRadius(CharacterCharacteristics.DropCollectorRadius * 100);
-	DropsCollectorMesh->SetRelativeScale3D(FVector(CharacterCharacteristics.DropCollectorRadius * 2, CharacterCharacteristics.DropCollectorRadius * 2, 0.01));
-	Health->SetMaxHealth(CharacterCharacteristics.MaxHealth);
-	Health->SetRegenerationRate(CharacterCharacteristics.RegenerationRate);
-	GetCharacterMovement()->MaxWalkSpeed = CharacterCharacteristics.Speed * 1000;
+	DropsCollector->SetSphereRadius(PersonaCharacteristics.DropCollectorRadius * 100);
+	DropsCollectorMesh->SetRelativeScale3D(FVector(PersonaCharacteristics.DropCollectorRadius * 2, PersonaCharacteristics.DropCollectorRadius * 2, 0.01));
+	Health->SetMaxHealth(PersonaCharacteristics.MaxHealth);
+	Health->SetRegenerationRate(PersonaCharacteristics.RegenerationRate);
+	GetCharacterMovement()->MaxWalkSpeed = PersonaCharacteristics.Speed * 1000;
 }

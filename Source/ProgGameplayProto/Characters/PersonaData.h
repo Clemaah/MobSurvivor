@@ -3,22 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CharacterCharacteristics.h"
+#include "PersonaCharacteristics.h"
 #include "Engine/DataAsset.h"
 #include "ProgGameplayProto/DisplayablePlayerElementInterface.h"
-#include "CharacterData.generated.h"
+#include "PersonaData.generated.h"
 
 /**
  * 
  */
 
 USTRUCT(BlueprintType)
-struct PROGGAMEPLAYPROTO_API FCharacterLevel
+struct PROGGAMEPLAYPROTO_API FPersonaLevel
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FCharacterCharacteristics Characteristics;
+	FPersonaCharacteristics Characteristics;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ClampMin = 0))
 	int Price;
@@ -26,7 +26,7 @@ struct PROGGAMEPLAYPROTO_API FCharacterLevel
 
 
 UCLASS(BlueprintType)
-class PROGGAMEPLAYPROTO_API UCharacterData : public UPrimaryDataAsset, public IDisplayablePlayerElementInterface
+class PROGGAMEPLAYPROTO_API UPersonaData : public UPrimaryDataAsset, public IDisplayablePlayerElementInterface
 {
 
 	GENERATED_BODY()
@@ -39,9 +39,9 @@ public:
 	FText Description;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Characteristics", Meta = (EditFixedOrder, ToolTip = "The first level contains base characteristics. Next ones contains modifiers."))
-	TArray<FCharacterLevel> Levels;
+	TArray<FPersonaLevel> Levels;
 
-	UCharacterData();
+	UPersonaData();
 
 	UFUNCTION(BlueprintCallable)
 	virtual TArray<FDisplayableCharacteristic> GetDisplayableCharacteristics_Implementation(const int Level) override;
@@ -56,5 +56,5 @@ public:
 	virtual FText GetDescription_Implementation() override;
 
 	UFUNCTION(BlueprintCallable)
-	virtual FCharacterCharacteristics GetCurrentCharacteristics(const int Level);
+	virtual FPersonaCharacteristics GetCurrentCharacteristics(const int Level);
 };

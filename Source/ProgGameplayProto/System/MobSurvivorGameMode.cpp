@@ -6,7 +6,7 @@
 #include "ProgGameplayProto/HealthComponent.h"
 #include "ProgGameplayProto/LevelData.h"
 #include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
-#include "ProgGameplayProto/Managers/EnemySpawnerManager.h"
+#include "ProgGameplayProto/Managers/EnemiesManager.h"
 #include "ProgGameplayProto/Managers/BonusManager.h"
 
 
@@ -19,7 +19,7 @@ void AMobSurvivorGameMode::InitGame(const FString& MapName, const FString& Optio
 {
 	Super::InitGame(MapName, Options, ErrorMessage);
 
-	EnemySpawnerManager = GetWorld()->SpawnActor<AEnemySpawnerManager>();
+	EnemiesManager = GetWorld()->SpawnActor<AEnemiesManager>();
 	BonusManager = GetWorld()->SpawnActor<ABonusManager>();
 }
 

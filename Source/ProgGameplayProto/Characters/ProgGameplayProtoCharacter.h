@@ -6,7 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
-#include "CharacterCharacteristics.h"
+#include "PersonaCharacteristics.h"
 #include "ProgGameplayProtoCharacter.generated.h"
 
 
@@ -28,7 +28,7 @@ class UInputMappingContext;
 class UInputAction;
 
 class UBonusData;
-class UCharacterData;
+class UPersonaData;
 class UWeaponData;
 
 class AProjectile;
@@ -105,7 +105,7 @@ protected:
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Character")
-	FCharacterCharacteristics CharacterCharacteristics;
+	FPersonaCharacteristics PersonaCharacteristics;
 
 	bool bIsHoldingShoot = false;
 
@@ -124,7 +124,7 @@ public:
 	virtual void RegisterInstance();
 
 	UFUNCTION(BlueprintCallable)
-	virtual void SetupComponents(const FCharacterCharacteristics InCharacterCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
+	virtual void SetupComponents(const FPersonaCharacteristics InPersonaCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
 
 	virtual void InitializeCharacterVariables();
 
@@ -159,12 +159,12 @@ public:
 
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
 
-	FORCEINLINE FCharacterCharacteristics GetCharacteristics() const { return CharacterCharacteristics; }
+	FORCEINLINE FPersonaCharacteristics GetCharacteristics() const { return PersonaCharacteristics; }
 
 
 
 	// --- SETTERS
 	UFUNCTION()
-	virtual void UpdateCharacteristics(FCharacterCharacteristics& Other);
+	virtual void UpdateCharacteristics(FPersonaCharacteristics& Other);
 };
 

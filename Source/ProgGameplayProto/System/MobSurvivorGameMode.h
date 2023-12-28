@@ -8,7 +8,7 @@
 #include "MobSurvivorGameMode.generated.h"
 
 class ABonusManager;
-class AEnemySpawnerManager;
+class AEnemiesManager;
 class ULevelData;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FFloatDelegateSignature, const float, value);
@@ -28,7 +28,7 @@ public:
 	ULevelData* GameLevelData;
 
 	UPROPERTY(BlueprintReadOnly)
-	AEnemySpawnerManager* EnemySpawnerManager;
+	AEnemiesManager* EnemiesManager;
 
 	UPROPERTY(BlueprintReadOnly)
 	ABonusManager* BonusManager;

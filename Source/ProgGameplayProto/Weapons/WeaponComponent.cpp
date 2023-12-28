@@ -18,11 +18,13 @@ UWeaponComponent::UWeaponComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 	bIsDoubleShotActivated = false;
 	bWantsToShoot = false;
+	PersonaCharacteristics = nullptr;
 }
 
-void UWeaponComponent::InitializeWeapon(APawn* NewPawn, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
+void UWeaponComponent::InitializeWeapon(APawn* InPawn, FPersonaCharacteristics* InPersonaCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
 {
-	Pawn = NewPawn;
+	Pawn = InPawn;
+	PersonaCharacteristics = InPersonaCharacteristics;
 	WeaponCharacteristics = InWeaponCharacteristics;
 	ProjectileCharacteristics = InProjectileCharacteristics;
 	Effects = ProjectileEffects;
@@ -66,7 +68,7 @@ void UWeaponComponent::TryShooting(float DeltaTime)
 bool UWeaponComponent::CanActivateDoubleShot()
 {
 	const float value = WeaponCharacteristics.DoubleShotChance;
-	const float multiplier = 1;//Pawn->GetCharacteristics().DoubleShotChanceMultiplier;
+	const float multiplier = PersonaCharacteristics->DoubleShotChanceMultiplier;
 
 	const float diceRoll = FMath::RandRange(0, 100);
 
@@ -163,7 +165,7 @@ FVector UWeaponComponent::GetPlayerDirection()
 void UWeaponComponent::SpawnProjectile(FVector Direction)
 {
 	const FVector spawnLocation = Pawn->GetActorLocation();
-	const FRotator spawnRotation = FRotator::ZeroRotator;
+	const FRotator spawnRotation = Pawn->GetActorRotation();
 
 	AProjectile* projectile = Pawn->GetWorld()->SpawnActor<AProjectile>(WeaponProjectileToSpawn, spawnLocation, spawnRotation);
 
@@ -178,14 +180,14 @@ void UWeaponComponent::SpawnProjectile(FVector Direction)
 float UWeaponComponent::GetShootDelay()
 {
 	const float value = WeaponCharacteristics.FireRate;
-	const float multiplier = 1;//Pawn->GetCharacteristics().FireRateMultiplier;
+	const float multiplier = PersonaCharacteristics->FireRateMultiplier;
 
 	return 1 / (value * multiplier);
 }
 
 float UWeaponComponent::GetPrecisionRandomAngle()
 {
-	const float totalPrecision = (WeaponCharacteristics.Precision) * 1;//Pawn->GetCharacteristics().PrecisionMultiplier;
+	const float totalPrecision = (WeaponCharacteristics.Precision) * PersonaCharacteristics->PrecisionMultiplier;
 
 	const float precisionFactor = FMath::Clamp((1 - totalPrecision), 0, 1);
 	const float angleLimit = 30 * precisionFactor;
@@ -198,7 +200,7 @@ float UWeaponComponent::GetPrecisionRandomAngle()
 float UWeaponComponent::GetSpread()
 {
 	const float value = WeaponCharacteristics.Spread;
-	const float multiplier = 1;//Pawn->GetCharacteristics().SpreadMultiplier;
+	const float multiplier = PersonaCharacteristics->SpreadMultiplier;
 
 	return FMath::Clamp(value * multiplier, 0, 360);
 }

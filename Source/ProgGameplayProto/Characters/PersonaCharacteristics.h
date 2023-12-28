@@ -4,17 +4,17 @@
 
 #include "CoreMinimal.h"
 #include "ProgGameplayProto/Characteristics.h"
-#include "CharacterCharacteristics.generated.h"
+#include "PersonaCharacteristics.generated.h"
 
 /**
  * 
  */
 USTRUCT(BlueprintType)
-struct PROGGAMEPLAYPROTO_API FCharacterCharacteristics : public FCharacteristics
+struct PROGGAMEPLAYPROTO_API FPersonaCharacteristics : public FCharacteristics
 {
 	GENERATED_BODY()
 
-	FCharacterCharacteristics()
+	FPersonaCharacteristics()
 	{
 		MaxHealth = 0;
 		RegenerationRate = 0;
@@ -31,7 +31,7 @@ struct PROGGAMEPLAYPROTO_API FCharacterCharacteristics : public FCharacteristics
 		SpreadMultiplier = 0;
 	}
 
-	FCharacterCharacteristics& operator+=(const FCharacterCharacteristics& Other)
+	FPersonaCharacteristics& operator+=(const FPersonaCharacteristics& Other)
 	{
 		MaxHealth += Other.MaxHealth;
 		RegenerationRate += Other.RegenerationRate;
@@ -50,7 +50,7 @@ struct PROGGAMEPLAYPROTO_API FCharacterCharacteristics : public FCharacteristics
 		return *this;
 	}
 
-	friend FCharacterCharacteristics operator+(FCharacterCharacteristics One, const FCharacterCharacteristics& Other)
+	friend FPersonaCharacteristics operator+(FPersonaCharacteristics One, const FPersonaCharacteristics& Other)
 	{
 		One += Other;
 		return One;

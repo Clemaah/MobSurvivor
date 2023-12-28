@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "ProgGameplayProto/Characters/CharacterCharacteristics.h"
+#include "ProgGameplayProto/Characters/PersonaCharacteristics.h"
 #include "ProgGameplayProto/Projectiles/ProjectileCharacteristics.h"
 #include "ProgGameplayProto/Weapons/WeaponCharacteristics.h"
 #include "BonusData.generated.h"
@@ -39,7 +39,7 @@ public:
 	TArray<TSubclassOf<UProjectileEffect>> Effects;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ShowOnlyInnerProperties))
-	FCharacterCharacteristics CharacterBonuses;
+	FPersonaCharacteristics PersonaBonuses;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Meta = (ShowOnlyInnerProperties))
 	FWeaponCharacteristics WeaponBonuses;

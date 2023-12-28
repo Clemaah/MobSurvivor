@@ -8,10 +8,9 @@
 
 #include "MobSurvivorSaveGame.generated.h"
 
-class UGamePlayElementsData;
 class UProjectileData;
 class UWeaponData;
-class UCharacterData;
+class UPersonaData;
 /**
  * 
  */
@@ -31,7 +30,7 @@ public:
 	FString PlayerToken;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SavedParameters")
-	TMap<UCharacterData*, int> CharactersCurrentLevel;
+	TMap<UPersonaData*, int> PersonasCurrentLevel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SavedParameters")
 	TMap<UWeaponData*, int> WeaponsCurrentLevel;
