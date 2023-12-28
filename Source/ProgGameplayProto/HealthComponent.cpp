@@ -50,7 +50,7 @@ void UHealthComponent::HitByAttack(float Damages, AActor* Attacker)
 
 void UHealthComponent::AddHealth(float Amount)
 {
-	if (CurrentHealth == MaxHealth && Amount >= 0) return;
+	if (CurrentHealth == 0 || CurrentHealth == MaxHealth && Amount >= 0) return;
 
 	CurrentHealth = FMath::Clamp(CurrentHealth + Amount, 0, MaxHealth);
 	OnHealthChanged.Broadcast(CurrentHealth);
