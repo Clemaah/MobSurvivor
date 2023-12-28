@@ -31,5 +31,8 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	float DesiredIntensity;
+
+	UPROPERTY(VisibleAnywhere)
+	AActor* LastActor;
 };
 

@@ -38,12 +38,18 @@ void AZone::CheckForCollisions()
 
 	for (auto outHit : outHits)
 	{
+		if (IsValid(LastActor))
+		{
+			if (LastActor == outHit.GetActor()) continue;
+		}
 		HitSomething(outHit.GetActor());
 	}
 }
 
 void AZone::HitSomething(AActor* OtherActor)
 {
+	LastActor = OtherActor;
+
 	UHealthComponent* HealthComponent = OtherActor->FindComponentByClass<UHealthComponent>();
 
 	if (IsValid(HealthComponent))
