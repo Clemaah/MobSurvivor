@@ -23,7 +23,12 @@ AZone::AZone()
 	Sphere1->OnComponentEndOverlap.AddDynamic(this, &AZone::OnOverlapEnd);
 }
 
-void AZone::CheckForCollisions(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AZone::BeginPlay()
+{
+	CheckForCollisions();
+}
+
+void AZone::CheckForCollisions()
 {
 	TArray<FHitResult> outHits;
 	const FCollisionShape shape = FCollisionShape::MakeSphere(Sphere1->GetScaledSphereRadius());

@@ -13,18 +13,21 @@ public:
 	class USphereComponent* Sphere1;
 
 	AZone();
+public:
+	UFUNCTION()
+	virtual void CheckForCollisions();
 
 	UFUNCTION()
-	void CheckForCollisions(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	virtual void HitSomething(AActor* OtherActor);
 
 	UFUNCTION()
-	void HitSomething(AActor* OtherActor);
+	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	virtual void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION()
-	void ToggleLight();
+	virtual void ToggleLight();
 
 	UPROPERTY(VisibleAnywhere)
 	float DesiredIntensity;

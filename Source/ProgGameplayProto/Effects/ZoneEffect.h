@@ -11,5 +11,6 @@ class PROGGAMEPLAYPROTO_API UZoneEffect : public UProjectileEffect
 	GENERATED_BODY()
 
 	public:
+
 		virtual void OnProjectileDestroy(AProjectile* Projectile) override;
 };
