@@ -48,9 +48,7 @@ void AEnemiesManager::Tick(float DeltaSeconds)
 	PlayerPosition.Z = 0;
 
 	for (int i = DeadEnemiesList.Num() - 1; i >= 0; i--)
-	{
 		DestroyEnemy(DeadEnemiesList[i]);
-	}
 
 	MoveEnemies(DeltaSeconds);
 
@@ -64,6 +62,25 @@ void AEnemiesManager::MoveEnemies(float DeltaSeconds)
 	for (AEnemy* Enemy : AliveEnemiesList)
 	{
 		Enemy->Behave(DeltaSeconds, PlayerPosition);
+
+		if (Enemy->DistanceFromPlayerSqrd < DespawnDistanceThresholdSqrd) continue;
+
+		if (!Enemy->GetEnemyCharacteristics().IsTargetingPlayer)
+		{
+			AddEnemyToDeadList(Enemy, false);
+			continue;
+		}
+
+		FVector respawnLocation;
+		FRotator respawnRotation;
+
+		do {
+			respawnLocation = GetSpawnLocation(PlayerPosition, SpawnDistance, SpawnDistance);
+			respawnRotation = UKismetMathLibrary::FindLookAtRotation(respawnLocation, PlayerPosition);
+
+		} while (!Enemy->TeleportTo(respawnLocation, respawnRotation));
+
+		Enemy->DistanceFromPlayerSqrd = UKismetMathLibrary::Vector_DistanceSquared(respawnLocation, PlayerPosition);
 	}
 }
 
@@ -87,7 +104,7 @@ bool AEnemiesManager::EvaluatePunctualRule(FPunctualEnemySpawnRule Rule)
 
 	if (Rule.IsACluster)
 	{
-		const FVector clusterLocation = GetSpawnLocation(PlayerPosition, 2000, 2000);
+		const FVector clusterLocation = GetSpawnLocation(PlayerPosition, SpawnDistance, SpawnDistance);
 		const FRotator clusterRotation = UKismetMathLibrary::FindLookAtRotation(clusterLocation, PlayerPosition);
 
 		for (int32 i = 0; i < Rule.Number; i++)
@@ -102,7 +119,7 @@ bool AEnemiesManager::EvaluatePunctualRule(FPunctualEnemySpawnRule Rule)
 
 	for (int32 i = 0; i < Rule.Number; i++)
 	{
-		spawnLocation = GetSpawnLocation(PlayerPosition, 2000, 2000);
+		spawnLocation = GetSpawnLocation(PlayerPosition, SpawnDistance, SpawnDistance);
 		FRotator spawnRotation = UKismetMathLibrary::FindLookAtRotation(spawnLocation, PlayerPosition);
 
 		SpawnEnemy(Rule.Enemy, spawnLocation, spawnRotation);
@@ -137,7 +154,7 @@ bool AEnemiesManager::EvaluateRangeRule(float DeltaTime, FRangeEnemySpawnRule& R
 
 		while (Rule.NumberOfEnemyToSpawn > 1)
 		{
-			const FVector spawnLocation = GetSpawnLocation(PlayerPosition, 2000, 2000);
+			const FVector spawnLocation = GetSpawnLocation(PlayerPosition, SpawnDistance, SpawnDistance);
 			const FRotator spawnRotation = UKismetMathLibrary::FindLookAtRotation(spawnLocation, PlayerPosition);
 
 			SpawnEnemy(Rule.Enemy, spawnLocation, spawnRotation);
@@ -162,21 +179,23 @@ void AEnemiesManager::SpawnEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnLo
 
 		return;
 	}
-	
+
+	newEnemy->DistanceFromPlayerSqrd = UKismetMathLibrary::Vector_DistanceSquared(SpawnLocation, PlayerPosition);
 	AliveEnemiesList.Add(newEnemy);
 
 	newEnemy->DieDelegate.AddDynamic(this, &AEnemiesManager::AddEnemyToDeadList);
 }
 
-void AEnemiesManager::AddEnemyToDeadList(AEnemy* Enemy)
+void AEnemiesManager::AddEnemyToDeadList(AEnemy* Enemy, bool bIsGettingPoints)
 {
+	if (bIsGettingPoints)
+		GameMode->ChangeGamePointsBy(Enemy->GetEnemyCharacteristics().Points);
+
 	DeadEnemiesList.Add(Enemy);
 }
 
 void AEnemiesManager::DestroyEnemy(AEnemy* Enemy)
 {
-	GameMode->ChangeGamePointsBy(Enemy->GetEnemyCharacteristics().Points);
-
 	DeadEnemiesList.RemoveSwap(Enemy);
 	AliveEnemiesList.RemoveSwap(Enemy);
 

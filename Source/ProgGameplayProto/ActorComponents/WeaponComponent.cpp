@@ -38,18 +38,16 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::Reload(float DeltaTime)
 {
-	if(!bCanShoot)
-	{
-		if (!IsValid(Pawn)) return;
+	if(bCanShoot) return;
 
-		TimeElapsedSinceLastShoot += DeltaTime;
+	if (!IsValid(Pawn)) return;
 
-		if (TimeElapsedSinceLastShoot >= GetShootDelay())
-		{
-			bCanShoot = true;
-			TimeElapsedSinceLastShoot = 0;
-		}
-	}
+	TimeElapsedSinceLastShoot += DeltaTime;
+
+	if (TimeElapsedSinceLastShoot < GetShootDelay()) return;
+
+	bCanShoot = true;
+	TimeElapsedSinceLastShoot = 0;
 }
 
 void UWeaponComponent::Shoot(FRotator Rotation)

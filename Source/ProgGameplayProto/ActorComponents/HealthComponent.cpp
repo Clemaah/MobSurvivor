@@ -43,11 +43,6 @@ void UHealthComponent::HitByProjectile(AProjectile* Projectile)
 	AddHealth(-damages);
 }
 
-void UHealthComponent::HitByAttack(float Damages, AActor* Attacker)
-{
-	AddHealth(-Damages);
-}
-
 void UHealthComponent::AddHealth(float Amount)
 {
 	if (CurrentHealth == 0 || CurrentHealth == MaxHealth && Amount >= 0) return;

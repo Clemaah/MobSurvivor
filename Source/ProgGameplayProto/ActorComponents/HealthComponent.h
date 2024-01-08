@@ -54,8 +54,6 @@ public:
 
 	virtual void HitByProjectile(AProjectile* Projectile) override;
 
-	virtual void HitByAttack(float Damages, AActor* Attacker);
-
 	virtual void AddHealth(float Amount);
 
 	virtual void RestoreFullHealth();
@@ -63,5 +61,6 @@ public:
 	virtual void Die();
 
 	virtual void SetMaxHealth(float NewMaxHealth);
+
 	virtual void SetRegenerationRate(float NewRegenerationRate);
 };

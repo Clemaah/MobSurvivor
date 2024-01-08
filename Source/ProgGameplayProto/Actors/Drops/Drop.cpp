@@ -31,12 +31,12 @@ void ADrop::MoveTowardCollectingTarget(float DeltaTime)
 	if (!bIsBeingCollected) return;
 
 	FVector direction = CollectingTarget->GetActorLocation() - GetActorLocation();
-	float squaredCurrentDistance = direction.SquaredLength();
+	const float CurrentDistanceSqrt = direction.SquaredLength();
 
-	float squaredMoveAmount = CollectionSpeed * DeltaTime;
-	squaredMoveAmount *= squaredMoveAmount;
+	float MoveAmountSqrt = CollectionSpeed * DeltaTime;
+	MoveAmountSqrt *= MoveAmountSqrt;
 
-	if (squaredCurrentDistance - squaredMoveAmount < CollectionSqrdDistance)
+	if (CurrentDistanceSqrt - MoveAmountSqrt < CollectionSqrdDistance)
 	{
 		Collect();
 	}

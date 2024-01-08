@@ -8,7 +8,7 @@
 
 class AProjectile;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitDelegate, AProjectile*, Projectile);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FHitDelegate, const FRotator&, ProjectileRotation, const float, ProjectileSpeed);
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROGGAMEPLAYPROTO_API UProjectileInteraction : public UActorComponent

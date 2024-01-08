@@ -43,6 +43,10 @@ protected:
 
 	FVector PlayerPosition;
 
+	float DespawnDistanceThresholdSqrd = 9000000;
+
+	float SpawnDistance = 2000;
+
 public:
 	virtual void Tick(float DeltaSeconds) override;
 
@@ -66,13 +70,9 @@ protected:
 	virtual void SpawnEnemy(TSubclassOf<AEnemy> EnemyClass, FVector SpawnLocation, FRotator SpawnRotation);
 
 	UFUNCTION()
-	virtual void AddEnemyToDeadList(AEnemy* Enemy);
+	virtual void AddEnemyToDeadList(AEnemy* Enemy, bool bIsGettingPoints);
 
 	virtual void DestroyEnemy(AEnemy* Enemy);
 
-	//virtual void SpawnEnemyInCluster(TSubclassOf<AEnemy> EnemyClass, FVector ClusterSpawnLocation, FVector ClusterMovementDirection);
-
 	virtual FVector GetSpawnLocation(FVector Center, float MinOffset, float MaxOffset);
-
-	//virtual FVector GetSpawnLocationForCluster(FVector ClusterSpawnLocation);
 };

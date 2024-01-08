@@ -85,7 +85,8 @@ public:
 
 	// --- GETTERS
 	virtual float GetDamages();
-	virtual FProjectileCharacteristics* GetCharacteristics();
+
+	FORCEINLINE virtual FProjectileCharacteristics GetCharacteristics() { return Characteristics; }
 
 
 	// --- SETTERS

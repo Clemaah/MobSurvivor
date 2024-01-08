@@ -3,6 +3,8 @@
 
 #include "ProjectileInteraction.h"
 
+#include "ProgGameplayProto/Actors/Projectile.h"
+
 // Sets default values for this component's properties
 UProjectileInteraction::UProjectileInteraction()
 {
@@ -34,5 +36,5 @@ void UProjectileInteraction::TickComponent(float DeltaTime, ELevelTick TickType,
 
 void UProjectileInteraction::HitByProjectile(AProjectile* Projectile)
 {
-	OnHitByProjectile.Broadcast(Projectile);
+	OnHitByProjectile.Broadcast(Projectile->GetActorRotation(), Projectile->GetCharacteristics().Speed);
 }

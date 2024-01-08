@@ -161,11 +161,6 @@ float AProjectile::GetDamages()
 	return output;
 }
 
-FProjectileCharacteristics* AProjectile::GetCharacteristics()
-{
-	return &Characteristics;
-}
-
 void AProjectile::RemoveTransformEffect(UProjectilePierceEffect* Effect)
 {
 	Effects.Remove(Effect);

@@ -26,8 +26,10 @@ AEnemy::AEnemy()
 	Dropper = CreateDefaultSubobject<UEnemyDropperComponent>("Dropper");
 	Dropper->SetupAttachment(Collision);
 
-	Health = CreateDefaultSubobject<UHealthComponent>("Health");
 	Weapon = CreateDefaultSubobject<UWeaponComponent>("Weapon");
+	Health = CreateDefaultSubobject<UHealthComponent>("Health");
+
+	Health->OnHitByProjectile.AddDynamic(this, &AEnemy::OnHit);
 }
 
 // Called when the game starts or when spawned
@@ -62,31 +64,28 @@ void AEnemy::InitializeEnemyVariables()
 void AEnemy::Move(const float DeltaTime)
 {
 	AddActorWorldOffset(MovingSpeed * DeltaTime * MovingDirection);
-
-	Location = GetActorLocation();
-	Location.Z = 0;
 }
 
 void AEnemy::Rotate(const float DeltaTime, const FVector& PlayerPosition)
 {
 	RotationTarget = UKismetMathLibrary::FindLookAtRotation(Location, PlayerPosition);
-	Rotation = UKismetMathLibrary::RInterpTo(Rotation, RotationTarget, DeltaTime, 2.5);
+	Rotation = UKismetMathLibrary::RInterpTo(Rotation, RotationTarget, DeltaTime, 40);
 
 	SetActorRotation(Rotation);
 }
 
-void AEnemy::RunnerBehave(const float DeltaTime, const float PlayerDistanceSqrd)
+void AEnemy::RunnerBehave(const float DeltaTime)
 {
 
 	Move(DeltaTime);
 
-	if (Weapon->bCanShoot && PlayerDistanceSqrd <= EnemyCharacteristics.DistanceToShootSqrd)
+	if (Weapon->bCanShoot && DistanceFromPlayerSqrd <= EnemyCharacteristics.DistanceToShootSqrd)
 		Weapon->Shoot(Rotation);
 }
 
-void AEnemy::AggressiveBehave(const float DeltaTime, const float PlayerDistanceSqrd)
+void AEnemy::AggressiveBehave(const float DeltaTime)
 {
-	if (PlayerDistanceSqrd > EnemyCharacteristics.DistanceToShootSqrd)
+	if (DistanceFromPlayerSqrd > EnemyCharacteristics.DistanceToShootSqrd)
 	{
 		MovingDirection = GetActorForwardVector();
 		Move(DeltaTime);
@@ -94,7 +93,7 @@ void AEnemy::AggressiveBehave(const float DeltaTime, const float PlayerDistanceS
 		return;
 	}
 
-	if (PlayerDistanceSqrd <= EnemyCharacteristics.DistanceToRecedeSqrd)
+	if (DistanceFromPlayerSqrd <= EnemyCharacteristics.DistanceToRecedeSqrd)
 	{
 		MovingDirection = -GetActorForwardVector();
 		Move(DeltaTime);
@@ -106,21 +105,24 @@ void AEnemy::AggressiveBehave(const float DeltaTime, const float PlayerDistanceS
 
 void AEnemy::Behave(const float DeltaTime, const FVector& PlayerPosition)
 {
-	const float PlayerDistanceSqrd = UKismetMathLibrary::Vector_DistanceSquared(Location, PlayerPosition);
+	DistanceFromPlayerSqrd = UKismetMathLibrary::Vector_DistanceSquared(Location, PlayerPosition);
 
 	Rotate(DeltaTime, PlayerPosition);
 
+	Location = GetActorLocation();
+	Location.Z = 0;
+
 	if (!EnemyCharacteristics.IsTargetingPlayer)
 	{
-		RunnerBehave(DeltaTime, PlayerDistanceSqrd);
+		RunnerBehave(DeltaTime);
 
 		return;
 	}
 
-	AggressiveBehave(DeltaTime, PlayerDistanceSqrd);
+	AggressiveBehave(DeltaTime);
 }
 
 void AEnemy::Die()
 {
-	DieDelegate.Broadcast(this);
+	DieDelegate.Broadcast(this, true);
 }

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Projectile.h"
 #include "ProgGameplayProto/DataAssets/PersonaCharacteristics.h"
 #include "ProgGameplayProto/DataAssets/Enemies/EnemyCharacteristics.h"
 #include "Enemy.generated.h"
@@ -15,7 +16,7 @@ class UEnemyDropperComponent;
 class UCapsuleComponent;
 class UEnemyData;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnemyDie, AEnemy*, Enemy);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnEnemyDie, AEnemy*, Enemy, bool, bIsGettingPoints);
 
 UCLASS()
 class PROGGAMEPLAYPROTO_API AEnemy : public APawn
@@ -24,6 +25,8 @@ class PROGGAMEPLAYPROTO_API AEnemy : public APawn
 
 public:
 	FOnEnemyDie DieDelegate;
+
+	float DistanceFromPlayerSqrd;
 
 	// Sets default values for this pawn's properties
 	AEnemy();
@@ -75,11 +78,14 @@ public:
 
 	void Rotate(float DeltaTime, const FVector& PlayerPosition);
 
-	void RunnerBehave(const float DeltaTime, const float PlayerDistanceSqrd);
+	void RunnerBehave(const float DeltaTime);
 
-	void AggressiveBehave(const float DeltaTime, const float PlayerDistanceSqrd);
+	void AggressiveBehave(const float DeltaTime);
 
 	virtual void Behave(const float DeltaTime, const FVector& PlayerPosition);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void OnHit(const FRotator& ProjectileRotation, const float ProjectileSpeed);
 
 	UFUNCTION(BlueprintCallable)
 	virtual void Die();
