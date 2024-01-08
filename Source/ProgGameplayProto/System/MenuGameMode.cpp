@@ -5,6 +5,7 @@
 
 #include "GameUtils.h"
 #include "MobSurvivorGameInstance.h"
+#include "Managers/HttpManager.h"
 
 void AMenuGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {

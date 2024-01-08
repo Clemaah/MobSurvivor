@@ -3,14 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ProgGameplayProto/System/MobSurvivorSaveGame.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameUtils.generated.h"
 
 class AMobSurvivorGameMode;
 class UMobSurvivorGameInstance;
 class UMobSurvivorSaveGame;
-class AProgGameplayProtoCharacter;
+class AMobSurvivorCharacter;
 
 /**
  *
@@ -24,7 +23,7 @@ class PROGGAMEPLAYPROTO_API UGameUtils : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
-	static AProgGameplayProtoCharacter* GetMainCharacter();
+	static AMobSurvivorCharacter* GetMainCharacter();
 
 	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
 	static UMobSurvivorGameInstance* GetGameInstance(const UWorld* World);

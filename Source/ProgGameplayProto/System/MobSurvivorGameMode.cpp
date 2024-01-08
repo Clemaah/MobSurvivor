@@ -3,11 +3,11 @@
 #include "MobSurvivorGameMode.h"
 
 #include "GameUtils.h"
-#include "ProgGameplayProto/HealthComponent.h"
-#include "ProgGameplayProto/LevelData.h"
-#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
-#include "ProgGameplayProto/Managers/EnemiesManager.h"
-#include "ProgGameplayProto/Managers/BonusManager.h"
+#include "Managers/BonusManager.h"
+#include "Managers/EnemiesManager.h"
+#include "ProgGameplayProto/ActorComponents/HealthComponent.h"
+#include "ProgGameplayProto/Actors/MobSurvivorCharacter.h"
+#include "ProgGameplayProto/DataAssets/Levels/LevelData.h"
 
 
 AMobSurvivorGameMode::AMobSurvivorGameMode()

@@ -3,12 +3,13 @@
 
 #include "MobSurvivorGameInstance.h"
 
-#include "PlayerGPEData.h"
-#include "ProgGameplayProto/System/MobSurvivorSaveGame.h"
-#include "ProgGameplayProto/Projectiles/ProjectileData.h"
-#include "ProgGameplayProto/Characters/PersonaData.h"
-#include "ProgGameplayProto/Weapons/WeaponData.h"
+#include "MobSurvivorSaveGame.h"
 #include "Kismet/GameplayStatics.h"
+#include "Managers/HttpManager.h"
+#include "ProgGameplayProto/DataAssets/Characters/CharacterData.h"
+#include "ProgGameplayProto/DataAssets/DataList/PlayerDataListData.h"
+#include "ProgGameplayProto/DataAssets/Projectiles/ProjectileData.h"
+#include "ProgGameplayProto/DataAssets/Weapons/WeaponData.h"
 
 /**
  * 
@@ -18,7 +19,7 @@ UMobSurvivorGameInstance::UMobSurvivorGameInstance()
 	SaveName = "MobSurvivor";
 	GamePlayElementsData = nullptr;
 	SaveGameInstance = nullptr;
-	SelectedPersona = nullptr;
+	SelectedCharacter = nullptr;
 	SelectedWeapon = nullptr;
 	SelectedProjectile = nullptr;
     HttpManager = nullptr;
@@ -30,8 +31,8 @@ void UMobSurvivorGameInstance::OnStart()
 
     if (!UpdateData()) return;
 
-    if(SaveGameInstance->PersonasCurrentLevel.Num() > 0)
-		SelectedPersona = SaveGameInstance->PersonasCurrentLevel.begin()->Key;
+    if(SaveGameInstance->CharactersCurrentLevel.Num() > 0)
+		SelectedCharacter = SaveGameInstance->CharactersCurrentLevel.begin()->Key;
 
     if (SaveGameInstance->WeaponsCurrentLevel.Num() > 0)
 		SelectedWeapon = SaveGameInstance->WeaponsCurrentLevel.begin()->Key;
@@ -103,8 +104,8 @@ bool UMobSurvivorGameInstance::UpdateData()
     }
 
     // Adding new GamePlayElement Data
-    for (auto& Element : GamePlayElementsData->Personas)
-        SaveGameInstance->PersonasCurrentLevel.FindOrAdd(Element, 0);
+    for (auto& Element : GamePlayElementsData->Characters)
+        SaveGameInstance->CharactersCurrentLevel.FindOrAdd(Element, 0);
 
     for (auto& Element : GamePlayElementsData->Weapons)
         SaveGameInstance->WeaponsCurrentLevel.FindOrAdd(Element, 0);
@@ -113,9 +114,9 @@ bool UMobSurvivorGameInstance::UpdateData()
         SaveGameInstance->ProjectilesCurrentLevel.FindOrAdd(Element, 0);
 
     // Removing old GamePlayElement Data
-    for(auto Iterator = SaveGameInstance->PersonasCurrentLevel.CreateIterator(); Iterator; ++Iterator)
+    for(auto Iterator = SaveGameInstance->CharactersCurrentLevel.CreateIterator(); Iterator; ++Iterator)
     {
-        if (GamePlayElementsData->Personas.Find(Iterator.Key()) == INDEX_NONE)
+        if (GamePlayElementsData->Characters.Find(Iterator.Key()) == INDEX_NONE)
             Iterator.RemoveCurrent();
     }
 
@@ -136,10 +137,10 @@ bool UMobSurvivorGameInstance::UpdateData()
 
 
 
-void UMobSurvivorGameInstance::LevelUpPersona(UPersonaData* Persona) const
+void UMobSurvivorGameInstance::LevelUpCharacter(UCharacterData* Character) const
 {
-    if (CanPersonaLevelUp(Persona))
-        SaveGameInstance->PersonasCurrentLevel[Persona] += 1;
+    if (CanCharacterLevelUp(Character))
+        SaveGameInstance->CharactersCurrentLevel[Character] += 1;
 }
 
 void UMobSurvivorGameInstance::LevelUpWeapon(UWeaponData* Weapon) const
@@ -156,12 +157,12 @@ void UMobSurvivorGameInstance::LevelUpProjectile(UProjectileData* Projectile) co
 
 
 
-int UMobSurvivorGameInstance::GetNextPersonaLevelPrice(UPersonaData* Persona) const
+int UMobSurvivorGameInstance::GetNextCharacterLevelPrice(UCharacterData* Character) const
 {
-    if (!IsValid(Persona))
+    if (!IsValid(Character))
         return -1;
 
-    return Persona->GetLevelPrice(GetPersonaCurrentLevel(Persona) + 1);
+    return Character->GetLevelPrice(GetCharacterCurrentLevel(Character) + 1);
 }
 
 int UMobSurvivorGameInstance::GetNextWeaponLevelPrice(UWeaponData* Weapon) const
@@ -182,12 +183,12 @@ int UMobSurvivorGameInstance::GetNextProjectileLevelPrice(UProjectileData* Proje
 
 
 
-int UMobSurvivorGameInstance::GetPersonaCurrentLevel(UPersonaData* Persona) const
+int UMobSurvivorGameInstance::GetCharacterCurrentLevel(UCharacterData* Character) const
 {
-    if (!IsValid(Persona))
+    if (!IsValid(Character))
         return -1;
 
-    return SaveGameInstance->PersonasCurrentLevel[Persona];
+    return SaveGameInstance->CharactersCurrentLevel[Character];
 }
 
 int UMobSurvivorGameInstance::GetWeaponCurrentLevel(UWeaponData* Weapon) const
@@ -208,12 +209,12 @@ int UMobSurvivorGameInstance::GetProjectileCurrentLevel(UProjectileData* Project
 
 
 
-bool UMobSurvivorGameInstance::CanPersonaLevelUp(UPersonaData* Persona) const
+bool UMobSurvivorGameInstance::CanCharacterLevelUp(UCharacterData* Character) const
 {
-    if (!IsValid(Persona))
+    if (!IsValid(Character))
         return false;
 
-    return (GetPersonaCurrentLevel(Persona) < Persona->Levels.Num() - 1);
+    return (GetCharacterCurrentLevel(Character) < Character->Levels.Num() - 1);
 }
 
 bool UMobSurvivorGameInstance::CanWeaponLevelUp(UWeaponData* Weapon) const

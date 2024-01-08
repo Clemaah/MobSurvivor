@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "ProgGameplayProto/LevelData.h"
+#include "ProgGameplayProto/DataAssets/Levels/LevelData.h"
 #include "MobSurvivorGameMode.generated.h"
 
 class ABonusManager;

@@ -2,16 +2,17 @@
 
 
 #include "GameUtils.h"
-#include "ProgGameplayProto/Characters/ProgGameplayProtoCharacter.h"
 #include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
 #include "ProgGameplayProto/System/MobSurvivorGameMode.h"
 #include "Kismet/GameplayStatics.h"
-#include <regex>
+#include "regex"
+
+#include "ProgGameplayProto/Actors/MobSurvivorCharacter.h"
 
 
-AProgGameplayProtoCharacter* UGameUtils::GetMainCharacter()
+AMobSurvivorCharacter* UGameUtils::GetMainCharacter()
 {
-	return AProgGameplayProtoCharacter::Instance;
+	return AMobSurvivorCharacter::Instance;
 }
 
 UMobSurvivorGameInstance* UGameUtils::GetGameInstance(const UWorld* World)

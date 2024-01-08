@@ -10,7 +10,7 @@
 
 class UProjectileData;
 class UWeaponData;
-class UPersonaData;
+class UCharacterData;
 /**
  * 
  */
@@ -30,7 +30,7 @@ public:
 	FString PlayerToken;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SavedParameters")
-	TMap<UPersonaData*, int> PersonasCurrentLevel;
+	TMap<UCharacterData*, int> CharactersCurrentLevel;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SavedParameters")
 	TMap<UWeaponData*, int> WeaponsCurrentLevel;

@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
-#include "ProgGameplayProto/Managers/HTTPManager.h"
 #include "MobSurvivorGameInstance.generated.h"
 
-class UPersonaData;
+class UHttpManager;
+class UCharacterData;
 class UWeaponData;
 class UProjectileData;
-class UPlayerGPEData;
+class UPlayerDataListData;
 class UMobSurvivorSaveGame;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCoinsChangedSignature, const int, value);
@@ -27,7 +27,7 @@ protected:
 	FString SaveName;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "MobSurvivor|SaveSettings", Meta = (ShowOnlyInnerProperties))
-	UPlayerGPEData* GamePlayElementsData;
+	UPlayerDataListData* GamePlayElementsData;
 
 public:
 	UPROPERTY(BlueprintAssignable)
@@ -43,7 +43,7 @@ public:
 	FString PlayerPseudo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
-	UPersonaData* SelectedPersona;
+	UCharacterData* SelectedCharacter;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MobSurvivor|GameSettings")
 	UWeaponData* SelectedWeapon;
@@ -71,7 +71,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
-	void LevelUpPersona(UPersonaData* Persona) const;
+	void LevelUpCharacter(UCharacterData* Character) const;
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
 	void LevelUpWeapon(UWeaponData* Weapon) const;
@@ -81,7 +81,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
-	int GetNextPersonaLevelPrice(UPersonaData* Persona) const;
+	int GetNextCharacterLevelPrice(UCharacterData* Character) const;
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
 	int GetNextWeaponLevelPrice(UWeaponData* Weapon) const;
@@ -91,7 +91,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
-	int GetPersonaCurrentLevel(UPersonaData* Persona) const;
+	int GetCharacterCurrentLevel(UCharacterData* Character) const;
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
 	int GetWeaponCurrentLevel(UWeaponData* Weapon) const;
@@ -101,7 +101,7 @@ public:
 
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
-	bool CanPersonaLevelUp(UPersonaData* Persona) const;
+	bool CanCharacterLevelUp(UCharacterData* Character) const;
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
 	bool CanWeaponLevelUp(UWeaponData* Weapon) const;
