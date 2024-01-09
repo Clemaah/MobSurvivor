@@ -98,6 +98,8 @@ protected:
 
 	FCharacterCharacteristics CharacterCharacteristics;
 
+	FRotator ShootingDirection;
+
 	bool bIsHoldingShoot = false;
 	bool bIsAutoFire = false;
 	bool bWantsToShoot = false;

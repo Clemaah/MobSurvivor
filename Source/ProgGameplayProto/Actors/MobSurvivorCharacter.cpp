@@ -164,8 +164,11 @@ void AMobSurvivorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 // --- ACTIONS
 void AMobSurvivorCharacter::Tick(float DeltaSeconds)
 {
+	ShootingDirection = GetMouseDirection().Rotation();
+
+
 	if (bWantsToShoot && Weapon->bCanShoot)
-		Weapon->Shoot(GetMouseDirection().Rotation());
+		Weapon->Shoot(ShootingDirection);
 }
 
 void AMobSurvivorCharacter::Move(const FInputActionValue& Value)
