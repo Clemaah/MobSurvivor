@@ -25,6 +25,9 @@ class PROGGAMEPLAYPROTO_API UBonusData : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta")
+	FText Name;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta", meta = (MultiLine = true))
 	FText Description;
 

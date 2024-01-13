@@ -56,6 +56,14 @@ void ABonusManager::AddToHeldBonuses(UBonusData* Bonus)
 		AllBonuses.Remove(Bonus);
 }
 
+int ABonusManager::GetBonusLevel(const UBonusData* Bonus)
+{
+	if (HeldBonus.Find(Bonus))
+		return HeldBonus[Bonus] + 1;
+
+	return 1;
+}
+
 int ABonusManager::GetWeightedIndex()
 {                                       
 	float totalWeight = 0;

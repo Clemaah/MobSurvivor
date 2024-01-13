@@ -28,21 +28,23 @@ class PROGGAMEPLAYPROTO_API ABonusManager : public AInfo
 protected:
 	virtual void BeginPlay() override;
 
-	UFUNCTION(BlueprintCallable)
 	void LoadBonuses();
-
-	UFUNCTION(BlueprintCallable)
-	void ResetAvailableBonuses();
-
-	UFUNCTION(BlueprintCallable)
-	UBonusData* GetRandomBonus();
-
-	UFUNCTION(BlueprintCallable)
-	void AddToHeldBonuses(UBonusData* Bonus);
 
 	int GetWeightedIndex();
 
 public:
 	UPROPERTY(BlueprintReadOnly)
 	int NumberOfUpgrades = 3;
+
+	UFUNCTION(BlueprintCallable)
+	void ResetAvailableBonuses();
+
+	UFUNCTION(BlueprintPure)
+	UBonusData* GetRandomBonus();
+
+	UFUNCTION(BlueprintPure)
+	int GetBonusLevel(const UBonusData* Bonus);
+
+	UFUNCTION(BlueprintCallable)
+	void AddToHeldBonuses(UBonusData* Bonus);
 };
