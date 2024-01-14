@@ -27,6 +27,7 @@ public:
 	FOnEnemyDie DieDelegate;
 
 	float DistanceFromPlayerSqrd;
+	float MovingSpeed;
 
 	// Sets default values for this pawn's properties
 	AEnemy();
@@ -60,7 +61,6 @@ protected:
 
 	FVector Location;
 	FVector MovingDirection;
-	float MovingSpeed;
 
 	FRotator Rotation;
 	FRotator RotationTarget;
