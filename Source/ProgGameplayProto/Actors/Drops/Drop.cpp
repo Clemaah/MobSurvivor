@@ -15,7 +15,6 @@ ADrop::ADrop()
 void ADrop::BeginPlay()
 {
 	Super::BeginPlay();
-
 }
 
 // Called every frame
