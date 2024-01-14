@@ -12,9 +12,10 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Kismet/GameplayStatics.h"
+
 #include "ProgGameplayProto/ActorComponents/ExperienceComponent.h"
 #include "ProgGameplayProto/ActorComponents/HealthComponent.h"
+#include "ProgGameplayProto/ActorComponents/ShooterComponent.h"
 #include "ProgGameplayProto/ActorComponents/WeaponComponent.h"
 
 #include "ProgGameplayProto/Actors/Drops/Drop.h"
@@ -38,6 +39,7 @@ AMobSurvivorCharacter* AMobSurvivorCharacter::Instance = nullptr;
 
 AMobSurvivorCharacter::AMobSurvivorCharacter()
 {
+	SetActorTickInterval(0);
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
@@ -74,6 +76,8 @@ AMobSurvivorCharacter::AMobSurvivorCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
 	Weapon = CreateDefaultSubobject<UWeaponComponent>("Weapon");
+
+	Shooter = CreateDefaultSubobject<UShooterComponent>("Shooter");
 
 	Health = CreateDefaultSubobject<UHealthComponent>("Health");
 
@@ -122,19 +126,14 @@ void AMobSurvivorCharacter::SetupComponents(
 	PersonaCharacteristics = InPersonaCharacteristics;
 	CharacterCharacteristics = InCharacterCharacteristics;
 	Weapon->InitializeWeapon(this, &PersonaCharacteristics, InWeaponCharacteristics, InProjectileCharacteristics, InProjectileToSpawn, ProjectileEffects);
+	Shooter->InitializeShooter(this, Weapon);
+	Health->InitializeHealth(PersonaCharacteristics.MaxHealth, PersonaCharacteristics.RegenerationRate);
 
-	InitializeCharacterVariables();
-}
-
-void AMobSurvivorCharacter::InitializeCharacterVariables()
-{
 	DropsCollector->SetSphereRadius(CharacterCharacteristics.DropCollectorRadius * 100);
 	DropsCollectorMesh->SetRelativeScale3D(FVector(CharacterCharacteristics.DropCollectorRadius * 2, CharacterCharacteristics.DropCollectorRadius * 2, 0.01));
 
-	Health->InitializeHealth(PersonaCharacteristics.MaxHealth, PersonaCharacteristics.RegenerationRate);
-
 	GetCharacterMovement()->MaxWalkSpeed = PersonaCharacteristics.Speed * 1000;
-	CameraBoom->TargetArmLength = PersonaCharacteristics.Speed * 500 + 700;
+	CameraBoom->TargetArmLength = PersonaCharacteristics.Speed * 200 + 900;
 }
 
 void AMobSurvivorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -149,7 +148,7 @@ void AMobSurvivorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMobSurvivorCharacter::Move);
 
-		//Shooting
+		//Firing
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Started, this, &AMobSurvivorCharacter::Shoot);
 		EnhancedInputComponent->BindAction(ShootAction, ETriggerEvent::Completed, this, &AMobSurvivorCharacter::StopShoot);
 		EnhancedInputComponent->BindAction(AutoFireAction, ETriggerEvent::Started, this, &AMobSurvivorCharacter::AutoFire);
@@ -162,15 +161,6 @@ void AMobSurvivorCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInp
 
 //////////////////////////////////////////////////////////////////////////
 // --- ACTIONS
-void AMobSurvivorCharacter::Tick(float DeltaSeconds)
-{
-	ShootingDirection = GetMouseDirection().Rotation();
-
-
-	if (bWantsToShoot && Weapon->bCanShoot)
-		Weapon->Shoot(ShootingDirection);
-}
-
 void AMobSurvivorCharacter::Move(const FInputActionValue& Value)
 {
 	// input is a Vector2D
@@ -214,7 +204,7 @@ void AMobSurvivorCharacter::AutoFire(const FInputActionValue& Value)
 
 void AMobSurvivorCharacter::WantsToShoot()
 {
-	bWantsToShoot = bIsHoldingShoot || bIsAutoFire;
+	Shooter->ToggleWantsToShoot(bIsHoldingShoot || bIsAutoFire);
 }
 
 
@@ -247,32 +237,5 @@ void AMobSurvivorCharacter::UpdateCharacteristics(FPersonaCharacteristics& Perso
 	Health->SetMaxHealth(PersonaCharacteristics.MaxHealth);
 	Health->SetRegenerationRate(PersonaCharacteristics.RegenerationRate);
 	GetCharacterMovement()->MaxWalkSpeed = PersonaCharacteristics.Speed * 1000;
-}
-
-FVector AMobSurvivorCharacter::GetMouseDirection()
-{
-	FVector mouseLocation;
-	FVector mouseDirection;
-	UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectMousePositionToWorld(mouseLocation, mouseDirection);
-
-	FHitResult outHit;
-	FVector endTraceLocation = mouseLocation + mouseDirection * 10000;
-	FCollisionObjectQueryParams params;
-	params.AddObjectTypesToQuery(ECC_WorldStatic);
-	GetWorld()->LineTraceSingleByObjectType(outHit, mouseLocation, endTraceLocation, params);
-
-	if (outHit.bBlockingHit)
-	{
-		FVector neutralCharacterLocation = GetActorLocation();
-		neutralCharacterLocation.Z = 0;
-		FVector neutralMouseLocation = outHit.Location;
-		neutralMouseLocation.Z = 0;
-
-		FVector direction = neutralMouseLocation - neutralCharacterLocation;
-		direction.Normalize();
-
-		return direction;
-	}
-
-	return GetActorForwardVector();
+	CameraBoom->TargetArmLength = PersonaCharacteristics.Speed * 200 + 900;
 }

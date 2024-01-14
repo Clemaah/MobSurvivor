@@ -4,10 +4,10 @@
 #include "Enemy.h"
 
 #include "Components/CapsuleComponent.h"
-#include "Drops/EnemyDropperComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "ProgGameplayProto/ActorComponents/HealthComponent.h"
 #include "ProgGameplayProto/ActorComponents/WeaponComponent.h"
+#include "ProgGameplayProto/ActorComponents/EnemyDropperComponent.h"
 #include "ProgGameplayProto/DataAssets/Characters/CharacterData.h"
 #include "ProgGameplayProto/DataAssets/Enemies/EnemyData.h"
 #include "ProgGameplayProto/DataAssets/Projectiles/ProjectileData.h"
@@ -79,8 +79,8 @@ void AEnemy::RunnerBehave(const float DeltaTime)
 
 	Move(DeltaTime);
 
-	if (Weapon->bCanShoot && DistanceFromPlayerSqrd <= EnemyCharacteristics.DistanceToShootSqrd)
-		Weapon->Shoot(Rotation);
+	if (DistanceFromPlayerSqrd <= EnemyCharacteristics.DistanceToShootSqrd)
+		Weapon->TryShooting(Rotation);
 }
 
 void AEnemy::AggressiveBehave(const float DeltaTime)
@@ -99,8 +99,7 @@ void AEnemy::AggressiveBehave(const float DeltaTime)
 		Move(DeltaTime);
 	}
 
-	if (Weapon->bCanShoot)
-		Weapon->Shoot(Rotation);
+	Weapon->TryShooting(Rotation);
 }
 
 void AEnemy::Behave(const float DeltaTime, const FVector& PlayerPosition)

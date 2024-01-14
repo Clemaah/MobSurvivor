@@ -3,7 +3,7 @@
 
 #include "DropperComponent.h"
 
-#include "Drop.h"
+#include "ProgGameplayProto/Actors/Drops/Drop.h"
 #include "ProgGameplayProto/System/GameUtils.h"
 #include "ProgGameplayProto/Actors/MobSurvivorCharacter.h"
 
@@ -50,7 +50,7 @@ void UDropperComponent::Drop()
 				numberOfDrops *= mainCharacter->GetCharacterCharacteristics().ExperienceMultiplier;
 				break;
 
-			case Upgrade:
+			case Chest:
 				dropChance *= mainCharacter->GetCharacterCharacteristics().UpgradeDropChanceMultiplier;
 				break;
 

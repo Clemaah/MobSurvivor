@@ -17,6 +17,16 @@ struct FProjectileCharacteristics;
 class AProjectile;
 class UProjectileEffect;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnReloadSignature, bool, IsReloading);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAmmoChangedSignature, int, numberOfAmmo);
+
+
+UENUM()
+enum EWeaponState
+{
+	Armed, Reloading, Firing
+};
+
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class PROGGAMEPLAYPROTO_API UWeaponComponent : public UActorComponent
 {
@@ -40,12 +50,25 @@ protected:
 
 	TArray<TSubclassOf<UProjectileEffect>> Effects;
 
-	float TimeElapsedSinceLastShoot = 0;
+	float ShootElapsedTime = 0;
+
+	float ReloadElapsedTime = 0;
+
+	int RemainingAmmunition = 0;
 
 	bool bHasAlreadyDoubleShot;
 
+	EWeaponState State;
+
 public:
-	bool bCanShoot;
+	UPROPERTY(BlueprintAssignable)
+	FOnReloadSignature OnReloadDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAmmoChangedSignature OnShootDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAmmoChangedSignature OnTotalAmmoChangedSignature;
 
 
 
@@ -55,29 +78,32 @@ public:
 public:
 	UWeaponComponent();
 
-	virtual void InitializeWeapon(
+	void InitializeWeapon(
 		APawn* InPawn, 
 		FPersonaCharacteristics* InPersonaCharacteristics, 
-		const FWeaponCharacteristics InWeaponCharacteristics, 
-		const FProjectileCharacteristics InProjectileCharacteristics, 
+		const FWeaponCharacteristics& InWeaponCharacteristics, 
+		const FProjectileCharacteristics& InProjectileCharacteristics, 
 		const TSubclassOf<AProjectile> InProjectileToSpawn, 
-		const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
+		const TArray<TSubclassOf<UProjectileEffect>>& ProjectileEffects);
 
 	// --- BEHAVIOUR
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-	virtual void Shoot(FRotator Rotation);
+
+	void TryShooting(const FRotator& Rotation);
 
 protected:
+	void Shoot(const FRotator& Rotation);
 
 	void Reload(float DeltaTime);
-	void TryDoubleShoot();
 
-	virtual void SpawnProjectile(FVector Direction);
+	void TryRearming(float ElapsedTime, float& Timer, float TimerDuration);
 
-	virtual TArray<FVector> ComputeSpreadDirections(FRotator Rotation);
+	bool TryDoubleShoot() const;
 
-	virtual bool ActivateDoubleShot();
+	void SpawnProjectile(FVector Direction) const;
+
+	TArray<FVector> ComputeSpreadDirections(const FRotator& Rotation);
 
 
 
@@ -87,6 +113,9 @@ protected:
 	virtual float GetPrecisionRandomAngle();
 
 	virtual float GetSpread();
+
+	UFUNCTION(BlueprintPure)
+	virtual float GetReloadingTimePercentage();
 
 
 	// --- SETTERS

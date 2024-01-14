@@ -48,6 +48,8 @@ protected:
 
 	virtual void BeginPlay() override;
 
+	virtual void Tick(float DeltaSeconds) override;
+
 public:
 	UPROPERTY(BlueprintAssignable)
 	FIntDelegateSignature OnCoinsChanged;
@@ -57,8 +59,6 @@ public:
 
 	UPROPERTY(BlueprintAssignable)
 	FFloatDelegateSignature OnTimerChanged;
-
-	virtual void Tick(float DeltaSeconds) override;
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void OnWin();

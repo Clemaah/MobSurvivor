@@ -12,11 +12,11 @@ UWeaponComponent::UWeaponComponent()
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	bHasAlreadyDoubleShot = false;
-	bCanShoot = true;
 	PersonaCharacteristics = nullptr;
+	State = Armed;
 }
 
-void UWeaponComponent::InitializeWeapon(APawn* InPawn, FPersonaCharacteristics* InPersonaCharacteristics, const FWeaponCharacteristics InWeaponCharacteristics, const FProjectileCharacteristics InProjectileCharacteristics, const TSubclassOf<AProjectile> InProjectileToSpawn, const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects)
+void UWeaponComponent::InitializeWeapon(APawn* InPawn, FPersonaCharacteristics* InPersonaCharacteristics, const FWeaponCharacteristics& InWeaponCharacteristics, const FProjectileCharacteristics& InProjectileCharacteristics, const TSubclassOf<AProjectile> InProjectileToSpawn, const TArray<TSubclassOf<UProjectileEffect>>& ProjectileEffects)
 {
 	Pawn = InPawn;
 	PersonaCharacteristics = InPersonaCharacteristics;
@@ -24,6 +24,10 @@ void UWeaponComponent::InitializeWeapon(APawn* InPawn, FPersonaCharacteristics* 
 	ProjectileCharacteristics = InProjectileCharacteristics;
 	Effects = ProjectileEffects;
 	WeaponProjectileToSpawn = InProjectileToSpawn;
+
+	RemainingAmmunition = WeaponCharacteristics.AmmoNumber;
+	OnTotalAmmoChangedSignature.Broadcast(RemainingAmmunition);
+	OnShootDelegate.Broadcast(RemainingAmmunition);
 }
 
 
@@ -38,47 +42,79 @@ void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UWeaponComponent::Reload(float DeltaTime)
 {
-	if(bCanShoot) return;
-
 	if (!IsValid(Pawn)) return;
 
-	TimeElapsedSinceLastShoot += DeltaTime;
+	switch (State) {
+		case Armed:
+			return;
 
-	if (TimeElapsedSinceLastShoot < GetShootDelay()) return;
+		case Reloading:
+			TryRearming(DeltaTime, ReloadElapsedTime, WeaponCharacteristics.ReloadingTime);
+			if(State == Armed)
+			{
+				OnReloadDelegate.Broadcast(false);
+				OnShootDelegate.Broadcast(RemainingAmmunition);
+			}
+			break;
 
-	bCanShoot = true;
-	TimeElapsedSinceLastShoot = 0;
+		case Firing:
+			TryRearming(DeltaTime, ShootElapsedTime, GetShootDelay());
+			break;
+	}
 }
 
-void UWeaponComponent::Shoot(FRotator Rotation)
+void UWeaponComponent::TryRearming(float ElapsedTime, float& Timer, float TimerDuration)
 {
+	Timer += ElapsedTime;
+
+	if (Timer < TimerDuration) return;
+
+	State = Armed;
+	Timer = 0;
+}
+
+void UWeaponComponent::TryShooting(const FRotator& Rotation)
+{
+	if (State != Armed) return;
+
 	if (!IsValid(WeaponProjectileToSpawn)) return;
+
+	Shoot(Rotation);
+}
+
+void UWeaponComponent::Shoot(const FRotator& Rotation)
+{
+	RemainingAmmunition--;
+	OnShootDelegate.Broadcast(RemainingAmmunition);
 
 	TArray<FVector> shootDirections = ComputeSpreadDirections(Rotation);
 
 	for (int i = 0; i < shootDirections.Num(); i++)
-	{
 		SpawnProjectile(shootDirections[i]);
-	}
 
-	TryDoubleShoot();
-
-	bCanShoot = false;
-}
-
-void UWeaponComponent::TryDoubleShoot()
-{
-	if (bHasAlreadyDoubleShot)
+	if (bHasAlreadyDoubleShot || RemainingAmmunition == 0) {
 		bHasAlreadyDoubleShot = false;
 
-	else if (ActivateDoubleShot())
+		if (RemainingAmmunition == 0)
+		{
+			RemainingAmmunition = WeaponCharacteristics.AmmoNumber;
+			State = Reloading;
+			OnReloadDelegate.Broadcast(true);
+		}
+
+		return;
+	}
+
+	if (TryDoubleShoot())
 	{
 		bHasAlreadyDoubleShot = true;
-		TimeElapsedSinceLastShoot = FMath::Max(0, GetShootDelay() - 0.1f);
+		ShootElapsedTime = FMath::Max(0, GetShootDelay() - 0.1f);
 	}
+
+	State = Firing;
 }
 
-bool UWeaponComponent::ActivateDoubleShot()
+bool UWeaponComponent::TryDoubleShoot() const
 {
 	const float value = WeaponCharacteristics.DoubleShotChance;
 	const float multiplier = PersonaCharacteristics->DoubleShotChanceMultiplier;
@@ -88,7 +124,7 @@ bool UWeaponComponent::ActivateDoubleShot()
 	return diceRoll <= value * multiplier;
 }
 
-TArray<FVector> UWeaponComponent::ComputeSpreadDirections(FRotator Rotation)
+TArray<FVector> UWeaponComponent::ComputeSpreadDirections(const FRotator& Rotation)
 {
 	TArray<FVector> directions;
 	FVector centralDirection = Rotation.Vector();
@@ -119,7 +155,7 @@ TArray<FVector> UWeaponComponent::ComputeSpreadDirections(FRotator Rotation)
 	return directions;
 }
 
-void UWeaponComponent::SpawnProjectile(FVector Direction)
+void UWeaponComponent::SpawnProjectile(FVector Direction) const
 {
 	if (Direction == FVector::ZeroVector)
 		Direction = Pawn->GetActorForwardVector();
@@ -161,10 +197,17 @@ float UWeaponComponent::GetSpread()
 	return FMath::Clamp(value * multiplier, 0, 360);
 }
 
+float UWeaponComponent::GetReloadingTimePercentage()
+{
+	return ReloadElapsedTime / WeaponCharacteristics.ReloadingTime;
+}
+
 void UWeaponComponent::UpdateCharacteristics(FWeaponCharacteristics& WeaponBonuses, FProjectileCharacteristics& ProjectileBonuses)
 {
 	WeaponCharacteristics += WeaponBonuses;
 	ProjectileCharacteristics += ProjectileBonuses;
+
+	OnTotalAmmoChangedSignature.Broadcast(WeaponCharacteristics.AmmoNumber);
 }
 
 void UWeaponComponent::AddEffect(TSubclassOf<UProjectileEffect> Effect)

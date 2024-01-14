@@ -18,6 +18,8 @@ struct PROGGAMEPLAYPROTO_API FWeaponCharacteristics
 		FireRate = 0;
 		Precision = 0;
 		Spread = 0;
+		ReloadingTime = 0;
+		AmmoNumber = 0;
 		DoubleShotChance = 0;
 		ShotsNumber = 0;
 		DamagesMultiplier = 0;
@@ -32,6 +34,8 @@ struct PROGGAMEPLAYPROTO_API FWeaponCharacteristics
 		FireRate += Other.FireRate;
 		Precision += Other.Precision;
 		Spread += Other.Spread;
+		ReloadingTime += Other.ReloadingTime;
+		AmmoNumber += Other.AmmoNumber;
 		DoubleShotChance += Other.DoubleShotChance;
 		ShotsNumber += Other.ShotsNumber;
 		DamagesMultiplier += Other.DamagesMultiplier;
@@ -57,6 +61,12 @@ struct PROGGAMEPLAYPROTO_API FWeaponCharacteristics
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|General")
 	float Spread;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|General")
+	float ReloadingTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|General")
+	int AmmoNumber;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon|Salvo")
 	float DoubleShotChance;

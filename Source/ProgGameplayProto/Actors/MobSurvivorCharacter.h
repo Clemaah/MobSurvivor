@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Projectile.h"
 #include "GameFramework/Character.h"
+#include "ProgGameplayProto/ActorComponents/ShooterComponent.h"
 #include "ProgGameplayProto/DataAssets/PersonaCharacteristics.h"
 #include "ProgGameplayProto/DataAssets/Characters/CharacterCharacteristics.h"
 #include "MobSurvivorCharacter.generated.h"
@@ -92,17 +93,17 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
 	UWeaponComponent* Weapon;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Components")
+	UShooterComponent* Shooter;
+
 
 	// --- OTHER VARIABLES
 	FPersonaCharacteristics PersonaCharacteristics;
 
 	FCharacterCharacteristics CharacterCharacteristics;
 
-	FRotator ShootingDirection;
-
 	bool bIsHoldingShoot = false;
 	bool bIsAutoFire = false;
-	bool bWantsToShoot = false;
 
 
 
@@ -125,14 +126,10 @@ public:
 		const TSubclassOf<AProjectile> InProjectileToSpawn,
 		const TArray<TSubclassOf<UProjectileEffect>> ProjectileEffects);
 
-	virtual void InitializeCharacterVariables();
-
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
 	// --- ACTIONS
-	virtual void Tick(float DeltaSeconds) override;
-
 	void Move(const FInputActionValue& Value);
 
 	void Shoot(const FInputActionValue& Value);
@@ -140,8 +137,6 @@ public:
 	void StopShoot(const FInputActionValue& Value);
 
 	void AutoFire(const FInputActionValue& Value);
-
-	FVector GetMouseDirection();
 
 	virtual void WantsToShoot();
 
@@ -161,6 +156,8 @@ public:
 	FORCEINLINE UHealthComponent* GetHealth() const { return Health; }
 
 	FORCEINLINE UWeaponComponent* GetWeapon() const { return Weapon; }
+
+	FORCEINLINE UShooterComponent* GetShooter() const { return Shooter; }
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE FCharacterCharacteristics GetCharacterCharacteristics() const { return CharacterCharacteristics; }
