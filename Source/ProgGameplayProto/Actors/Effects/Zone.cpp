@@ -8,16 +8,16 @@ AZone::AZone()
 {
 	DesiredIntensity = 3000.0f;
 
-	PointLight1 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLight1"));
-	PointLight1->Intensity = DesiredIntensity;
-	PointLight1->SetVisibleFlag(true);
-	RootComponent = PointLight1;
+	//PointLight1 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLight1"));
+	//PointLight1->Intensity = DesiredIntensity;
+	//PointLight1->SetVisibleFlag(true);
+	//RootComponent = PointLight1;
 
 	Sphere1 = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere1"));
 	Sphere1->InitSphereRadius(250.0f);
-	Sphere1->SetupAttachment(RootComponent);
+	RootComponent = Sphere1;
 
-	Sphere1->OnComponentEndOverlap.AddDynamic(this, &AZone::OnOverlapEnd);
+	//Sphere1->OnComponentEndOverlap.AddDynamic(this, &AZone::OnOverlapEnd);
 }
 
 void AZone::BeginPlay()
@@ -52,18 +52,6 @@ void AZone::HitSomething(AActor* OtherActor)
 	if (IsValid(HealthComponent))
 	{
 		HealthComponent->AddHealth(-10);
-	}
-}
 
-void AZone::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-	if (OtherActor && (OtherActor != this) && OtherComp)
-	{
-		ToggleLight();
 	}
-}
-
-void AZone::ToggleLight()
-{
-	PointLight1->ToggleVisibility();
 }
