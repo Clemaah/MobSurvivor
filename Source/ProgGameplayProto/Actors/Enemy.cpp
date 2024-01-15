@@ -76,7 +76,6 @@ void AEnemy::Rotate(const float DeltaTime, const FVector& PlayerPosition)
 
 void AEnemy::RunnerBehave(const float DeltaTime)
 {
-
 	Move(DeltaTime);
 
 	if (DistanceFromPlayerSqrd <= EnemyCharacteristics.DistanceToShootSqrd)

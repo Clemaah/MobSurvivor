@@ -47,12 +47,13 @@ void AProjectile::ApplyEffects(const TArray<TSubclassOf<UProjectileEffect>>& Pro
 		UProjectileEffect* effect = NewObject<UProjectileEffect>(this, projectileEffects);
 		Effects.Add(effect);
 
-		if (!effect->IsA(UProjectilePierceEffect::StaticClass()) || !bCanPierce)
-		{
+		if (!effect->IsA(UProjectilePierceEffect::StaticClass()))
 			effect->RegisterProjectile(this);
 
-			if (!bCanPierce)
-				bCanPierce = true;
+		else if (!bCanPierce)
+		{
+			effect->RegisterProjectile(this);
+			bCanPierce = true;
 		}
 	}
 }

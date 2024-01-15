@@ -1,6 +1,5 @@
 ﻿#include "Zone.h"
 
-#include "Components/PointLightComponent.h"
 #include "Components/SphereComponent.h"
 #include "ProgGameplayProto/ActorComponents/HealthComponent.h"
 
@@ -8,21 +7,15 @@ AZone::AZone()
 {
 	DesiredIntensity = 3000.0f;
 
-	//PointLight1 = CreateDefaultSubobject<UPointLightComponent>(TEXT("PointLight1"));
-	//PointLight1->Intensity = DesiredIntensity;
-	//PointLight1->SetVisibleFlag(true);
-	//RootComponent = PointLight1;
-
 	Sphere1 = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere1"));
 	Sphere1->InitSphereRadius(250.0f);
 	RootComponent = Sphere1;
-
-	//Sphere1->OnComponentEndOverlap.AddDynamic(this, &AZone::OnOverlapEnd);
 }
 
 void AZone::BeginPlay()
 {
 	CheckForCollisions();
+	Destroy();
 }
 
 void AZone::CheckForCollisions()
@@ -51,7 +44,7 @@ void AZone::HitSomething(AActor* OtherActor)
 
 	if (IsValid(HealthComponent))
 	{
-		HealthComponent->AddHealth(-10);
+		HealthComponent->AddHealth(-5);
 
 	}
 }

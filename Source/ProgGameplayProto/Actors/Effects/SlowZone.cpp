@@ -1,13 +1,10 @@
 ﻿#include "SlowZone.h"
 
 #include "ProgGameplayProto/Actors/Enemy.h"
-#include "Components/PointLightComponent.h"
 #include "Components/SphereComponent.h"
-#include "ProgGameplayProto/ActorComponents/HealthComponent.h"
 
 ASlowZone::ASlowZone()
 {
-
 	Sphere1 = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere1"));
 	Sphere1->InitSphereRadius(250.0f);
 	RootComponent = Sphere1;
@@ -16,6 +13,7 @@ ASlowZone::ASlowZone()
 void ASlowZone::BeginPlay()
 {
 	CheckForCollisions();
+	Destroy();
 }
 
 void ASlowZone::CheckForCollisions()
