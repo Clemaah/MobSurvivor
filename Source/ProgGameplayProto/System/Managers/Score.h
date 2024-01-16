@@ -8,15 +8,12 @@
 /**
  *
  */
-UCLASS(BlueprintType)
-class PROGGAMEPLAYPROTO_API UScore : public UObject
+USTRUCT(BlueprintType)
+struct PROGGAMEPLAYPROTO_API FScore
 {
 	GENERATED_BODY()
 
-public:
-	UScore() : Score(0) {}
-
-	void Initialization(const FString& inPseudo, const FString& inCharacter, const FString& InWeapon, const FString& InProjectile, float InScore);
+	FScore() : Score(0) {}
 
 	UPROPERTY(BlueprintReadOnly)
 	FString Pseudo;
@@ -32,4 +29,20 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	float Score;
+};
+
+/**
+ *
+ */
+UCLASS(BlueprintType)
+class PROGGAMEPLAYPROTO_API UScoreObject : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void Initialization(const FScore& InScore);
+
+	UPROPERTY(BlueprintReadOnly)
+	FScore Score;
 };

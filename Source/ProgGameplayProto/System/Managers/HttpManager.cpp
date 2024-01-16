@@ -133,8 +133,6 @@ void UHttpManager::ProcessResponseObject(const FString Action, TSharedPtr<FJsonO
         InsertUserResponse(ResponseObject);
         return;
     }
-
-    UE_LOG(LogTemp, Error, TEXT("Unknown action : %s"), *Action);
 }
 
 void UHttpManager::GetTokenResponse(TSharedPtr<FJsonObject> ResponseObject)
@@ -164,18 +162,20 @@ void UHttpManager::GetUserResponse(TSharedPtr<FJsonObject> ResponseObject)
 
 void UHttpManager::GetLeaderBoardResponse(TArray<TSharedPtr<FJsonValue>>& ResponseArray)
 {
-    TArray<UScore*> Scores;
+    TQueue<FScore> Scores;
+
     for (int i = 0; i < ResponseArray.Num(); ++i)
     {
         const TSharedPtr<FJsonObject> JSonObject = ResponseArray[i]->AsObject();
-        Scores.Add(NewObject<UScore>());
-        Scores[i]->Initialization(
-            JSonObject->GetStringField("pseudo"),
-            JSonObject->GetStringField("characterUsed"),
-            JSonObject->GetStringField("weaponUsed"),
-            JSonObject->GetStringField("projectileUsed"),
-            JSonObject->GetNumberField("score")
-        );
+        FScore inScore;
+
+        inScore.Pseudo = JSonObject->GetStringField("pseudo");
+        inScore.Character = JSonObject->GetStringField("characterUsed");
+        inScore.Weapon = JSonObject->GetStringField("weaponUsed");
+        inScore.Projectile = JSonObject->GetStringField("projectileUsed");
+        inScore.Score = JSonObject->GetNumberField("score");
+
+        Scores.Enqueue(inScore);
     }
 
     OnGetScoresDelegate.Broadcast(Scores);

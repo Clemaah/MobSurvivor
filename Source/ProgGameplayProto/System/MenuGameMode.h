@@ -7,7 +7,7 @@
 #include "MenuGameMode.generated.h"
 
 class UHttpManager;
-class UScore;
+struct FScore;
 class AUpgradesManager;
 /**
  * 
@@ -21,8 +21,10 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	UHttpManager* HttpManager;
 
+	void GetScoresQueue(TQueue<FScore>& Scores);
+
 	UFUNCTION(BlueprintImplementableEvent)
-	void GetScores(const TArray<UScore*>& Scores);
+	void GetScores(const TArray<FScore>& Scores);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void Connect(const FString& Pseudo);

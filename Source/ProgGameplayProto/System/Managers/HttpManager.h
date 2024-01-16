@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Score.h"
 #include "GameFramework/Info.h"
 #include "HttpManager.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnGetScoresSignature, const TArray<UScore*>&, Scores);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnGetScoresSignature, TQueue<FScore>&);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStringResponseSignature, const FString&, String);
 
 /**
