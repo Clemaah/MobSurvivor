@@ -18,11 +18,6 @@ class PROGGAMEPLAYPROTO_API AMenuGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(BlueprintReadOnly)
-	UHttpManager* HttpManager;
-
-	void GetScoresQueue(TQueue<FScore>& Scores);
-
 	UFUNCTION(BlueprintImplementableEvent)
 	void GetScores(const TArray<FScore>& Scores);
 
@@ -30,7 +25,7 @@ public:
 	void Connect(const FString& Pseudo);
 
 	UFUNCTION(BlueprintImplementableEvent)
-	void DisplayError(const FString& Error);
+	void DisplayError(const FString& Message);
 
 	UFUNCTION(BlueprintImplementableEvent)
 	void DisplayMessage(const FString& Message);

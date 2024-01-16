@@ -40,8 +40,14 @@ void UMobSurvivorGameInstance::OnStart()
     if (SaveGameInstance->ProjectilesCurrentLevel.Num() > 0)
 		SelectedProjectile = SaveGameInstance->ProjectilesCurrentLevel.begin()->Key;
 
-    HttpManager = NewObject<UHttpManager>();
-    HttpManager->OnTokenChangedDelegate.AddDynamic(this, &UMobSurvivorGameInstance::ChangePlayerToken);
+}
+
+void UMobSurvivorGameInstance::InitializeHTTP(AMenuGameMode* GameMode)
+{
+    if (!IsValid(HttpManager))
+        HttpManager = NewObject<UHttpManager>();
+
+    HttpManager->Initialize(this, GameMode);
 }
 
 void UMobSurvivorGameInstance::SaveGame()
@@ -251,7 +257,7 @@ void UMobSurvivorGameInstance::ChangeTotalPointsBy(const int Quantity)
     SaveGameInstance->TotalPoints += Quantity;
 }
 
-void UMobSurvivorGameInstance::ChangePlayerToken(const FString& Token)
+void UMobSurvivorGameInstance::UpdatePlayerToken(FString Token)
 {
     SaveGameInstance->PlayerToken = Token;
     SaveGame();

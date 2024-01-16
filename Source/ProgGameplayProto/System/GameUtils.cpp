@@ -25,6 +25,11 @@ AMobSurvivorGameMode* UGameUtils::GetGameMode(const UWorld* World)
 	return Cast<AMobSurvivorGameMode>(UGameplayStatics::GetGameMode(World));
 }
 
+AMenuGameMode* UGameUtils::GetMenuGameMode(const UWorld* World)
+{
+	return Cast<AMenuGameMode>(UGameplayStatics::GetGameMode(World));
+}
+
 bool UGameUtils::IsAValidEmail(const FString& Email)
 {
 	const std::regex pattern("^(([^<>()[\\]\\.,;:\\s@\"]+(\\.[^<>()[\\]\\.,;:\\s@\"]+)*)|(\".+\"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$");

@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "MobSurvivorGameInstance.generated.h"
 
+class AMenuGameMode;
 class UHttpManager;
 class UCharacterData;
 class UWeaponData;
@@ -57,6 +58,8 @@ public:
 	UMobSurvivorGameInstance();
 
 	virtual void OnStart() override;
+
+	void InitializeHTTP(AMenuGameMode* GameMode);
 
 
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
@@ -119,8 +122,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MobSurvivor|SaveSettings")
 	void ChangeTotalPointsBy(const int Quantity);
 
-	UFUNCTION()
-	void ChangePlayerToken(const FString& Token);
+	void UpdatePlayerToken(FString Token);
 
 
 private:

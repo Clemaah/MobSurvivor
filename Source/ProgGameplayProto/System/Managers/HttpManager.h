@@ -3,12 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Score.h"
 #include "GameFramework/Info.h"
+#include "ProgGameplayProto/System/MenuGameMode.h"
+#include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
 #include "HttpManager.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnGetScoresSignature, TQueue<FScore>&);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnStringResponseSignature, const FString&, String);
 
 /**
  *
@@ -20,17 +19,12 @@ class PROGGAMEPLAYPROTO_API UHttpManager : public UObject
 
 	FString BaseUrl = "http://mob-survivor.alwaysdata.net/";
 
-
 public:
-	FOnGetScoresSignature OnGetScoresDelegate;
+	AMenuGameMode* GameMode;
 
-	FOnStringResponseSignature OnGetUserDelegate;
+	UMobSurvivorGameInstance* GameInstance;
 
-	FOnStringResponseSignature OnErrorDelegate;
-
-	FOnStringResponseSignature OnMessageDelegate;
-
-	FOnStringResponseSignature OnTokenChangedDelegate;
+	void Initialize(UMobSurvivorGameInstance* InGameInstance, AMenuGameMode* InGameMode);
 
 	UFUNCTION(BlueprintCallable)
 	void GetToken(FString pseudo, FString password);

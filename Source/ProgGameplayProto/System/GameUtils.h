@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "MenuGameMode.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameUtils.generated.h"
 
@@ -30,6 +31,9 @@ public:
 
 	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
 	static AMobSurvivorGameMode* GetGameMode(const UWorld* World);
+
+	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
+	static AMenuGameMode* GetMenuGameMode(const UWorld* World);
 
 	UFUNCTION(BlueprintPure, Category = "MobSurvivor|Manager")
 	static bool IsAValidEmail(const FString& Email);

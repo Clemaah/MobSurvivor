@@ -2,6 +2,15 @@
 
 #include "Http.h"
 #include "Score.h"
+#include "ProgGameplayProto/System/GameUtils.h"
+#include "ProgGameplayProto/System/MobSurvivorGameInstance.h"
+
+
+void UHttpManager::Initialize(UMobSurvivorGameInstance* InGameInstance, AMenuGameMode* InGameMode)
+{
+    GameInstance = InGameInstance;
+    GameMode = InGameMode;
+}
 
 void UHttpManager::GetToken(FString pseudo, FString password)
 {
@@ -131,7 +140,6 @@ void UHttpManager::ProcessResponseObject(const FString Action, TSharedPtr<FJsonO
     if (Action == "insertUser")
     {
         InsertUserResponse(ResponseObject);
-        return;
     }
 }
 
@@ -139,30 +147,31 @@ void UHttpManager::GetTokenResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
     if (!ResponseObject->GetBoolField("success"))
     {
-        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        GameMode->DisplayError(ResponseObject->GetStringField("message"));
         return;
     }
 
-    OnTokenChangedDelegate.Broadcast(ResponseObject->GetStringField("token"));
-    GetUser(ResponseObject->GetStringField("token"));
+    FString token = ResponseObject->GetStringField("token");
+    GameInstance->UpdatePlayerToken(token);
+    GetUser(token);
 }
 
 void UHttpManager::GetUserResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
     if(!ResponseObject->GetBoolField("success"))
     {
-        OnTokenChangedDelegate.Broadcast("");
-        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        GameInstance->UpdatePlayerToken("");
+        GameMode->DisplayError(ResponseObject->GetStringField("message"));
         return;
     }
 
-	OnGetUserDelegate.Broadcast(ResponseObject->GetStringField("pseudo"));
-    OnMessageDelegate.Broadcast(ResponseObject->GetStringField("message"));
+    GameMode->Connect(ResponseObject->GetStringField("pseudo"));
+    GameMode->DisplayMessage(ResponseObject->GetStringField("message"));
 }
 
 void UHttpManager::GetLeaderBoardResponse(TArray<TSharedPtr<FJsonValue>>& ResponseArray)
 {
-    TQueue<FScore> Scores;
+    TArray<FScore> ResScores;
 
     for (int i = 0; i < ResponseArray.Num(); ++i)
     {
@@ -175,31 +184,31 @@ void UHttpManager::GetLeaderBoardResponse(TArray<TSharedPtr<FJsonValue>>& Respon
         inScore.Projectile = JSonObject->GetStringField("projectileUsed");
         inScore.Score = JSonObject->GetNumberField("score");
 
-        Scores.Enqueue(inScore);
+        ResScores.Add(inScore);
     }
 
-    OnGetScoresDelegate.Broadcast(Scores);
+    GameMode->GetScores(ResScores);
 }
 
 void UHttpManager::InsertUserResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
     if (!ResponseObject->GetBoolField("success"))
     {
-        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        GameMode->DisplayError(ResponseObject->GetStringField("message"));
         return;
     }
 
-    OnMessageDelegate.Broadcast(ResponseObject->GetStringField("message"));
+    GameMode->DisplayMessage(ResponseObject->GetStringField("message"));
 }
 
 void UHttpManager::InsertScoreResponse(TSharedPtr<FJsonObject> ResponseObject)
 {
     if (!ResponseObject->GetBoolField("success"))
     {
-        OnErrorDelegate.Broadcast(ResponseObject->GetStringField("message"));
+        GameMode->DisplayError(ResponseObject->GetStringField("message"));
         return;
     }
 
-    OnMessageDelegate.Broadcast(ResponseObject->GetStringField("message"));
+    GameMode->DisplayMessage(ResponseObject->GetStringField("message"));
 }
 
